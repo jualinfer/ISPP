@@ -33,7 +33,7 @@ window.addEventListener("load", function(){
 window.cookieconsent.initialise({
  "palette": {
    "popup": {
-     "background": "#ff40a0"
+     "background": "#b143dd"
    },
    "button": {
      "background": "#ffa513"
@@ -53,12 +53,12 @@ window.cookieconsent.initialise({
 <security:authorize access="isAuthenticated()">
 	<div class="logo">
 		<security:authorize access="hasRole('DRIVER')">
-		<a href="route/driver/listActive.do" >
+		<a href="/Trond/route/driver/listActive.do" >
 		
 		<img src="images/logoicon.png" /></a>
 		</security:authorize>
 		<security:authorize access="hasRole('PASSENGER')">
-		<a href="route/passenger/listActive.do" >
+		<a href="/Trond/route/passenger/listActive.do" >
 		
 		<img src="images/logoicon.png" /></a>
 		</security:authorize>
@@ -82,20 +82,20 @@ window.cookieconsent.initialise({
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 				<security:authorize access="hasRole('DRIVER')">
-					<a class="dropdown-item" href="#">Visit my profile</a> 
+					<a class="dropdown-item" href="driver/displayPrincipal.do">Visit my profile</a> 
 					<!-- driver/display.do?driverId= -->
 				</security:authorize>
 				<security:authorize access="hasRole('PASSENGER')">
-					<a class="dropdown-item" href="#">Visit my profile</a> 
+					<a class="dropdown-item" href="passenger/displayPrincipal.do">Visit my profile</a> 
 					<!-- passenger/display.do?passengerId= -->
 				</security:authorize>
 				<security:authorize access="hasRole('DRIVER')">
-					<a class="dropdown-item" href="#">Edit Profile</a> 
-					<!-- driver/edit.do?driverId= -->
+					<a class="dropdown-item" href="driver/edit.do">Edit Profile</a> 
+					<!-- driver/edit.do -->
 				</security:authorize>
 				<security:authorize access="hasRole('PASSENGER')">
-					<a class="dropdown-item" href="#">Edit Profile</a> 
-					<!-- passenger/edit.do?passengerId= -->
+					<a class="dropdown-item" href="passenger/edit.do">Edit Profile</a> 
+					<!-- passenger/edit.do -->
 				</security:authorize>
 				<a class="dropdown-item" href="#">Configuration</a>
 				<div class="dropdown-divider"></div>
@@ -104,7 +104,18 @@ window.cookieconsent.initialise({
 		</div>
 	</div>
 	
+	<div class="header_nav backgroundcolor-pink">
+		<nav class="nav-bar navbar-expand-lg">
+			<!-- <ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+	        		<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+	      		</li>
+			</ul> -->
+		</nav>
+	</div>
+	
 	<!-- --- -->
+<%-- 
 	<nav class="navbar navbar-icon-top navbar-expand-lg" style="background-color: #fa3274;">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -158,7 +169,9 @@ window.cookieconsent.initialise({
 
 
 </nav>
+--%>
 </security:authorize>
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 	integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
 	crossorigin="anonymous"></script>

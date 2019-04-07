@@ -36,4 +36,9 @@
 		<put-attribute name="body" value="/views/passenger/display.jsp"/>
 	</definition>
 	
+	<definition name="passenger/displayPrincipal" extends="master.page">
+		<put-attribute name="title" value="Display Passenger"/>
+		<put-attribute name="body" value="/views/passenger/display.jsp"/>
+	</definition>
+	
 </tiles-definitions>

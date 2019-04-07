@@ -401,7 +401,9 @@ public class RouteService {
 			routeForm.setOrigin(this.controlPointService.constructCreate(this.controlPointService.create(), route));
 			final ControlPoint cp = this.controlPointService.create();
 			cp.setArrivalOrder(1);
-			routeForm.setDestination(this.controlPointService.constructCreate(cp, route));
+			ControlPointFormCreate cpfc = this.controlPointService.constructCreate(cp, route);
+			cpfc.setEstimatedTime(1);
+			routeForm.setDestination(cpfc);
 			routeForm.setControlpoints(new ArrayList<ControlPointFormCreate>());
 		} else {
 			final LinkedList<ControlPoint> cps = new LinkedList<ControlPoint>(route.getControlPoints());

@@ -1,5 +1,49 @@
 @CHARSET "ISO-8859-1";
 
+.card-header_{
+	text-align: center;
+	border-top: 2px solid #00ACE2;
+	border-bottom: 2px solid #00ACE2;
+}
+
+.card-header_ button{
+	font-size: 24px;
+}
+
+.route-route h5{
+	font-weight: bold;
+}
+
+.route-route, .details-details{
+	width: 60%;
+	margin: 0 auto;
+}
+
+.item-route-accordion{
+	
+}
+
+/** Arrow origin destination **/
+/* .item-1:before{
+	position:absolute;
+	margin: 10px 0;
+	content:'';
+	height:16px;
+	padding: 2.5px;
+	border-right: 2px solid black;
+}
+.item-1:after{
+	position:absolute;
+	margin: 29px 3px;
+	content:'';
+	height:3px;
+	padding: 3px;
+	border-bottom: 2px solid black;
+	border-right: 2px solid black;
+	transform: rotate(45deg)
+}
+ */
+/****/
 .items{
 	margin: 0 auto;
 }
@@ -133,7 +177,7 @@ a:hover,a:focus{
     left: 0;
 }
 
-body{background:#f1f1f2;}
+/* body{background:#f1f1f2;} */
 h4{text-align:center;margin:30px 0px;color:#444;}
 .mt-10{margin-top:20px;}
 a:hover,a:focus{

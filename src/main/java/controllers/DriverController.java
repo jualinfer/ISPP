@@ -1,6 +1,8 @@
 
 package controllers;
 
+import java.util.Collection;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import security.UserAccount;
 import services.ActorService;
+import services.CommentService;
 import services.DriverService;
+import domain.Actor;
+import domain.Comment;
 import domain.Driver;
 import forms.CredentialsfForm;
 
@@ -29,6 +34,9 @@ public class DriverController extends AbstractController {
 	@Autowired
 	private ActorService	actorService;
 
+	@Autowired
+	private CommentService	commentService;
+
 
 	// Constructor ------------------------------
 	public DriverController() {
@@ -42,10 +50,31 @@ public class DriverController extends AbstractController {
 
 		ModelAndView result;
 		Driver driver;
+		Collection<Comment> comments;
 
 		driver = this.driverService.findOne(driverId);
+		comments = this.commentService.findCommentsMadeToDriver(driverId);
 		result = new ModelAndView("driver/display");
 		result.addObject("driver", driver);
+		result.addObject("comments", comments);
+
+		return result;
+	}
+
+	@RequestMapping(value = "/displayPrincipal", method = RequestMethod.GET)
+	public ModelAndView displayPrincipal() {
+		ModelAndView result;
+		Driver driver;
+		Actor principal;
+		Collection<Comment> comments;
+
+		principal = this.actorService.findByPrincipal();
+		Assert.isTrue(principal instanceof Driver);
+		driver = (Driver) principal;
+		comments = this.commentService.findCommentsMadeToDriver(driver.getId());
+		result = new ModelAndView("driver/display");
+		result.addObject("driver", driver);
+		result.addObject("comments", comments);
 
 		return result;
 	}
@@ -83,17 +112,13 @@ public class DriverController extends AbstractController {
 	}
 	// Edition -----------------------------------------------------------
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam final int driverId) {
+	public ModelAndView edit() {
 		ModelAndView result;
 		Driver driver;
-		Driver principal;
 		String requestURI;
 
 		requestURI = "driver/edit.do";
-		driver = this.driverService.findOne(driverId);
-		principal = (Driver) this.actorService.findByPrincipal();
-
-		Assert.isTrue(driver.getId() == principal.getId());
+		driver = (Driver) this.actorService.findByPrincipal();
 
 		result = this.createEditModelAndView(driver, "driver/edit");
 		result.addObject("requestURI", requestURI);
@@ -119,21 +144,21 @@ public class DriverController extends AbstractController {
 			}
 		return result;
 	}
-	
+
 	// Edition Credentials-----------------------------------------------------------
 	@RequestMapping(value = "/editCredentials", method = RequestMethod.GET)
-	public ModelAndView editCredentials(){
+	public ModelAndView editCredentials() {
 		ModelAndView res = null;
-		
-		Driver driver = (Driver) this.actorService.findByPrincipal();
-		CredentialsfForm credentialsfForm = driverService.constructCredential(driver);
-		
+
+		final Driver driver = (Driver) this.actorService.findByPrincipal();
+		final CredentialsfForm credentialsfForm = this.driverService.constructCredential(driver);
+
 		res = this.createEditModelAndViewEditCredentials(credentialsfForm);
 		res.addObject("credentialsfForm", credentialsfForm);
-		
+
 		return res;
 	}
-	
+
 	@RequestMapping(value = "/editCredentials", method = RequestMethod.POST, params = "save")
 	public ModelAndView editCredentials(@Valid final CredentialsfForm credentialsfForm, final BindingResult binding) {
 		ModelAndView res;
@@ -145,7 +170,7 @@ public class DriverController extends AbstractController {
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "driver.commit.errorPassword");
 		else
 			try {
-				driver = driverService.reconstructCredential(credentialsfForm, binding);
+				driver = this.driverService.reconstructCredential(credentialsfForm, binding);
 				this.driverService.saveCredentials(driver);
 				res = new ModelAndView("redirect:/j_spring_security_logout");
 			} catch (final Throwable oops) {
@@ -174,7 +199,7 @@ public class DriverController extends AbstractController {
 
 		return result;
 	}
-	
+
 	protected ModelAndView createEditModelAndViewEditCredentials(final CredentialsfForm credentialsfForm) {
 		ModelAndView result;
 
@@ -183,14 +208,13 @@ public class DriverController extends AbstractController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndViewEditCredentials(final CredentialsfForm credentialsfForm,
-			final String message) {
+	protected ModelAndView createEditModelAndViewEditCredentials(final CredentialsfForm credentialsfForm, final String message) {
 		ModelAndView result;
 
 		result = new ModelAndView("driver/editCredentials");
 		result.addObject("credentialsfForm", credentialsfForm);
 		result.addObject("message", message);
-		result.addObject("requestURI","driver/editCredentials.do");
+		result.addObject("requestURI", "driver/editCredentials.do");
 
 		return result;
 	}

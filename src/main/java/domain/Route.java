@@ -44,6 +44,7 @@ public class Route extends DomainEntity {
 	private Vehicle					vehicle;
 	private List<ControlPoint>		controlPoints;
 	private Collection<Reservation>	reservations;
+	private Collection<Comment>		comments;
 
 
 	//Getter
@@ -139,6 +140,12 @@ public class Route extends DomainEntity {
 		return this.reservations;
 	}
 
+	@Valid
+	@OneToMany(mappedBy = "route")
+	public Collection<Comment> getComments() {
+		return this.comments;
+	}
+
 	//Setter
 
 	public void setDepartureDate(final Date departureDate) {
@@ -174,6 +181,10 @@ public class Route extends DomainEntity {
 	}
 	public void setReservations(final Collection<Reservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	public void setComments(final Collection<Comment> comments) {
+		this.comments = comments;
 	}
 
 	public void setAvailableSeats(final Integer availableSeats) {

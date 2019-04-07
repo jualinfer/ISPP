@@ -23,12 +23,12 @@
 		<value>/views/security/messages</value>		
 		<value>/views/welcome/messages</value>
 		<value>/views/administrator/messages</value>
-		<value>/views/customer/messages</value>
 		<value>/views/profile/messages</value>
 		<value>/views/route/messages</value>
 		<value>/views/reservation/messages</value>
 		<value>/views/driver/messages</value>
 		<value>/views/passenger/messages</value>
+		<value>/views/vehicle/messages</value>
 	</util:list>
 
 </beans>

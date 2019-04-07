@@ -133,6 +133,14 @@ public class PassengerService {
 		return result;
 	}
 
+	public Collection<Passenger> findPassengersAcceptedByRoute(int routeId) {
+		Collection<Passenger> result;
+
+		result = this.passengerRepository.findPassengersAcceptedByRoute(routeId);
+
+		return result;
+	}
+
 	// Complex business rules
 	public Passenger reconstruct(final Passenger passenger, final BindingResult binding) {
 		Passenger result;

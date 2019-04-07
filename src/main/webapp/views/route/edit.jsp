@@ -116,7 +116,7 @@
 								</div>
 								<div class="col-3">
 									<div class="input-group">
-										<form:input type="number" path="controlpoints[${status.index}].estimatedTime" class="form-control" aria-describedy="controlpointTime${status.index}" />
+										<form:input type="number" path="controlpoints[${status.index}].estimatedTime" class="form-control" min="1" aria-describedy="controlpointTime${status.index}" />
 										<div class="input-group-prepend">
 											<span class="input-group-text" id="controlpointTime${status.index}"><spring:message code="minutes"/></span>
 										</div>
@@ -151,7 +151,7 @@
 					</div>
 					<div class="col-3">
 						<div class="input-group">
-							<form:input type="number" path="destination.estimatedTime" class="form-control" aria-describedy="destinationTime" />
+							<form:input type="number" path="destination.estimatedTime" class="form-control" min="1" aria-describedy="destinationTime" />
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="destinationTime"><spring:message code="minutes"/></span>
 							</div>

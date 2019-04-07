@@ -2,6 +2,14 @@
 
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
+.header_nav{
+	conten: '';
+	height: 50px;
+	width: 100%;
+	position: relative;
+	background-color: #FD497C;
+}
+
 .item-details a{
 	color:black;
 }
@@ -130,7 +138,7 @@
 .logo img{
 	width: 120px;
 	position: relative;
-	left: -75px;
+	/* left: -75px; */
 	margin: 10px;
 }
 
@@ -165,6 +173,8 @@
 	rigth: 0px;
 	
 }
+
+
 
 
 

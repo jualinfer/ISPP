@@ -9,9 +9,14 @@
  */
 @import url(https://fonts.googleapis.com/css?family=Poppins);
 body{
-	width: 80%;
+	/* width: 80%; */
+	background-color: white;
 	margin: 0 auto;
 	font-family: "Poppins", sans-serif;
+}
+
+.content{
+	margin: 0 auto;
 }
 
 .error {

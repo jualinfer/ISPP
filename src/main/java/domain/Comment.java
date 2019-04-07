@@ -25,11 +25,13 @@ public class Comment extends DomainEntity {
 	private Date		date;
 	private Double		star;
 	private String		text;
+	private Boolean		fromDriver;
 
 	//Relationships
 
 	private Passenger	passenger;
 	private Driver		driver;
+	private Route		route;
 
 
 	//Getters
@@ -52,6 +54,11 @@ public class Comment extends DomainEntity {
 		return this.star;
 	}
 
+	@NotNull
+	public Boolean getFromDriver() {
+		return this.fromDriver;
+	}
+
 	@Valid
 	@NotNull
 	@ManyToOne(optional = false)
@@ -64,6 +71,13 @@ public class Comment extends DomainEntity {
 	@ManyToOne(optional = false)
 	public Passenger getPassenger() {
 		return this.passenger;
+	}
+
+	@Valid
+	@NotNull
+	@ManyToOne(optional = false)
+	public Route getRoute() {
+		return this.route;
 	}
 
 	//Setters
@@ -80,11 +94,19 @@ public class Comment extends DomainEntity {
 		this.text = text;
 	}
 
+	public void setFromDriver(Boolean fromDriver) {
+		this.fromDriver = fromDriver;
+	}
+
 	public void setDriver(final Driver driver) {
 		this.driver = driver;
 	}
 
 	public void setPassenger(final Passenger passenger) {
 		this.passenger = passenger;
+	}
+
+	public void setRoute(Route route) {
+		this.route = route;
 	}
 }

@@ -1,6 +1,8 @@
 
 package controllers;
 
+import java.util.Collection;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import security.UserAccount;
 import services.ActorService;
+import services.CommentService;
 import services.PassengerService;
+import domain.Actor;
+import domain.Comment;
 import domain.Passenger;
 import forms.CredentialsfForm;
 
@@ -29,6 +34,9 @@ public class PassegerController extends AbstractController {
 	@Autowired
 	private ActorService		actorService;
 
+	@Autowired
+	private CommentService		commentService;
+
 
 	// Constructor ------------------------------
 	public PassegerController() {
@@ -42,10 +50,31 @@ public class PassegerController extends AbstractController {
 
 		ModelAndView result;
 		Passenger passenger;
+		Collection<Comment> comments;
 
 		passenger = this.passengerService.findOne(passengerId);
+		comments = this.commentService.findCommentsMadeToPassenger(passengerId);
 		result = new ModelAndView("passenger/display");
 		result.addObject("passenger", passenger);
+		result.addObject("comments", comments);
+
+		return result;
+	}
+
+	@RequestMapping(value = "/displayPrincipal", method = RequestMethod.GET)
+	public ModelAndView displayPrincipal() {
+		ModelAndView result;
+		Passenger passenger;
+		Actor principal;
+		Collection<Comment> comments;
+
+		principal = this.actorService.findByPrincipal();
+		Assert.isTrue(principal instanceof Passenger);
+		passenger = (Passenger) principal;
+		comments = this.commentService.findCommentsMadeToPassenger(passenger.getId());
+		result = new ModelAndView("passenger/display");
+		result.addObject("passenger", passenger);
+		result.addObject("comments", comments);
 
 		return result;
 	}
@@ -83,17 +112,13 @@ public class PassegerController extends AbstractController {
 	}
 	// Edition -----------------------------------------------------------
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam final int passengerId) {
+	public ModelAndView edit() {
 		ModelAndView result;
 		Passenger passenger;
-		Passenger principal;
 		String requestURI;
 
 		requestURI = "passenger/edit.do";
-		passenger = this.passengerService.findOne(passengerId);
-		principal = (Passenger) this.actorService.findByPrincipal();
-
-		Assert.isTrue(passenger.getId() == principal.getId());
+		passenger = (Passenger) this.actorService.findByPrincipal();
 
 		result = this.createEditModelAndView(passenger, "passenger/edit");
 		result.addObject("requestURI", requestURI);
@@ -119,21 +144,21 @@ public class PassegerController extends AbstractController {
 			}
 		return result;
 	}
-	
+
 	// Edition Credentials-----------------------------------------------------------
 	@RequestMapping(value = "/editCredentials", method = RequestMethod.GET)
-	public ModelAndView editCredentials(){
+	public ModelAndView editCredentials() {
 		ModelAndView res = null;
-		
-		Passenger passenger = (Passenger) this.actorService.findByPrincipal();
-		CredentialsfForm credentialsfForm = passengerService.constructCredential(passenger);
-		
+
+		final Passenger passenger = (Passenger) this.actorService.findByPrincipal();
+		final CredentialsfForm credentialsfForm = this.passengerService.constructCredential(passenger);
+
 		res = this.createEditModelAndViewEditCredentials(credentialsfForm);
 		res.addObject("credentialsfForm", credentialsfForm);
-		
+
 		return res;
 	}
-	
+
 	@RequestMapping(value = "/editCredentials", method = RequestMethod.POST, params = "save")
 	public ModelAndView editCredentials(@Valid final CredentialsfForm credentialsfForm, final BindingResult binding) {
 		ModelAndView res;
@@ -145,7 +170,7 @@ public class PassegerController extends AbstractController {
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "passenger.commit.errorPassword");
 		else
 			try {
-				passenger = passengerService.reconstructCredential(credentialsfForm, binding);
+				passenger = this.passengerService.reconstructCredential(credentialsfForm, binding);
 				this.passengerService.saveCredentials(passenger);
 				res = new ModelAndView("redirect:/j_spring_security_logout");
 			} catch (final Throwable oops) {
@@ -174,8 +199,7 @@ public class PassegerController extends AbstractController {
 
 		return result;
 	}
-	
-	
+
 	protected ModelAndView createEditModelAndViewEditCredentials(final CredentialsfForm credentialsfForm) {
 		ModelAndView result;
 
@@ -184,14 +208,13 @@ public class PassegerController extends AbstractController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndViewEditCredentials(final CredentialsfForm credentialsfForm,
-			final String message) {
+	protected ModelAndView createEditModelAndViewEditCredentials(final CredentialsfForm credentialsfForm, final String message) {
 		ModelAndView result;
 
 		result = new ModelAndView("passenger/editCredentials");
 		result.addObject("credentialsfForm", credentialsfForm);
 		result.addObject("message", message);
-		result.addObject("requestURI","passenger/editCredentials.do");
+		result.addObject("requestURI", "passenger/editCredentials.do");
 
 		return result;
 	}
