@@ -108,18 +108,18 @@ window.cookieconsent.initialise({
 	</div>
 	
 	<div class="header_nav backgroundcolor-pink">
-		<div class="add_search">
-			<security:authorize access="hasRole('DRIVER')">
-				<a href="route/driver/create.do" class="btn btn-success btn-lg p-1 text-white">
-					<spring:message code="master.page.addRoute" />
-				</a>
-			</security:authorize>
-			<security:authorize access="hasRole('PASSENGER')">
-				<a href="route/search.do" class="btn btn-success btn-lg p-1 text-white">
-					<spring:message code="master.page.searchRoute" />
-				</a>
-			</security:authorize>
-		</div>
+<!-- 		<div class="add_search"> -->
+<%-- 			<security:authorize access="hasRole('DRIVER')"> --%>
+<!-- 				<a href="route/driver/create.do" class="btn btn-success btn-lg p-1 text-white"> -->
+<%-- 					<spring:message code="master.page.addRoute" /> --%>
+<!-- 				</a> -->
+<%-- 			</security:authorize> --%>
+<%-- 			<security:authorize access="hasRole('PASSENGER')"> --%>
+<!-- 				<a href="route/search.do" class="btn btn-success btn-lg p-1 text-white"> -->
+<%-- 					<spring:message code="master.page.searchRoute" /> --%>
+<!-- 				</a> -->
+<%-- 			</security:authorize> --%>
+<!-- 		</div> -->
 		<!-- <nav class="nav-bar navbar-expand-lg">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">

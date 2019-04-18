@@ -82,9 +82,9 @@
 </div>
 
 
-<%-- <security:authorize access="hasRole('DRIVER')">
+<security:authorize access="hasRole('DRIVER')">
 	<a href="route/driver/create.do" class="btn btn-success btn-circle btn-xl"><i class="fas fa-plus fa-2x"></i></a>
 </security:authorize>
 <security:authorize access="hasRole('PASSENGER')">
 	<a href="route/search.do" class="btn btn-primary btn-circle btn-xl"><i class="fas fa-search fa-2x"></i></a>
-</security:authorize> --%>
+</security:authorize>

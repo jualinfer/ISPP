@@ -29,22 +29,22 @@
 	</definition>
 	
 	<definition name="passenger/editCredentials" extends="master.page">	
-		<put-attribute name="title" value="Editar Credenciales" />
+		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="/views/passenger/edit_credentials.jsp" />
 	</definition>
 	
 	<definition name="passenger/create" extends="master.page">	
-		<put-attribute name="title" value="Registrar Pasajero" />
+		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="/views/passenger/create.jsp" />
 	</definition>
 	
 	<definition name="passenger/display" extends="master.page">
-		<put-attribute name="title" value="Mostrar Pasajero"/>
+		<put-attribute name="title" value=""/>
 		<put-attribute name="body" value="/views/passenger/display.jsp"/>
 	</definition>
 	
 	<definition name="passenger/displayPrincipal" extends="master.page">
-		<put-attribute name="title" value="Mostrar Pasajero"/>
+		<put-attribute name="title" value=""/>
 		<put-attribute name="body" value="/views/passenger/display.jsp"/>
 	</definition>
 	

@@ -69,9 +69,6 @@
 		<div class="save-cancel-management">
 			<input class="btn btn-success" type="submit" name="save" value="<spring:message code="driver.register"/>" />
 			
-			<input class="btn btn-light" type="button" name="cancel"
-				value="<spring:message code="driver.cancel" />"
-				onclick="javascript: relativeRedir('./');" />
 		</div>	
 	</div>	
 	

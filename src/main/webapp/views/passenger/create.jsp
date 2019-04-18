@@ -115,7 +115,7 @@
 		<div class="form-row">
 			<div class="col">
 			<spring:message code="passenger.password" var="passengerPass"/>
-				<form:input path="userAccount.password" type="text" class="form-control"
+				<form:input path="userAccount.password" type="password" class="form-control"
 					placeholder="${passengerPass }"/>
 				<form:errors cssClass="error" path="userAccount.password" />
 				<br />

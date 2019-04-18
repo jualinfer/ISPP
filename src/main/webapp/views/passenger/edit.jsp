@@ -103,10 +103,7 @@
 		
 		<div class="save-cancel-management">
 			<input type="submit" name="save" class="btn btn-success"
-				value="<spring:message code="passenger.register"/>" /> <input
-				type="button" name="cancel" class="btn btn-light"
-				value="<spring:message code="passenger.cancel" />"
-				onclick="javascript: relativeRedir('security/login.do');" />
+				value="<spring:message code="passenger.register"/>" /> 
 		</div>
 
 	</div>
