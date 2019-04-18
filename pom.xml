@@ -35,10 +35,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<showWarnings>true</showWarnings>
 					<compilerArguments>
 						<Xlint />
@@ -323,6 +323,12 @@
     		<groupId>org.decimal4j</groupId>
     		<artifactId>decimal4j</artifactId>
     		<version>1.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>LATEST</version>
 		</dependency>
 
 	</dependencies>

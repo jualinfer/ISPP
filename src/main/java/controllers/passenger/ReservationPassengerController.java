@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -33,6 +35,11 @@ import security.UserAccount;
 import services.ActorService;
 import services.ReservationService;
 import services.RouteService;
+
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+
 import controllers.AbstractController;
 import domain.Actor;
 import domain.Administrator;
@@ -59,7 +66,7 @@ public class ReservationPassengerController extends AbstractController {
 	public ReservationPassengerController() {
 		super();
 	}
-	// Create ---------------------------------------------------------------		
+	// Create ---------------------------------------------------------------
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create(@RequestParam final int routeId) {
@@ -77,7 +84,7 @@ public class ReservationPassengerController extends AbstractController {
 		return result;
 	}
 
-	@RequestMapping(value = "/save", method = RequestMethod.POST, params = "save")
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ModelAndView save(@ModelAttribute(value = "reservation") @Valid final ReservationForm reservationForm, final BindingResult binding) {
 		ModelAndView result = null;
 		if (binding.hasErrors())
@@ -90,12 +97,25 @@ public class ReservationPassengerController extends AbstractController {
 				if (binding.hasErrors())
 					result = this.createEditModelAndView(reservationForm);
 				else {
+					Stripe.apiKey = "sk_test_0bkVMJPAjHpW9u9YpxqM3yht00PfFHLjSJ";
+					final Map<String, Object> chargeParams = new HashMap<>();
+					chargeParams.put("amount", "110");
+					chargeParams.put("currency", "EUR");
+					chargeParams.put("description", "Request seats");
+					chargeParams.put("source", reservationForm.getStripeToken());
+					final Charge charge = Charge.create(chargeParams);
+
 					reservation = this.reservationService.save2(reservation);
 					result = new ModelAndView("redirect:/route/display.do?routeId=" + reservation.getRoute().getId());
 				}
-			} catch (final Throwable oops) {
+			} catch (final StripeException e) {
+				e.printStackTrace();
 				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
 			}
+
+			catch (final Throwable oops) {
+			result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
+		}
 		return result;
 	}
 
@@ -108,6 +128,8 @@ public class ReservationPassengerController extends AbstractController {
 		result.addObject("reservation", reservation);
 		result.addObject("requestURI", "reservation/passenger/save.do");
 		result.addObject("message", message);
+		result.addObject("stripePublicKey", "pk_test_lx9QYYAhpwYKowZ5iqmKbs4Z00CaE1E067");
+		result.addObject("currency", "EUR");
 
 		return result;
 	}
@@ -319,7 +341,7 @@ public class ReservationPassengerController extends AbstractController {
 	 * 
 	 * }
 	 */
-	// Confirmacion de que conductor me ha recogido ---------------------------------------------------------------		
+	// Confirmacion de que conductor me ha recogido ---------------------------------------------------------------
 
 	@RequestMapping(value = "/driverPickUp", method = RequestMethod.GET)
 	public ModelAndView driverPickUp(final int reservationId) {
@@ -377,7 +399,7 @@ public class ReservationPassengerController extends AbstractController {
 					for (final Reservation r : reservations)
 						//...y ha hecho alguna reserva en la ruta
 						if (r.getPassenger().equals(passenger)) {
-							rol = 2;		//...se considerara como "pasajero con reserva" 
+							rol = 2;		//...se considerara como "pasajero con reserva"
 							result.addObject("reservation", r);
 							if (route.getDepartureDate().before(new Date()))
 								startedRoute = true;
@@ -420,7 +442,7 @@ public class ReservationPassengerController extends AbstractController {
 
 		return result;
 	}
-	// Confirmacion de que conductor NO me ha recogido ---------------------------------------------------------------		
+	// Confirmacion de que conductor NO me ha recogido ---------------------------------------------------------------
 
 	@RequestMapping(value = "/driverNoPickUp", method = RequestMethod.GET)
 	public ModelAndView driverNoPickUp(final int reservationId) {
@@ -477,7 +499,7 @@ public class ReservationPassengerController extends AbstractController {
 					for (final Reservation r : reservations)
 						//...y ha hecho alguna reserva en la ruta
 						if (r.getPassenger().equals(passenger)) {
-							rol = 2;		//...se considerara como "pasajero con reserva" 
+							rol = 2;		//...se considerara como "pasajero con reserva"
 							result.addObject("reservation", r);
 							if (route.getDepartureDate().before(new Date()))
 								startedRoute = true;
@@ -564,7 +586,7 @@ public class ReservationPassengerController extends AbstractController {
 		//		places.add(route.getOrigin());
 
 		//	if (route.getControlPoints() != null && !route.getControlPoints().isEmpty())
-		//	for (final ControlPoint c : route.getControlPoints()) 
+		//	for (final ControlPoint c : route.getControlPoints())
 		//		places.add(c.getLocation());
 		//		places.add(route.getDestination());
 		//-----------------------------------------------------
@@ -587,7 +609,7 @@ public class ReservationPassengerController extends AbstractController {
 		return result;
 	}
 
-	// Action-2 ---------------------------------------------------------------		
+	// Action-2 ---------------------------------------------------------------
 
 	@RequestMapping("/driverPickMe")
 	public ModelAndView action3() {
