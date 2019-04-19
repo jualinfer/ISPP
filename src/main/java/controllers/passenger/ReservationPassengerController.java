@@ -35,6 +35,7 @@ import security.UserAccount;
 import services.ActorService;
 import services.ReservationService;
 import services.RouteService;
+import utilities.StripeConfig;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -87,34 +88,39 @@ public class ReservationPassengerController extends AbstractController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ModelAndView save(@ModelAttribute(value = "reservation") @Valid final ReservationForm reservationForm, final BindingResult binding) {
 		ModelAndView result = null;
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(reservationForm);
-		else
+		}
+		else {
 			try {
 				final Passenger passenger = (Passenger) this.actorService.findByPrincipal();
 
 				Reservation reservation = this.reservationService.reconstruct(reservationForm, passenger, binding);
-				if (binding.hasErrors())
+				if (binding.hasErrors()) {
 					result = this.createEditModelAndView(reservationForm);
+				}
 				else {
-					Stripe.apiKey = "sk_test_0bkVMJPAjHpW9u9YpxqM3yht00PfFHLjSJ";
-					final Map<String, Object> chargeParams = new HashMap<>();
-					chargeParams.put("amount", "110");
-					chargeParams.put("currency", "EUR");
-					chargeParams.put("description", "Request seats");
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					Double finalPrice = reservation.getPrice() * 100;
+					Map<String, Object> chargeParams = new HashMap<>();
+					chargeParams.put("amount", Integer.toString(finalPrice.intValue()));
+					chargeParams.put("currency", StripeConfig.CURRENCY);
+					chargeParams.put("description", "Reservation from user ID '"+reservation.getPassenger().getId()+"' on route ID '"+reservation.getRoute().getId()+"'");
 					chargeParams.put("source", reservationForm.getStripeToken());
-					final Charge charge = Charge.create(chargeParams);
+					Charge charge = Charge.create(chargeParams);
 
 					reservation = this.reservationService.save2(reservation);
 					result = new ModelAndView("redirect:/route/display.do?routeId=" + reservation.getRoute().getId());
 				}
-			} catch (final StripeException e) {
+			}
+			catch (final StripeException e) {
 				e.printStackTrace();
 				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
 			}
-
 			catch (final Throwable oops) {
-			result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
+				oops.printStackTrace();
+				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
+			}
 		}
 		return result;
 	}
@@ -128,8 +134,8 @@ public class ReservationPassengerController extends AbstractController {
 		result.addObject("reservation", reservation);
 		result.addObject("requestURI", "reservation/passenger/save.do");
 		result.addObject("message", message);
-		result.addObject("stripePublicKey", "pk_test_lx9QYYAhpwYKowZ5iqmKbs4Z00CaE1E067");
-		result.addObject("currency", "EUR");
+		result.addObject("stripePublicKey", StripeConfig.PUBLIC_KEY);
+		result.addObject("currency", StripeConfig.CURRENCY);
 
 		return result;
 	}

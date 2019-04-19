@@ -36,9 +36,11 @@
 
 <security:authorize access="hasRole('PASSENGER')">
 	<center>
-		<form:form action="${requestURI}" modelAttribute="reservation">
+		<form:form action="${requestURI}" id="reservationForm" modelAttribute="reservation">
 			<form:hidden path="route"/>
 			<form:hidden path="availableSeats"/>
+			<form:hidden path="stripeToken"/>
+			<form:hidden path="stripeEmail"/>
 			
 			<div class="form-group col-md-6">
 				<div class="input-group">
@@ -100,15 +102,8 @@
 			<h4><spring:message code="reservation.price" />: <span class="badge badge-success" id="price"></span></h4>
 			<br />
 			
-			<script id="botonStripe" src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-				data-key="pk_test_lx9QYYAhpwYKowZ5iqmKbs4Z00CaE1E067"
-				data-amount="110"
-				data-name="Trond"
-				data-description="Request seats"
-				data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-				data-locale="auto"
-				data-currency="${currency}" >
-			</script>
+			<script src="https://checkout.stripe.com/checkout.js"></script>
+			<input type="submit" id="stripeButton" name="request" class="btn btn-success" value="<spring:message code="reservation.request" />" />
 			
 			<input type="button" name="cancel" class="btn btn-danger"
 				value="<spring:message code="route.cancel" />"
@@ -120,6 +115,7 @@
 		
 	</center>
 	<script type="text/javascript">
+		var finalPrice = 0;
 		function calculatePrice() {
 			var cpOrders = {};
 			var cpDistances = {};
@@ -140,15 +136,44 @@
 				if (totalDistance > 9.0) {
 					price = price + (totalDistance - 9.0) * 0.11;
 				}
-				price = price * parseInt(document.getElementById("seats").value);
+				price = price * Number.parseInt(document.getElementById("seats").value);
 				price = Number.parseFloat(price + 0.1).toFixed(2);
 				document.getElementById("price").innerHTML = price.toString().concat("&euro;");
+				finalPrice = price * 100;
+				finalPrice = Number.parseInt(finalPrice);
 			}
 			else {
 				document.getElementById("price").innerHTML = "ERROR";
+				finalPrice = 110;
 			}
 		};
 		calculatePrice();
+		// https://stripe.com/img/documentation/checkout/marketplace.png
+		var handler = StripeCheckout.configure({
+			key: '${stripePublicKey}',
+			image: './images/trondicon2.png',
+			locale: 'auto',
+			token: function(token) {
+				document.getElementById("stripeToken").value = token.id;
+				document.getElementById("stripeEmail").value = token.email;
+				document.getElementById("reservationForm").submit();
+			}
+		});
+		
+		document.getElementById("reservationForm").addEventListener("submit", function(e) {
+			handler.open({
+				name: 'Trond',
+				description: '<spring:message code="makeReservation" />',
+				zipCode: false,
+				amount: finalPrice,
+				currency: '${currency}'
+			});
+			e.preventDefault();
+		});
+		
+		window.addEventListener("popstate", function() {
+			handler.close();
+		});
 	</script>
  
 	
