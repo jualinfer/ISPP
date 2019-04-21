@@ -1,4 +1,5 @@
 /*
+ * 
  * ReservationController.java
  * 
  * Copyright (C) 2019 Universidad de Sevilla
@@ -142,7 +143,7 @@ public class ReservationPassengerController extends AbstractController {
 		if (reservations != null && reservations.size() > 0)
 			for (final Reservation res : reservations) {
 				if (res.getStatus().equals(ReservationStatus.ACCEPTED)) {
-					occupiedSeats++;		//Contamos asientos ocupados
+					occupiedSeats = occupiedSeats + res.getSeat();		//Contamos asientos ocupados
 					displayableReservations.add(res);	//añadimos las reservas aceptadas
 				}
 				if (actor instanceof Driver) {
@@ -242,7 +243,7 @@ public class ReservationPassengerController extends AbstractController {
 		if (reservations != null && reservations.size() > 0)
 			for (final Reservation res : reservations) {
 				if (res.getStatus().equals(ReservationStatus.ACCEPTED)) {
-					occupiedSeats++;		//Contamos asientos ocupados
+					occupiedSeats = occupiedSeats + res.getSeat();		//TODO: NO SE TENIA EN CUENTA EL Nº DE ASIENTOS POR RESERVA		//Contamos asientos ocupados
 					displayableReservations.add(res);	//añadimos las reservas aceptadas
 				}
 				if (actor instanceof Driver) {
@@ -317,6 +318,7 @@ public class ReservationPassengerController extends AbstractController {
 			res = new ModelAndView("redirect:/route/display.do?routeId=" + route.getId());
 
 		} catch (final Exception e) {
+			System.out.println(e);
 			res = new ModelAndView("redirect:/route/display.do?routeId=" + route.getId());
 		}
 
@@ -339,7 +341,9 @@ public class ReservationPassengerController extends AbstractController {
 		//		Collection<String> places;
 		Collection<Reservation> routeAcceptedReservations;
 		Integer remainingSeats;
-
+		boolean routeLugNothing = false;
+		boolean routeLugMedium = false;
+		boolean routeLugBig = false;
 		route = reservation.getRoute();
 
 		//---Lista de strings de lugares por donde pasa la ruta---
@@ -352,9 +356,26 @@ public class ReservationPassengerController extends AbstractController {
 		//		places.add(route.getDestination());
 		//-----------------------------------------------------
 
+		//-------- Pasar tipo de luggage a la vista----------
+
+		switch (route.getMaxLuggage()) {
+		case NOTHING:
+			routeLugNothing = true;
+			break;
+		case MEDIUM:
+			routeLugMedium = true;
+			break;
+		case BIG:
+			routeLugBig = true;
+			break;
+		}
+
 		//------------Asientos restantes--------------------
 		routeAcceptedReservations = this.reservationService.findAcceptedReservationsByRoute(route.getId());
-		remainingSeats = route.getAvailableSeats() - routeAcceptedReservations.size();
+		remainingSeats = route.getAvailableSeats();
+		for (final Reservation res : route.getReservations())
+			if (res.getStatus().equals(ReservationStatus.ACCEPTED))
+				remainingSeats = remainingSeats - res.getSeat();
 
 		//Comprobamos que haya asientos disponibles
 		Assert.isTrue(remainingSeats > 0);
@@ -366,6 +387,9 @@ public class ReservationPassengerController extends AbstractController {
 		//		result.addObject("places", places);
 		result.addObject("remainingSeats", remainingSeats);
 		result.addObject("message", message);
+		result.addObject("LugNothing", routeLugNothing);
+		result.addObject("LugMedium", routeLugMedium);
+		result.addObject("LugBig", routeLugBig);
 
 		return result;
 	}

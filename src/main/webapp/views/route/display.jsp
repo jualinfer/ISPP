@@ -153,10 +153,7 @@
 										<jstl:out value="${route.destination }"></jstl:out>
 									</p>
 
-									<p>Luggage: &nbsp</p>
-
-
-									<p>Seats: &nbsp <jstl:out value="${route.availableSeats}"></jstl:out><br/></p>
+									<p>Seats: &nbsp <jstl:out value="${remainingSeats}"></jstl:out><br/></p>
 
 
 									<p>
@@ -167,19 +164,20 @@
 								</div>
 
 
-								<div class="cancelled">
+			<!-- vvv ESTE BOTON DE REQUEST SOBRA YA QUE YA HAY OTRO MAS ADELANTE vvv -->
+<!-- 								<div class="cancelled"> -->
 
-									<jstl:if test="${route.isCancelled == false }">
+<%-- 									<jstl:if test="${route.isCancelled == false }"> --%>
 
-										<jstl:if test="${route.availableSeats > 0 }">
+<%-- 										<jstl:if test="${route.availableSeats > 0 }"> --%>
 
-											<button class="btn" type="button">REQUEST</button>
+<!-- 											<button class="btn" type="button">REQUEST</button> -->
 
-										</jstl:if>
+<%-- 										</jstl:if> --%>
 
-									</jstl:if>
+<%-- 									</jstl:if> --%>
 
-								</div>
+<!-- 								</div> -->
 								</div>
 							</div>
                             </div>

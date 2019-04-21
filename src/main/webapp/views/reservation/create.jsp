@@ -60,9 +60,15 @@
 				<spring:message code="route.luggage" />: </form:label>
 			<form:select path="luggageSize">
 				<form:option value="NOTHING" label="NOTHING"/>
+				<jstl:if test="${!LugNothing }">
 				<form:option value="SMALL" label="SMALL"/>
+				</jstl:if>
+				<jstl:if test="${(LugMedium eq true) or (LugBig eq true)}">
 				<form:option value="MEDIUM" label="MEDIUM"/>
+				</jstl:if>
+				<jstl:if test="${LugBig eq true }">
 				<form:option value="BIG" label="BIG"/>
+				</jstl:if>
 			</form:select>
 			<form:errors cssClass="error" path="luggageSize" />
 			<br />
@@ -79,7 +85,7 @@
 				value="<spring:message code="route.save" />" />
 			<input type="button" name="cancel"
 				value="<spring:message code="route.cancel" />"
-				onclick="javascript: relativeRedir('route/passenger/listActive.do');" />
+				onclick="javascript: relativeRedir('route/display.do?routeId=${route.id}');" />
 			<br />
 
 		</form:form>

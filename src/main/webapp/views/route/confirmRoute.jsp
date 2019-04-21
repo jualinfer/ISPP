@@ -44,7 +44,7 @@
 <center>
 	<div class="col-sm-6 text-center" style="padding-top: 20px;">
 		<h4><jstl:out value="${msgDistance}" />:</h4>
-		<h3><span class="badge badge-primary"><jstl:out value="${route.distance}" /></span></h3>
+		<h3><span class="badge badge-primary"><jstl:out value="${route.distance} Km" /></span></h3>
 		<br />
 	</div>
 </center>

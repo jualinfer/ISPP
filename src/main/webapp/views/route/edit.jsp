@@ -136,16 +136,18 @@
 				<br />
 			</div>
 
-			<div class="form-group col-md-6 text-center">
-				<h4>
-					Distance: <span class="badge badge-primary">10Km</span>
-				</h4>
+		<!-- la distancia y el precio se quedaban fijos, asi que casi mejor quitarlos y punto -->
 
-				<h4>
-					Price per passenger: <span class="badge badge-success">1,10&euro;</span>
-				</h4>
+<!-- 			<div class="form-group col-md-6 text-center"> -->
+<!-- 				<h4> -->
+<!-- 					Distance: <span class="badge badge-primary">10Km</span> -->
+<!-- 				</h4> -->
 
-			</div>
+<!-- 				<h4> -->
+<!-- 					Price per passenger: <span class="badge badge-success">1,10&euro;</span> -->
+<!-- 				</h4> -->
+
+<!-- 			</div> -->
 
 			<div class="form-group col-md-6 text-center">
 				<input type="submit" name="save" class="btn btn-success"

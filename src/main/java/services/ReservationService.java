@@ -156,7 +156,6 @@ public class ReservationService {
 		}
 	}
 
-	//TODO: Puede que no esté lo bastante pulido, pero como lo mio (Jesus) y Juanma es sobre Crear Reservas pues xd
 	public void delete(final Reservation reservation) {
 		UserAccount ua;
 		Actor principal;
@@ -328,7 +327,7 @@ public class ReservationService {
 		Assert.isTrue(reservationId > 0);
 		final Reservation reservation = this.findOne(reservationId);
 		final Route route = reservation.getRoute();
-		Assert.isTrue(reservation.getStatus().equals(ReservationStatus.ACCEPTED) || reservation.getStatus().equals(ReservationStatus.REJECTED));
+		Assert.isTrue(reservation.getStatus().equals(ReservationStatus.ACCEPTED) || reservation.getStatus().equals(ReservationStatus.PENDING));	//TODO: en vez de PENDING ponia REJECTED
 		Assert.isTrue(route.getDepartureDate().after(new Date()));
 
 		reservation.setStatus(ReservationStatus.CANCELLED);
