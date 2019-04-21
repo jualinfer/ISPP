@@ -4,10 +4,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
-import domain.ControlPoint;
+import domain.MessagesThread;
 
 @Component
 @Transactional
-public class ControlPointToStringConverter extends GenericToStringConverter<ControlPoint> {
+public class MessagesThreadToStringConverter extends GenericToStringConverter<MessagesThread> {
 
 }
