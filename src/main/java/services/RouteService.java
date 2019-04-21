@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 
 import repositories.RouteRepository;
 import domain.ControlPoint;
@@ -112,6 +113,67 @@ public class RouteService {
 		r.setDistance(distance);
 		final Route saved = this.routeRepository.save(r);
 
+		return saved;
+	}
+
+	public Route save2(final Route r, final BindingResult binding) {
+		Assert.notNull(r);
+		Double distance = 0.0;
+		Double price = 0.0;
+		final Date date = new Date();
+		Driver driver;
+		Assert.isTrue(r.getDepartureDate().after(date));
+
+		//Assertion that the user modifying this task has the correct privilege.
+
+		if (this.actorService.findByPrincipal() instanceof Driver)
+			Assert.isTrue(this.actorService.findByPrincipal().getId() == r.getDriver().getId());
+		//Assertion that the avaliable seats  isn't a bigger value than the vehicle capacity
+
+		driver = r.getDriver();
+		boolean keepGoing = true;
+		if (r.getAvailableSeats() >= r.getVehicle().getSeatsCapacity()) {
+			binding.rejectValue("availableSeats", "route.error.seatsCapacity");
+			keepGoing = false;
+		}
+		if (!r.getDepartureDate().after(new Date(new Date().getTime() + 900000l))) {
+			binding.rejectValue("departureDate", "route.error.dateTooSoon");
+			keepGoing = false;
+		}
+		if (r.getVehicle().getDriver().getId() != driver.getId()) {
+			binding.rejectValue("vehicle", "route.error.incorrectVehicle");
+			keepGoing = false;
+		}
+
+		//
+		//		if (r.getId() == 0 || r.getControlPoints().size() < 2) {
+		//			r.setDestination("NONE");
+		//			r.setOrigin("NONE");
+		//		} else if (r.getControlPoints().size() >= 2) {
+		//			List<ControlPoint> cps = new ArrayList<ControlPoint>(r.getControlPoints());
+		//			Collections.sort(cps);
+		//
+		//			for (int a = 0; a < r.getControlPoints().size() - 1; a++) {
+		//				long diffInMillies = cps.get(a + 1).getArrivalTime().getTime() - cps.get(a).getArrivalTime().getTime();
+		//				estimatedDuration = (int) (estimatedDuration + TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MINUTES));
+		//				distance = distance + this.getDistance(cps.get(a).getLocation(), cps.get(a + 1).getLocation());
+		//			}
+		//			price = this.getPrice(distance);
+		//
+		//			r.setOrigin(cps.get(0).getLocation());
+		//			r.setDestination(cps.get(cps.size() - 1).getLocation());
+		//		}
+		Route saved = null;
+		if (keepGoing) {
+			final String origin = r.getOrigin();
+			final String destination = r.getDestination();
+			distance = this.getDistance(origin, destination);
+			price = this.getPrice(distance);
+			r.setPricePerPassenger(price);
+			r.setDistance(distance);
+
+			saved = this.routeRepository.save(saved);
+		}
 		return saved;
 	}
 

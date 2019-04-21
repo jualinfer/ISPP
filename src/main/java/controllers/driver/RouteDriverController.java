@@ -105,7 +105,11 @@ public class RouteDriverController extends AbstractController {
 			result = this.createEditModelAndView(route);
 		} else
 			try {
-				saved = this.routeService.save(route);
+				saved = this.routeService.save2(route, binding);
+				if (binding.hasErrors()) {
+					System.out.println(binding.getAllErrors());
+					result = this.createEditModelAndView(route);
+				}
 				result = new ModelAndView("redirect:/route/driver/confirmRoute.do?routeId=" + saved.getId());
 			} catch (final Throwable oops) {
 				oops.printStackTrace();
