@@ -16,7 +16,6 @@ public class MessagesThread extends DomainEntity {
 	
 	//Attributes
 	
-	private Boolean read;
 	private Boolean closed;
 	
 	//Relationships
@@ -32,11 +31,6 @@ public class MessagesThread extends DomainEntity {
 	}
 
 	//Getter
-	
-	@NotNull
-	public Boolean getRead() {
-		return read;
-	}
 	
 	@NotNull
 	public Boolean getClosed() {
@@ -77,10 +71,6 @@ public class MessagesThread extends DomainEntity {
 	}
 	
 	//Setter
-	
-	public void setRead(Boolean read) {
-		this.read = read;
-	}
 	
 	public void setClosed(Boolean closed) {
 		this.closed = closed;
