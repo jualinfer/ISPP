@@ -591,12 +591,13 @@ public class RouteService {
 			cps.add(routeForm.getDestination());
 			List<ControlPoint> controlPoints = this.controlPointService.reconstructCreate(cps, routeForm.getDepartureDate());
 	
-			double routeDistance = 0d;
+			Double routeDistance = 0d;
 			for (ControlPoint cp : controlPoints) {
 				routeDistance += cp.getDistance();
 			}
+			routeDistance = DoubleRounder.round(routeDistance, 2);
 	
-			int estimatedDuration = 0;
+			Integer estimatedDuration = 0;
 			for (ControlPointFormCreate cp : cps) {
 				estimatedDuration += cp.getEstimatedTime();
 			}
