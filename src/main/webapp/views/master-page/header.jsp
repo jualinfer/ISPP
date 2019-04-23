@@ -53,12 +53,12 @@ window.cookieconsent.initialise({
 <security:authorize access="isAuthenticated()">
 	<div class="logo">
 		<security:authorize access="hasRole('DRIVER')">
-		<a href="/Trond/route/driver/listActive.do" >
+		<a href="route/driver/listActive.do" >
 		
 		<img src="images/logoicon.png" /></a>
 		</security:authorize>
 		<security:authorize access="hasRole('PASSENGER')">
-		<a href="/Trond/route/passenger/listActive.do" >
+		<a href="route/passenger/listActive.do" >
 		
 		<img src="images/logoicon.png" /></a>
 		</security:authorize>
@@ -128,7 +128,7 @@ window.cookieconsent.initialise({
     <div>
     <li class="nav-item">
      <security:authorize access="hasRole('PASSENGER')">
-        <a class="nav-link" href="/Trond/route/search.do">
+        <a class="nav-link" href="route/search.do">
           <i class="fa fa-search">
           </i>
          

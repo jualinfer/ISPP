@@ -58,6 +58,8 @@
 		<%-- 	<jstl:out value="${route.departureDate}"></jstl:out> --%>
 			<fmt:formatDate value="${route.departureDate}" pattern="${formatDate}"/>
 		</div>
+		
+		<!-- vvvvv NO SE TENIA EN CUENTA EL Nº DE ASIENTOS POR RESERVA vvvvvv -->
 		<div class="available-seats d-flex">
 			<p>Available seats : </p>
 			<jstl:set var="remainingSeats" value="${route.availableSeats}"/>

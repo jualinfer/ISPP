@@ -130,7 +130,7 @@ public class RouteService {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == r.getDriver().getId());
 		//Assertion that the avaliable seats  isn't a bigger value than the vehicle capacity
 
-		driver = r.getDriver();
+		driver = r.getDriver();			//TODO: MENSAJES DE ERROR ESPECIFICOS PARA EL FORMULARIO
 		boolean keepGoing = true;
 		if (r.getAvailableSeats() >= r.getVehicle().getSeatsCapacity()) {
 			binding.rejectValue("availableSeats", "route.error.seatsCapacity");
