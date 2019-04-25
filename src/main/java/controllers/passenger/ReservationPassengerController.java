@@ -526,8 +526,20 @@ public class ReservationPassengerController extends AbstractController {
 
 		//----proceso para conseguir la fecha de salida + 10 minutos---
 		final Date tenMinutesAfterDeparture = new Date(departureDateMilis + 600000);
-		if (new Date().after(tenMinutesAfterDeparture))
+		if (new Date().after(tenMinutesAfterDeparture)) {
 			hasPassed10Minutes = true;
+
+			try {
+				if (currentReservation.getChargeId() != null) {
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					final Map<String, Object> params = new HashMap<>();
+					params.put("charge", currentReservation.getChargeId());
+					final Refund refund = Refund.create(params);
+				}
+			} catch (final StripeException e) {
+				e.printStackTrace();
+			}
+		}
 		//----proceso para conseguir la fecha de salida + 20 minutos---
 		final Date twentyMinutesAfterDeparture = new Date(departureDateMilis + (600000 * 2));
 		if (new Date().after(twentyMinutesAfterDeparture))
@@ -556,10 +568,17 @@ public class ReservationPassengerController extends AbstractController {
 
 		try {
 			if (reservation.getChargeId() != null) {
-				Stripe.apiKey = StripeConfig.SECRET_KEY;
-				final Map<String, Object> params = new HashMap<>();
-				params.put("charge", reservation.getChargeId());
-				final Refund refund = Refund.create(params);
+				final Calendar date = Calendar.getInstance();
+				date.setTime(route.getDepartureDate());
+				final long departureDateMilis = date.getTimeInMillis();
+				final Date fifteenMinutesBeforeDeparture = new Date(departureDateMilis - 900000);
+
+				if (fifteenMinutesBeforeDeparture.after(new Date())) {
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					final Map<String, Object> params = new HashMap<>();
+					params.put("charge", reservation.getChargeId());
+					final Refund refund = Refund.create(params);
+				}
 			}
 			this.reservationService.cancelReservation(reservationId);
 			res = new ModelAndView("redirect:/route/display.do?routeId=" + route.getId());
