@@ -10,6 +10,9 @@
 
 package controllers.driver;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ReservationService;
 import services.RouteService;
+import utilities.StripeConfig;
+
+import com.stripe.Stripe;
+import com.stripe.model.Refund;
+
 import controllers.AbstractController;
 import domain.Reservation;
 import domain.Route;
@@ -38,7 +46,7 @@ public class ReservationDriverController extends AbstractController {
 		super();
 	}
 
-	// Accept Reservation ---------------------------------------------------------------		
+	// Accept Reservation ---------------------------------------------------------------
 
 	@RequestMapping(value = "/acceptReservation", method = RequestMethod.POST, params = "acceptReservation")
 	//, params = "acceptReservation")
@@ -67,10 +75,18 @@ public class ReservationDriverController extends AbstractController {
 		final Route route = this.routeService.findOne(reservation.getRoute().getId());
 
 		try {
+			if (reservation.getChargeId() != null) {
+				Stripe.apiKey = StripeConfig.SECRET_KEY;
+
+				final Map<String, Object> params = new HashMap<>();
+				params.put("charge", reservation.getChargeId());
+				final Refund refund = Refund.create(params);
+			}
 			this.reservationService.rejectReservation(reservationId);
 			res = new ModelAndView("redirect:/route/display.do?routeId=" + route.getId());
 
 		} catch (final Exception e) {
+			e.printStackTrace();
 			res = new ModelAndView("redirect:/route/display.do?routeId=" + route.getId());
 		}
 

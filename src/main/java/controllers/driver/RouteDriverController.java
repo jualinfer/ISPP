@@ -3,6 +3,8 @@ package controllers.driver;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -20,8 +22,14 @@ import security.LoginService;
 import security.UserAccount;
 import services.ActorService;
 import services.RouteService;
+import utilities.StripeConfig;
+
+import com.stripe.Stripe;
+import com.stripe.model.Refund;
+
 import controllers.AbstractController;
 import domain.Driver;
+import domain.Reservation;
 import domain.Route;
 import forms.RouteForm;
 
@@ -92,25 +100,23 @@ public class RouteDriverController extends AbstractController {
 	public ModelAndView confirm(@ModelAttribute(value = "route") @Valid final RouteForm routeForm, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
-//			System.out.println("/route/driver/confirm.do bindingErrors: " + binding.getAllErrors());
+		if (binding.hasErrors())
+			//			System.out.println("/route/driver/confirm.do bindingErrors: " + binding.getAllErrors());
 			result = this.createEditModelAndView(routeForm);
-		} else
+		else
 			try {
 				final Driver driver = (Driver) this.actorService.findByPrincipal();
-				Route route = this.routeService.reconstruct(routeForm, driver, binding);
+				final Route route = this.routeService.reconstruct(routeForm, driver, binding);
 				if (binding.hasErrors()) {
 					System.out.println(binding.getAllErrors());
 					result = this.createEditModelAndView(routeForm);
-				}
-				else {
+				} else {
 					result = new ModelAndView("route/driver/confirm");
 					result.addObject("route", route);
 					result.addObject("requestURISave", "route/driver/edit.do");
 					result.addObject("requestURICancel", "route/driver/create.do");
 				}
-			}
-			catch (final Throwable oops) {
+			} catch (final Throwable oops) {
 				oops.printStackTrace();
 				result = this.createEditModelAndView(routeForm, "driver.commit.error");
 			}
@@ -145,6 +151,14 @@ public class RouteDriverController extends AbstractController {
 
 		route = this.routeService.findOne(routeId);
 		try {
+			if (!route.getReservations().isEmpty())
+				for (final Reservation res : route.getReservations())
+					if (res.getChargeId() != null) {
+						Stripe.apiKey = StripeConfig.SECRET_KEY;
+						final Map<String, Object> params = new HashMap<>();
+						params.put("charge", res.getChargeId());
+						final Refund refund = Refund.create(params);
+					}
 			this.routeService.cancel(route);
 			result = new ModelAndView("redirect:/route/driver/listActive.do");
 		} catch (final Throwable oops) {
@@ -158,7 +172,7 @@ public class RouteDriverController extends AbstractController {
 	//	@RequestMapping(value = "/edit2", method = RequestMethod.POST, params = "save")
 	//	public ModelAndView save2(@ModelAttribute(value="route") @Valid final RouteForm routeForm, final BindingResult binding) {
 	//		ModelAndView result;
-	//		
+	//
 	//		if (binding.hasErrors()) {
 	//			System.out.println("/route/driver/edit.do bindingErrors: "+binding.getAllErrors());
 	//			result = this.createEditModelAndView(routeForm);
