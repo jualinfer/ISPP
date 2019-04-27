@@ -27,7 +27,8 @@
 			<br>
 			Participants:<br>
 			- ${thread.participantA.name} ${thread.participantA.surname}<br>
-			- ${thread.participantB.name} ${thread.participantB.surname}
+			- ${thread.participantB.name} ${thread.participantB.surname}<br>
+			New messages: ${thread.newMessages} [${thread.lastMessage.issueDate}]
 			<br><br>
 		</jstl:forEach>
 		

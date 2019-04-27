@@ -17,13 +17,13 @@ public interface MessagesThreadRepository extends JpaRepository<MessagesThread, 
 //	@Query("select mt from MessagesThread mt where mt.route.id = ?1 and ((mt.participantA.id = ?2 and mt.participantB.id = ?3) or (mt.participantA.id = ?3 and mt.participantB.id = ?2))")
 //	Collection<MessagesThread> findMessagesThreadFromParticipantsAndRoute(int routeId, int participant1Id, int participant2Id);
 	
-	@Query("select mt from MessagesThread mt where mt.reportedUser is null and (mt.participantA.id = ?1 or mt.participantB.id = ?1)")
+	@Query("select mt from MessagesThread mt where mt.reportedUser is null and (mt.participantA.id = ?1 or mt.participantB.id = ?1) order by mt.lastMessage.issueDate desc")
 	Collection<MessagesThread> findMessagesThreadFromParticipant(int participantId);
 	
-	@Query("select mt from MessagesThread mt where mt.reportedUser is null and mt.newMessages > 0 and ((mt.participantA.id = ?1 and mt.lastMessage.fromAtoB = false) or (mt.participantB.id = ?1 and mt.lastMessage.fromAtoB = true))")
+	@Query("select mt from MessagesThread mt where mt.reportedUser is null and mt.newMessages > 0 and ((mt.participantA.id = ?1 and mt.lastMessage.fromAtoB = false) or (mt.participantB.id = ?1 and mt.lastMessage.fromAtoB = true)) order by mt.lastMessage.issueDate desc")
 	Collection<MessagesThread> findUnreadMessagesThreadFromParticipant(int participantId);
 	
-	@Query("select mt from MessagesThread mt where mt.reportedUser is null and mt.newMessages = 0 and (mt.participantA.id = ?1 or mt.participantB.id = ?1)")
+	@Query("select mt from MessagesThread mt where mt.reportedUser is null and mt.newMessages = 0 and (mt.participantA.id = ?1 or mt.participantB.id = ?1) order by mt.lastMessage.issueDate desc")
 	Collection<MessagesThread> findReadMessagesThreadFromParticipant(int participantId);
 
 	@Query("select mt from MessagesThread mt where mt.route.id = ?1 and ((mt.participantA.id = ?2 and mt.participantB.id = ?3) or (mt.participantA.id = ?3 and mt.participantB.id = ?2))")

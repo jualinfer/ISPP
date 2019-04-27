@@ -72,7 +72,7 @@ window.cookieconsent.initialise({
 		<div class="item-details messages">
 			<a class="nav-link border-right" href="thread/message/list.do"> 
 				<i class="far fa-envelope">
-					<span class="badge badge-danger">X</span> <!-- numero de mensajes -->
+					<!-- <span class="badge badge-danger"></span> --> <!-- numero de mensajes -->
 				</i>
 			</a>
 		</div> 

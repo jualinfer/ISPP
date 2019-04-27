@@ -25,7 +25,6 @@ import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -35,7 +34,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
-import domain.Actor;
 import domain.DomainEntity;
 
 @Entity
@@ -162,18 +160,6 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 	public void setEnabled(final boolean b) {
 		// TODO Auto-generated method stub
 
-	}
-	
-	private Actor actor;
-	
-	@Valid
-	@OneToOne(optional=true)
-	public Actor getActor() {
-		return actor;
-	}
-	
-	public void setActor(Actor actor) {
-		this.actor = actor;
 	}
 
 }

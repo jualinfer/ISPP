@@ -74,13 +74,6 @@ public class ActorService {
 			Assert.notNull(userAccount.getPassword());
 
 			result = this.actorRepository.save(actor);
-			
-			userAccount = result.getUserAccount();
-			
-			if (userAccount != null && userAccount.getActor() == null) {
-				userAccount.setActor(result);
-				userAccount = uaService.save(userAccount);
-			}
 		} else {
 			final UserAccount principal, userAccount;
 			final UserAccount savedUserAccount;

@@ -150,6 +150,10 @@ public class DriverService {
 
 		return result;
 	}
+	
+	public Driver saveUpdateNotifications(Driver driver) {
+		return (Driver) actorService.save(driver);
+	}
 
 	public void delete(final Driver driver) {
 		Assert.isTrue(driver.getId() != 0);
@@ -182,6 +186,8 @@ public class DriverService {
 			driver.setComments(result.getComments());
 			driver.setNumberOfTrips(result.getNumberOfTrips());
 			driver.setMediumStars(result.getMediumStars());
+			driver.setNewMessages(result.getNewMessages());
+			driver.setNewAlerts(result.getNewAlerts());
 		}
 
 		this.validator.validate(driver, binding);

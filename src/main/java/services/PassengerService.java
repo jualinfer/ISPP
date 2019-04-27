@@ -132,6 +132,10 @@ public class PassengerService {
 
 		return result;
 	}
+	
+	public Passenger saveUpdateNotifications(Passenger passenger) {
+		return (Passenger) actorService.save(passenger);
+	}
 
 	public Collection<Passenger> findPassengersAcceptedByRoute(int routeId) {
 		Collection<Passenger> result;
@@ -165,6 +169,8 @@ public class PassengerService {
 			passenger.setComments(result.getComments());
 			passenger.setNumberOfTrips(result.getNumberOfTrips());
 			passenger.setMediumStars(result.getMediumStars());
+			passenger.setNewMessages(result.getNewMessages());
+			passenger.setNewAlerts(result.getNewAlerts());
 		}
 
 		this.validator.validate(passenger, binding);

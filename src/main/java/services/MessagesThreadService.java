@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import repositories.MessagesThreadRepository;
+import security.UserAccountService;
 import domain.Actor;
 import domain.Administrator;
 import domain.Message;
@@ -34,7 +35,16 @@ public class MessagesThreadService {
 	private AdministratorService administratorService;
 	
 	@Autowired
+	private DriverService driverService;
+	
+	@Autowired
+	private PassengerService passengerService;
+	
+	@Autowired
 	private ActorService actorService;
+	
+	@Autowired
+	private UserAccountService uaService;
 	
 	public MessagesThread saveNew(MessagesThread thread, String messageContent) {
 		MessagesThread result = mtRepository.saveAndFlush(thread);
@@ -54,11 +64,27 @@ public class MessagesThreadService {
 		MessagesThread thread = lastMessage.getThread(); 
 		thread.setLastMessage(lastMessage);
 		thread.setNewMessages(thread.getNewMessages() + 1);
-		Actor user = actorService.findByPrincipal();
+		Actor currentUser = actorService.findByPrincipal();
+		Actor user = null;
+		if (currentUser.getId() == thread.getParticipantA().getId()) {
+			user = thread.getParticipantB();
+		}
+		else {
+			user = thread.getParticipantA();
+		}		
 		if (user.getNewMessages() == null) {
 			user.setNewMessages(0);
 		}
 		user.setNewMessages(user.getNewMessages() + 1);
+		/*if (user instanceof Passenger) {
+			user = passengerService.saveUpdateNotifications((Passenger)user);
+		}
+		else if (user instanceof Driver) {
+			user = driverService.saveUpdateNotifications((Driver)user);
+		}
+		else if (user instanceof Administrator) {
+			user = administratorService.saveUpdateNotifications((Administrator)user);
+		}*/
 		user = actorService.save(user);
 		if (thread.getMessages() == null) {
 			Collection<Message> messages = new ArrayList<Message>();
@@ -86,6 +112,15 @@ public class MessagesThreadService {
 			user.setNewMessages(0);
 		}
 		user.setNewMessages(user.getNewMessages() - thread.getNewMessages());
+		/*if (user instanceof Passenger) {
+			user = passengerService.saveUpdateNotifications((Passenger)user);
+		}
+		else if (user instanceof Driver) {
+			user = driverService.saveUpdateNotifications((Driver)user);
+		}
+		else if (user instanceof Administrator) {
+			user = administratorService.saveUpdateNotifications((Administrator)user);
+		}*/
 		user = actorService.save(user);
 		thread.setNewMessages(0);
 		return mtRepository.saveAndFlush(thread);
