@@ -69,14 +69,14 @@ window.cookieconsent.initialise({
 		</security:authorize>
 	</div>
 	<div class="user-details d-flex justify-content-end">
-		<!-- <div class="item-details messages">
-			<a class="nav-link border-right" href="#"> 
-				<i class="far fa-envelope"> -->
-					<!-- <span class="badge badge-danger">11</span> --> <!-- numero de mensajes -->
-				<!-- </i>
+		<div class="item-details messages">
+			<a class="nav-link border-right" href="thread/message/list.do"> 
+				<i class="far fa-envelope">
+					<span class="badge badge-danger">X</span> <!-- numero de mensajes -->
+				</i>
 			</a>
 		</div> 
-		<div class="item-details notificaciones">
+		<!-- <div class="item-details notificaciones">
 			<a class="nav-link border-right" href="#"> 
 				<i class="far fa-bell"></i>
 			</a>

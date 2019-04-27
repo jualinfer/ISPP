@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import repositories.ActorRepository;
 import security.LoginService;
 import security.UserAccount;
+import security.UserAccountService;
 import domain.Actor;
 
 @Service
@@ -22,6 +23,9 @@ public class ActorService {
 	//Managed Repositories
 	@Autowired
 	private ActorRepository	actorRepository;
+	
+	@Autowired
+	private UserAccountService uaService;
 
 
 	// Supported Services ---------------------------------
@@ -70,7 +74,13 @@ public class ActorService {
 			Assert.notNull(userAccount.getPassword());
 
 			result = this.actorRepository.save(actor);
-
+			
+			userAccount = result.getUserAccount();
+			
+			if (userAccount != null && userAccount.getActor() == null) {
+				userAccount.setActor(result);
+				userAccount = uaService.save(userAccount);
+			}
 		} else {
 			final UserAccount principal, userAccount;
 			final UserAccount savedUserAccount;

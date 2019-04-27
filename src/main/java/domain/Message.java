@@ -21,9 +21,8 @@ public class Message extends DomainEntity {
 	//Attributes
 
 	private Date issueDate;
-	private Boolean AtoB;
+	private Boolean fromAtoB;
 	private String content;
-	private Boolean read;
 	
 	//Relationships
 	
@@ -43,19 +42,14 @@ public class Message extends DomainEntity {
 	}
 	
 	@NotNull
-	public Boolean getAtoB() {
-		return AtoB;
+	public Boolean getFromAtoB() {
+		return fromAtoB;
 	}
 
 	@NotNull
 	@NotBlank
 	public String getContent() {
 		return content;
-	}
-	
-	@NotNull
-	public Boolean getRead() {
-		return read;
 	}
 	
 	@Valid
@@ -71,16 +65,12 @@ public class Message extends DomainEntity {
 		this.issueDate = issueDate;
 	}
 	
-	public void setAtoB(Boolean AtoB) {
-		this.AtoB = AtoB;
+	public void setFromAtoB(Boolean fromAtoB) {
+		this.fromAtoB = fromAtoB;
 	}
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-	
-	public void setRead(Boolean read) {
-		this.read = read;
 	}
 	
 	public void setThread(MessagesThread thread) {

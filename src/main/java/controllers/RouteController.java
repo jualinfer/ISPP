@@ -193,6 +193,7 @@ public class RouteController extends AbstractController {
 		result.addObject("canComment", canComment);
 		result.addObject("passengersToComment", passengersToComment);
 		result.addObject("commentForm", commentForm);
+		result.addObject("connectedUser", actorService.findByPrincipal());
 
 		return result;
 	}
