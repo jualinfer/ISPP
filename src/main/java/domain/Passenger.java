@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -20,8 +21,8 @@ public class Passenger extends Actor {
 
 	//Attributes
 	private Double					cash;
-	private CreditCard				creditCard;
 	private String					bankAccountNumber;
+	private String					image;
 
 	//Relationships
 	private Collection<Reservation>	reservations;
@@ -35,16 +36,15 @@ public class Passenger extends Actor {
 		return this.cash;
 	}
 
-	@Valid
-	@NotNull
-	public CreditCard getCreditCard() {
-		return this.creditCard;
-	}
-
 	@NotBlank
 	@Pattern(regexp = "^ES\\d{22}$", message = "Invalid Spain Bank Number")
 	public String getBankAccountNumber() {
 		return this.bankAccountNumber;
+	}
+
+	@URL
+	public String getImage() {
+		return this.image;
 	}
 
 	@Valid
@@ -75,12 +75,12 @@ public class Passenger extends Actor {
 		this.comments = comments;
 	}
 
-	public void setCreditCard(final CreditCard creditCard) {
-		this.creditCard = creditCard;
-	}
-
 	public void setBankAccountNumber(final String bankAccountNumber) {
 		this.bankAccountNumber = bankAccountNumber;
+	}
+
+	public void setImage(final String image) {
+		this.image = image;
 	}
 
 }
