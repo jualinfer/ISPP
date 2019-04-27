@@ -65,6 +65,7 @@ public class DriverService {
 
 		userAccount = this.userAccountService.create();
 		userAccount.setEnabled(true);
+		userAccount.setBanned(false);
 		userAccount.setUsername("");
 		userAccount.setPassword("");
 		authority = new Authority();
@@ -161,6 +162,7 @@ public class DriverService {
 			driver.getUserAccount().setId(result.getUserAccount().getId());
 			driver.getUserAccount().setVersion(result.getUserAccount().getVersion());
 			driver.getUserAccount().setEnabled(result.getUserAccount().isEnabled());
+			driver.getUserAccount().setBanned(result.getUserAccount().getBanned());
 			driver.getUserAccount().setUsername(result.getUserAccount().getUsername());
 			driver.getUserAccount().setPassword(result.getUserAccount().getPassword());
 			driver.setComments(result.getComments());

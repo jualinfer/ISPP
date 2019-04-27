@@ -54,6 +54,7 @@ public class PassengerService {
 		ua.setUsername("");
 		ua.setPassword("");
 		ua.setEnabled(true);
+		ua.setBanned(false);
 		authority = new Authority();
 		authority.setAuthority(Authority.PASSENGER);
 		authorities = new ArrayList<Authority>();
@@ -143,6 +144,7 @@ public class PassengerService {
 			passenger.getUserAccount().setId(result.getUserAccount().getId());
 			passenger.getUserAccount().setVersion(result.getUserAccount().getVersion());
 			passenger.getUserAccount().setEnabled(result.getUserAccount().isEnabled());
+			passenger.getUserAccount().setBanned(result.getUserAccount().getBanned());
 			passenger.getUserAccount().setUsername(result.getUserAccount().getUsername());
 			passenger.getUserAccount().setPassword(result.getUserAccount().getPassword());
 			passenger.setComments(result.getComments());
