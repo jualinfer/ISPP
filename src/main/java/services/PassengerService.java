@@ -2,9 +2,7 @@
 package services;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
 import javax.transaction.Transactional;
 
@@ -20,7 +18,6 @@ import security.Authority;
 import security.UserAccount;
 import security.UserAccountService;
 import domain.Comment;
-import domain.CreditCard;
 import domain.Passenger;
 import domain.Reservation;
 import forms.CredentialsfForm;
@@ -91,7 +88,6 @@ public class PassengerService {
 		result.setNumberOfTrips(numberOfTrips);
 		result.setCash(cash);
 		result.setBankAccountNumber(bankAccountNumber);
-		result.setCreditCard(new CreditCard());
 
 		result.setUserAccount(ua);
 		result.setComments(comments);
@@ -120,20 +116,12 @@ public class PassengerService {
 		Assert.notNull(passenger);
 
 		Passenger result;
-
-		final Calendar calendar = Calendar.getInstance();
-		calendar.set(passenger.getCreditCard().getExpYear(), passenger.getCreditCard().getExpMonth(), 1);
-		final Date expiration = new Date(calendar.getTimeInMillis());
-		final Date now = new Date();
-
-		Assert.isTrue(expiration.after(now), "The date of a credit card are expired");
-
 		result = (Passenger) this.actorService.save(passenger);
 
 		return result;
 	}
 
-	public Collection<Passenger> findPassengersAcceptedByRoute(int routeId) {
+	public Collection<Passenger> findPassengersAcceptedByRoute(final int routeId) {
 		Collection<Passenger> result;
 
 		result = this.passengerRepository.findPassengersAcceptedByRoute(routeId);
@@ -150,11 +138,6 @@ public class PassengerService {
 			result = this.passengerRepository.findOne(passenger.getId());
 
 			passenger.setReservations(result.getReservations());
-			passenger.setBankAccountNumber(result.getBankAccountNumber());
-			passenger.getCreditCard().setCvv(result.getCreditCard().getCvv());
-			passenger.getCreditCard().setExpMonth(result.getCreditCard().getExpMonth());
-			passenger.getCreditCard().setExpYear(result.getCreditCard().getExpYear());
-			passenger.getCreditCard().setNumber(result.getCreditCard().getNumber());
 			passenger.setCash(result.getCash());
 			passenger.getUserAccount().setAuthorities(result.getUserAccount().getAuthorities());
 			passenger.getUserAccount().setId(result.getUserAccount().getId());
@@ -170,38 +153,38 @@ public class PassengerService {
 		this.validator.validate(passenger, binding);
 		return passenger;
 	}
-	
-	public CredentialsfForm constructCredential(Passenger passenger) {
-		CredentialsfForm credentialsfForm = new CredentialsfForm();
+
+	public CredentialsfForm constructCredential(final Passenger passenger) {
+		final CredentialsfForm credentialsfForm = new CredentialsfForm();
 		credentialsfForm.setId(passenger.getId());
 		return credentialsfForm;
 	}
-	
-	public Passenger reconstructCredential(CredentialsfForm credentialsfForm, BindingResult binding) {
-		Passenger passenger = findOne(credentialsfForm.getId());
-		
-		String pass = credentialsfForm.getPassword();
+
+	public Passenger reconstructCredential(final CredentialsfForm credentialsfForm, final BindingResult binding) {
+		final Passenger passenger = this.findOne(credentialsfForm.getId());
+
+		final String pass = credentialsfForm.getPassword();
 		passenger.getUserAccount().setPassword(pass);
-		
+
 		this.validator.validate(passenger, binding);
-		
+
 		return passenger;
 	}
-	
-	public Passenger saveCredentials(Passenger passenger) {
+
+	public Passenger saveCredentials(final Passenger passenger) {
 		Passenger res;
-		
+
 		String pass = passenger.getUserAccount().getPassword();
-		
+
 		final Md5PasswordEncoder code = new Md5PasswordEncoder();
-		
+
 		pass = code.encodePassword(pass, null);
-		
+
 		passenger.getUserAccount().setPassword(pass);
 
 		res = this.passengerRepository.save(passenger);
-		
+
 		return res;
 	}
-	
+
 }

@@ -38,7 +38,7 @@ import domain.DomainEntity;
 
 @Entity
 @Access(AccessType.PROPERTY)
-public class UserAccount extends DomainEntity implements UserDetails {    // Constructors -----------------------------------------------------------    
+public class UserAccount extends DomainEntity implements UserDetails {    // Constructors -----------------------------------------------------------
 
 	private static final long	serialVersionUID	= 7254823034213841482L;
 
@@ -48,7 +48,7 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 		super();
 		this.authorities = new ArrayList<Authority>();
 
-	}    // Attributes -------------------------------------------------------------    // UserDetails interface --------------------------------------------------    
+	}    // Attributes -------------------------------------------------------------    // UserDetails interface --------------------------------------------------
 
 
 	private String					username;
@@ -139,6 +139,7 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 		return true;
 
 	}
+
 	@Transient
 	@Override
 	public boolean isEnabled() {
@@ -158,7 +159,6 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 
 	}
 	public void setEnabled(final boolean b) {
-		// TODO Auto-generated method stub
 
 	}
 

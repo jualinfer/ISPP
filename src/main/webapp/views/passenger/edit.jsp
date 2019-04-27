@@ -44,11 +44,6 @@
 	<form:hidden path="version" />
 	<form:hidden path="comments" />
 	<form:hidden path="reservations" />
-	<form:hidden path="bankAccountNumber" />
-	<form:hidden path="creditCard.cvv" />
-	<form:hidden path="creditCard.number" />
-	<form:hidden path="creditCard.expMonth" />
-	<form:hidden path="creditCard.expYear" />
 	<form:hidden path="cash" />
 	<form:hidden path="userAccount.id" />
 	<form:hidden path="userAccount.enabled" />
@@ -60,6 +55,14 @@
 
 	<div class="content-principal">
 		<div class="profile-management d-flex flex-column justify-content-center">
+			<div class="item-profile-management d-flex d-row justify-content-arround">
+				<span><p><form:label path="image">
+					<spring:message code="passenger.image" />: 
+				</form:label></p></span>
+				<div><form:input path="image" />
+				<form:errors cssClass="error" path="image" /></div>
+			</div>
+			
 			<div class="item-profile-management d-flex d-row justify-content-arround">
 				<span><p><form:label path="name">
 					<spring:message code="passenger.name" />: 
@@ -98,6 +101,14 @@
 				</form:label></p></span>
 				<div><form:input id="phone" path="phone" />
 				<form:errors cssClass="error" path="phone" /></div>
+			</div>
+			
+			<div class="item-profile-management d-flex d-row justify-content-arround">
+				<span><p><form:label path="bankAccountNumber">
+					<spring:message code="passenger.bankAccountNumber" />: 
+				</form:label></p></span>
+				<div><form:input path="bankAccountNumber" />
+				<form:errors cssClass="error" path="bankAccountNumber" /></div>
 			</div>
 		</div>
 		
