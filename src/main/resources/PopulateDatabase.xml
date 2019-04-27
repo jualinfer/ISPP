@@ -15,6 +15,8 @@
 	<bean id="userAccount0" class="security.UserAccount">
 		<property name="username" value="admin@gmail.com" />
 		<property name="password" value="21232f297a57a5a743894a0e4a801fc3" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -28,6 +30,8 @@
 	<bean id="userAccount1" class="security.UserAccount">
 		<property name="username" value="driver1@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -39,6 +43,8 @@
 	<bean id="userAccount2" class="security.UserAccount">
 		<property name="username" value="driver2@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -50,6 +56,8 @@
 	<bean id="userAccount3" class="security.UserAccount">
 		<property name="username" value="driver3@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -61,6 +69,8 @@
 	<bean id="userAccount4" class="security.UserAccount">
 		<property name="username" value="driver4@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -72,6 +82,8 @@
 	<bean id="userAccount5" class="security.UserAccount">
 		<property name="username" value="driver5@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -83,6 +95,8 @@
 	<bean id="userAccount6" class="security.UserAccount">
 		<property name="username" value="driver6@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -94,6 +108,8 @@
 	<bean id="userAccount7" class="security.UserAccount">
 		<property name="username" value="driver7@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -105,6 +121,8 @@
 	<bean id="userAccount8" class="security.UserAccount">
 		<property name="username" value="driver8@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -116,6 +134,8 @@
 	<bean id="userAccount9" class="security.UserAccount">
 		<property name="username" value="driver9@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -127,6 +147,8 @@
 	<bean id="userAccount10" class="security.UserAccount">
 		<property name="username" value="driver10@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -138,6 +160,8 @@
 	<bean id="userAccount11" class="security.UserAccount">
 		<property name="username" value="driver11@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -149,6 +173,8 @@
 	<bean id="userAccount12" class="security.UserAccount">
 		<property name="username" value="driver12@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -160,6 +186,8 @@
 	<bean id="userAccount13" class="security.UserAccount">
 		<property name="username" value="driver13@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -171,6 +199,8 @@
 	<bean id="userAccount14" class="security.UserAccount">
 		<property name="username" value="driver14@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -182,6 +212,8 @@
 	<bean id="userAccount15" class="security.UserAccount">
 		<property name="username" value="driver15@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -193,6 +225,8 @@
 	<bean id="userAccount16" class="security.UserAccount">
 		<property name="username" value="driver16@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -204,6 +238,8 @@
 	<bean id="userAccount17" class="security.UserAccount">
 		<property name="username" value="driver17@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -215,6 +251,8 @@
 	<bean id="userAccount18" class="security.UserAccount">
 		<property name="username" value="driver18@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -226,6 +264,8 @@
 	<bean id="userAccount19" class="security.UserAccount">
 		<property name="username" value="driver19@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -237,6 +277,8 @@
 	<bean id="userAccount20" class="security.UserAccount">
 		<property name="username" value="driver20@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -248,6 +290,8 @@
 	<bean id="userAccount21" class="security.UserAccount">
 		<property name="username" value="driver21@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -259,6 +303,8 @@
 	<bean id="userAccount22" class="security.UserAccount">
 		<property name="username" value="driver22@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -270,6 +316,8 @@
 	<bean id="userAccount23" class="security.UserAccount">
 		<property name="username" value="driver23@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -281,6 +329,8 @@
 	<bean id="userAccount24" class="security.UserAccount">
 		<property name="username" value="driver24@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -292,6 +342,8 @@
 	<bean id="userAccount25" class="security.UserAccount">
 		<property name="username" value="driver25@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -303,6 +355,8 @@
 	<bean id="userAccount26" class="security.UserAccount">
 		<property name="username" value="driver26@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -314,6 +368,8 @@
 	<bean id="userAccount27" class="security.UserAccount">
 		<property name="username" value="driver27@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -325,6 +381,8 @@
 	<bean id="userAccount28" class="security.UserAccount">
 		<property name="username" value="driver28@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -336,6 +394,8 @@
 	<bean id="userAccount29" class="security.UserAccount">
 		<property name="username" value="driver29@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -347,6 +407,8 @@
 	<bean id="userAccount30" class="security.UserAccount">
 		<property name="username" value="driver30@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -358,6 +420,8 @@
 	<bean id="userAccount31" class="security.UserAccount">
 		<property name="username" value="passenger31@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -369,6 +433,8 @@
 	<bean id="userAccount32" class="security.UserAccount">
 		<property name="username" value="passenger32@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -380,6 +446,8 @@
 	<bean id="userAccount33" class="security.UserAccount">
 		<property name="username" value="passenger33@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -391,6 +459,8 @@
 	<bean id="userAccount34" class="security.UserAccount">
 		<property name="username" value="passenger34@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -402,6 +472,8 @@
 	<bean id="userAccount35" class="security.UserAccount">
 		<property name="username" value="passenger35@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -413,6 +485,8 @@
 	<bean id="userAccount36" class="security.UserAccount">
 		<property name="username" value="passenger36@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -424,6 +498,8 @@
 	<bean id="userAccount37" class="security.UserAccount">
 		<property name="username" value="passenger37@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -435,6 +511,8 @@
 	<bean id="userAccount38" class="security.UserAccount">
 		<property name="username" value="passenger38@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -446,6 +524,8 @@
 	<bean id="userAccount39" class="security.UserAccount">
 		<property name="username" value="passenger39@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -457,6 +537,8 @@
 	<bean id="userAccount40" class="security.UserAccount">
 		<property name="username" value="passenger40@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -468,6 +550,8 @@
 	<bean id="userAccount41" class="security.UserAccount">
 		<property name="username" value="passenger41@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -479,6 +563,8 @@
 	<bean id="userAccount42" class="security.UserAccount">
 		<property name="username" value="passenger42@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -490,6 +576,8 @@
 	<bean id="userAccount43" class="security.UserAccount">
 		<property name="username" value="passenger43@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -501,6 +589,8 @@
 	<bean id="userAccount44" class="security.UserAccount">
 		<property name="username" value="passenger44@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -512,6 +602,8 @@
 	<bean id="userAccount45" class="security.UserAccount">
 		<property name="username" value="passenger45@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -523,6 +615,8 @@
 	<bean id="userAccount46" class="security.UserAccount">
 		<property name="username" value="passenger46@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -534,6 +628,8 @@
 	<bean id="userAccount47" class="security.UserAccount">
 		<property name="username" value="passenger47@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -545,6 +641,8 @@
 	<bean id="userAccount48" class="security.UserAccount">
 		<property name="username" value="passenger48@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -556,6 +654,8 @@
 	<bean id="userAccount49" class="security.UserAccount">
 		<property name="username" value="passenger49@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -567,6 +667,8 @@
 	<bean id="userAccount50" class="security.UserAccount">
 		<property name="username" value="passenger50@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -578,6 +680,8 @@
 	<bean id="userAccount51" class="security.UserAccount">
 		<property name="username" value="passenger51@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -589,6 +693,8 @@
 	<bean id="userAccount52" class="security.UserAccount">
 		<property name="username" value="passenger52@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -600,6 +706,8 @@
 	<bean id="userAccount53" class="security.UserAccount">
 		<property name="username" value="passenger53@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -611,6 +719,8 @@
 	<bean id="userAccount54" class="security.UserAccount">
 		<property name="username" value="passenger54@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -622,6 +732,8 @@
 	<bean id="userAccount55" class="security.UserAccount">
 		<property name="username" value="passenger55@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -633,6 +745,8 @@
 	<bean id="userAccount56" class="security.UserAccount">
 		<property name="username" value="passenger56@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -644,6 +758,8 @@
 	<bean id="userAccount57" class="security.UserAccount">
 		<property name="username" value="passenger57@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -655,6 +771,8 @@
 	<bean id="userAccount58" class="security.UserAccount">
 		<property name="username" value="passenger58@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -666,6 +784,8 @@
 	<bean id="userAccount59" class="security.UserAccount">
 		<property name="username" value="passenger59@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -677,6 +797,8 @@
 	<bean id="userAccount60" class="security.UserAccount">
 		<property name="username" value="passenger60@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -688,6 +810,8 @@
 	<bean id="userAccount61" class="security.UserAccount">
 		<property name="username" value="passenger61@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -699,6 +823,8 @@
 	<bean id="userAccount62" class="security.UserAccount">
 		<property name="username" value="passenger62@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -710,6 +836,8 @@
 	<bean id="userAccount63" class="security.UserAccount">
 		<property name="username" value="passenger63@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -721,6 +849,8 @@
 	<bean id="userAccount64" class="security.UserAccount">
 		<property name="username" value="passenger64@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -732,6 +862,8 @@
 	<bean id="userAccount65" class="security.UserAccount">
 		<property name="username" value="passenger65@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -743,6 +875,8 @@
 	<bean id="userAccount66" class="security.UserAccount">
 		<property name="username" value="passenger66@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -754,6 +888,8 @@
 	<bean id="userAccount67" class="security.UserAccount">
 		<property name="username" value="passenger67@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -765,6 +901,8 @@
 	<bean id="userAccount68" class="security.UserAccount">
 		<property name="username" value="passenger68@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -776,6 +914,8 @@
 	<bean id="userAccount69" class="security.UserAccount">
 		<property name="username" value="passenger69@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -787,6 +927,8 @@
 	<bean id="userAccount70" class="security.UserAccount">
 		<property name="username" value="passenger70@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -798,6 +940,8 @@
 	<bean id="userAccount71" class="security.UserAccount">
 		<property name="username" value="passenger71@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -809,6 +953,8 @@
 	<bean id="userAccount72" class="security.UserAccount">
 		<property name="username" value="passenger72@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -820,6 +966,8 @@
 	<bean id="userAccount73" class="security.UserAccount">
 		<property name="username" value="passenger73@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -831,6 +979,8 @@
 	<bean id="userAccount74" class="security.UserAccount">
 		<property name="username" value="passenger74@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -842,6 +992,8 @@
 	<bean id="userAccount75" class="security.UserAccount">
 		<property name="username" value="passenger75@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -853,6 +1005,8 @@
 	<bean id="userAccount76" class="security.UserAccount">
 		<property name="username" value="passenger76@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -864,6 +1018,8 @@
 	<bean id="userAccount77" class="security.UserAccount">
 		<property name="username" value="passenger77@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -875,6 +1031,8 @@
 	<bean id="userAccount78" class="security.UserAccount">
 		<property name="username" value="passenger78@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -886,6 +1044,8 @@
 	<bean id="userAccount79" class="security.UserAccount">
 		<property name="username" value="passenger79@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -897,6 +1057,8 @@
 	<bean id="userAccount80" class="security.UserAccount">
 		<property name="username" value="passenger80@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -908,6 +1070,8 @@
 	<bean id="userAccount81" class="security.UserAccount">
 		<property name="username" value="passenger81@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -919,6 +1083,8 @@
 	<bean id="userAccount82" class="security.UserAccount">
 		<property name="username" value="passenger82@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -930,6 +1096,8 @@
 	<bean id="userAccount83" class="security.UserAccount">
 		<property name="username" value="passenger83@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -941,6 +1109,8 @@
 	<bean id="userAccount84" class="security.UserAccount">
 		<property name="username" value="passenger84@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -952,6 +1122,8 @@
 	<bean id="userAccount85" class="security.UserAccount">
 		<property name="username" value="passenger85@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -963,6 +1135,8 @@
 	<bean id="userAccount86" class="security.UserAccount">
 		<property name="username" value="passenger86@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -974,6 +1148,8 @@
 	<bean id="userAccount87" class="security.UserAccount">
 		<property name="username" value="passenger87@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -985,6 +1161,8 @@
 	<bean id="userAccount88" class="security.UserAccount">
 		<property name="username" value="passenger88@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -996,6 +1174,8 @@
 	<bean id="userAccount89" class="security.UserAccount">
 		<property name="username" value="passenger89@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1007,6 +1187,8 @@
 	<bean id="userAccount90" class="security.UserAccount">
 		<property name="username" value="passenger90@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1018,6 +1200,8 @@
 	<bean id="userAccount91" class="security.UserAccount">
 		<property name="username" value="passenger91@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1029,6 +1213,8 @@
 	<bean id="userAccount92" class="security.UserAccount">
 		<property name="username" value="passenger92@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1040,6 +1226,8 @@
 	<bean id="userAccount93" class="security.UserAccount">
 		<property name="username" value="passenger93@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1051,6 +1239,8 @@
 	<bean id="userAccount94" class="security.UserAccount">
 		<property name="username" value="passenger94@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1062,6 +1252,8 @@
 	<bean id="userAccount95" class="security.UserAccount">
 		<property name="username" value="passenger95@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1073,6 +1265,8 @@
 	<bean id="userAccount96" class="security.UserAccount">
 		<property name="username" value="passenger96@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1084,6 +1278,8 @@
 	<bean id="userAccount97" class="security.UserAccount">
 		<property name="username" value="passenger97@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1095,6 +1291,8 @@
 	<bean id="userAccount98" class="security.UserAccount">
 		<property name="username" value="passenger98@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1106,6 +1304,8 @@
 	<bean id="userAccount99" class="security.UserAccount">
 		<property name="username" value="passenger99@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
@@ -1117,6 +1317,8 @@
 	<bean id="userAccount100" class="security.UserAccount">
 		<property name="username" value="passenger100@gmail.com" />
 		<property name="password" value="7815696ecbf1c96e6894b779456d330e" />
+		<property name="enabled" value="true" />
+		<property name="banned" value="false" />
 		<property name="authorities">
 			<list>
 				<bean class="security.Authority">
