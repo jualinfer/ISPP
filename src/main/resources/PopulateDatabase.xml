@@ -9000,6 +9000,34 @@
 		<property name="driver" ref="driver23" />
 		<property name="passenger" ref="passenger62" />
 	</bean>
+	<bean id="messagesThread1" class="domain.MessagesThread">
+		<property name="closed" value="false"/>
+		<property name="newMessages" value="0"/>
+	
+		<property name="route" ref="route1"/>
+		<property name="participantA" ref="driver1"/>
+		<property name="participantB" ref="passenger31"/>
+		
+		<property name="messages">
+			<list></list>
+		</property>		
+	</bean>
+	
+	<bean id="message1" class="domain.Message">
+	<property name="issueDate" value="3/24/2019 17:32"/>
+	<property name="fromAtoB" value="true"/>
+	<property name="content" value="Hola"/>
+	
+	<property name="thread" ref="messagesThread1"/>
+	</bean>
+	
+	<bean id="message2" class="domain.Message">
+	<property name="issueDate" value="3/24/2019 17:40"/>
+	<property name="fromAtoB" value="false"/>
+	<property name="content" value="Ey"/>
+	
+	<property name="thread" ref="messagesThread1"/>
+	</bean>
 
 
 </beans>
