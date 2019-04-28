@@ -65,6 +65,7 @@ public class DriverService {
 
 		userAccount = this.userAccountService.create();
 		userAccount.setEnabled(true);
+		userAccount.setBanned(false);
 		userAccount.setUsername("");
 		userAccount.setPassword("");
 		authority = new Authority();
@@ -139,6 +140,10 @@ public class DriverService {
 
 		return result;
 	}
+	
+	public Driver saveUpdateNotifications(Driver driver) {
+		return (Driver) actorService.save(driver);
+	}
 
 	public void delete(final Driver driver) {
 		Assert.isTrue(driver.getId() != 0);
@@ -161,11 +166,14 @@ public class DriverService {
 			driver.getUserAccount().setId(result.getUserAccount().getId());
 			driver.getUserAccount().setVersion(result.getUserAccount().getVersion());
 			driver.getUserAccount().setEnabled(result.getUserAccount().isEnabled());
+			driver.getUserAccount().setBanned(result.getUserAccount().getBanned());
 			driver.getUserAccount().setUsername(result.getUserAccount().getUsername());
 			driver.getUserAccount().setPassword(result.getUserAccount().getPassword());
 			driver.setComments(result.getComments());
 			driver.setNumberOfTrips(result.getNumberOfTrips());
 			driver.setMediumStars(result.getMediumStars());
+			driver.setNewMessages(result.getNewMessages());
+			driver.setNewAlerts(result.getNewAlerts());
 		}
 
 		this.validator.validate(driver, binding);

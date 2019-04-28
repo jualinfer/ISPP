@@ -85,8 +85,10 @@ public class ReservationPassengerController extends AbstractController {
 		return result;
 	}
 
+
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ModelAndView save(@ModelAttribute(value = "reservation") @Valid final ReservationForm reservationForm, final BindingResult binding) {
+
 		ModelAndView result = null;
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(reservationForm);
@@ -97,6 +99,7 @@ public class ReservationPassengerController extends AbstractController {
 
 				Reservation reservation = this.reservationService.reconstruct(reservationForm, passenger, binding);
 				if (binding.hasErrors()) {
+
 					result = this.createEditModelAndView(reservationForm);
 				}
 				else {
@@ -108,6 +111,7 @@ public class ReservationPassengerController extends AbstractController {
 					chargeParams.put("description", "Reservation from user ID '"+reservation.getPassenger().getId()+"' on route ID '"+reservation.getRoute().getId()+"'");
 					chargeParams.put("source", reservationForm.getStripeToken());
 					Charge charge = Charge.create(chargeParams);
+
 
 					reservation = this.reservationService.save2(reservation);
 					result = new ModelAndView("redirect:/route/display.do?routeId=" + reservation.getRoute().getId());
@@ -124,7 +128,6 @@ public class ReservationPassengerController extends AbstractController {
 		}
 		return result;
 	}
-
 	private ModelAndView createEditModelAndView(final ReservationForm reservation) {
 		return this.createEditModelAndView(reservation, null);
 	}

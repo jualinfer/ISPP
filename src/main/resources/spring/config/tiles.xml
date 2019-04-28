@@ -29,6 +29,7 @@
 		<value>/views/reservation/tiles.xml</value>
 		<value>/views/driver/tiles.xml</value>
 		<value>/views/passenger/tiles.xml</value>
+		<value>/views/thread/tiles.xml</value>
 		<value>/views/vehicle/tiles.xml</value>
 	</util:list>
 

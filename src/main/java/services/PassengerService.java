@@ -54,6 +54,7 @@ public class PassengerService {
 		ua.setUsername("");
 		ua.setPassword("");
 		ua.setEnabled(true);
+		ua.setBanned(false);
 		authority = new Authority();
 		authority.setAuthority(Authority.PASSENGER);
 		authorities = new ArrayList<Authority>();
@@ -120,6 +121,10 @@ public class PassengerService {
 
 		return result;
 	}
+	
+	public Passenger saveUpdateNotifications(Passenger passenger) {
+		return (Passenger) actorService.save(passenger);
+	}
 
 	public Collection<Passenger> findPassengersAcceptedByRoute(final int routeId) {
 		Collection<Passenger> result;
@@ -143,11 +148,14 @@ public class PassengerService {
 			passenger.getUserAccount().setId(result.getUserAccount().getId());
 			passenger.getUserAccount().setVersion(result.getUserAccount().getVersion());
 			passenger.getUserAccount().setEnabled(result.getUserAccount().isEnabled());
+			passenger.getUserAccount().setBanned(result.getUserAccount().getBanned());
 			passenger.getUserAccount().setUsername(result.getUserAccount().getUsername());
 			passenger.getUserAccount().setPassword(result.getUserAccount().getPassword());
 			passenger.setComments(result.getComments());
 			passenger.setNumberOfTrips(result.getNumberOfTrips());
 			passenger.setMediumStars(result.getMediumStars());
+			passenger.setNewMessages(result.getNewMessages());
+			passenger.setNewAlerts(result.getNewAlerts());
 		}
 
 		this.validator.validate(passenger, binding);

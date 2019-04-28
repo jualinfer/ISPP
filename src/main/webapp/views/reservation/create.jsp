@@ -16,7 +16,6 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript"
@@ -37,6 +36,7 @@
 <security:authorize access="hasRole('PASSENGER')">
 	<center>
 		<form:form action="${requestURI}" id="reservationForm" modelAttribute="reservation">
+
 			<form:hidden path="route"/>
 			<form:hidden path="availableSeats"/>
 			<form:hidden path="stripeToken"/>
@@ -101,6 +101,7 @@
 			
 			<h4><spring:message code="reservation.price" />: <span class="badge badge-success" id="price"></span></h4>
 			<br />
+
 			
 			<script src="https://checkout.stripe.com/checkout.js"></script>
 			<input type="submit" id="stripeButton" name="request" class="btn btn-success" value="<spring:message code="reservation.request" />" />
@@ -175,7 +176,6 @@
 			handler.close();
 		});
 	</script>
- 
-	
+
 	
 </security:authorize>

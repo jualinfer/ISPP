@@ -38,6 +38,8 @@
 		<bean class="converters.StringToMessageConverter" />
 		<bean class="converters.MessagesThreadToStringConverter" />
 		<bean class="converters.StringToMessagesThreadConverter" />
+		<bean class="converters.ActorToStringConverter" />
+		<bean class="converters.StringToActorConverter" />
 	</util:list>
 	
 </beans>
