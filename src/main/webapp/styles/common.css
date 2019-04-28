@@ -25,7 +25,8 @@ body{
 
 .content-principal{
 	margin: 0 auto;
-	width: 50%;
+	/* width: 50%; */
+	width: 80%;
 }
 
 span{
