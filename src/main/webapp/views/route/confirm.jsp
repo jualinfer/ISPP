@@ -30,7 +30,7 @@
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
 <div class="text-center active-routes">
-	<h3>Confirm routes</h3>
+	<h3><spring:message code="confirmRoute" /></h3>
 </div>
 
 <%-- Stored message variables --%>
@@ -41,31 +41,21 @@
 <spring:message code="route.cancel"  var="cancel"/>
 
 
-
 <center>
 	<div class="col-sm-10 text-center" style="padding-top: 20px;">
-		<h2>Do you want to confirm this route?</h2>
+		<h2><spring:message code="confirmRouteMessage" /></h2>
 	</div>
-</center>
-
-<center>
-	<div class="col-sm-6 text-center" style="padding-top: 20px;">
-		<h4><jstl:out value="${msgPrice}" />:</h4>
-		<h3><span class="badge badge-success"><jstl:out value="${route.pricePerPassenger}" /> &euro;</span></h3>
-		
-		<br />
+	<div class="container">
+		<div class="row">
+			<div class="col-sm">
+				<h4><jstl:out value="${msgPrice}" /> <span class="badge badge-success"><jstl:out value="${route.pricePerPassenger}" /> &euro;</span></h4>
+			</div>
+			<div class="col-sm">
+				<h4><jstl:out value="${msgDistance}" /> <span class="badge badge-primary"><jstl:out value="${route.distance} Km" /></span></h4>
+			</div>
+		</div>
 	</div>
-</center>
-<center>
-	<div class="col-sm-6 text-center" style="padding-top: 20px;">
-		<h4><jstl:out value="${msgDistance}" />:</h4>
-		<h3><span class="badge badge-primary"><jstl:out value="${route.distance}" /></span></h3>
-		<br />
-	</div>
-</center>
-
-<center>
-	<div class="col-sm-6 text-center" style="padding-top: 20px;">
+	<div class="col-md-6 text-center">
 	<form:form action="${requestURISave}" modelAttribute="route" style="padding-bottom: 25px;">
 		<form:hidden path="id" />
 		<form:hidden path="departureDate" />

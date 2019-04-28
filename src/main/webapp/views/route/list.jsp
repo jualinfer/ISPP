@@ -36,7 +36,7 @@
 	<script src="${routecss}"></script>
 
 <div class="text-center active-routes">
-	<h3>Active routes</h3>
+	<h3><spring:message code="activeRoutes" /></h3>
 </div>
 <jstl:forEach var="route" items="${routes }">
 	<div class="title listRoute"></div>
@@ -59,15 +59,18 @@
 			<fmt:formatDate value="${route.departureDate}" pattern="${formatDate}"/>
 		</div>
 		<div class="available-seats d-flex">
-			<p>Available seats : </p>
 			<jstl:set var="remainingSeats" value="${route.availableSeats}"/>
 			<jstl:forEach items="${route.reservations}" var="reservation">
 				<jstl:if test="${reservation.status eq 'ACCEPTED' }">
 					<jstl:set var="remainingSeats" value="${remainingSeats-reservation.seat}"/>
 				</jstl:if>
 			</jstl:forEach>
-			<jstl:out value=" ${remainingSeats }/${route.availableSeats}"></jstl:out>
-			
+			<jstl:forEach begin="1" end="${remainingSeats}" var="index">
+				<div class="rectangle background_green"></div>
+			</jstl:forEach>
+			<jstl:forEach begin="1" end="${route.availableSeats - remainingSeats}" var="index">
+				<div class="rectangle background_red"></div>
+			</jstl:forEach>
 		</div>
 
 	</div>

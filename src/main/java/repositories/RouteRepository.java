@@ -22,5 +22,8 @@ public interface RouteRepository extends JpaRepository<Route, Integer> {
 
 	@Query(value = "select * from Route where (is_cancelled = false) and (departure_date > now()) and (available_seats >= ?1)", nativeQuery = true)
 	Collection<Route> searchRoutes(int availableSeats);
+	
+	@Query("select distinct r from Route r join r.controlPoints cp where r.isCancelled = false and r.departureDate > CURRENT_TIMESTAMP and lower(cp.location) like %?1% and cp.arrivalOrder != 0 and r.availableSeats >= ?2")
+	Collection<Route> search(String destination, int availableSeats);
 
 }

@@ -2,9 +2,7 @@
 package services;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
 import javax.transaction.Transactional;
 
@@ -20,7 +18,6 @@ import security.Authority;
 import security.UserAccount;
 import security.UserAccountService;
 import domain.Comment;
-import domain.CreditCard;
 import domain.Driver;
 import domain.Route;
 import domain.Vehicle;
@@ -68,6 +65,7 @@ public class DriverService {
 
 		userAccount = this.userAccountService.create();
 		userAccount.setEnabled(true);
+		userAccount.setBanned(false);
 		userAccount.setUsername("");
 		userAccount.setPassword("");
 		authority = new Authority();
@@ -109,7 +107,6 @@ public class DriverService {
 		result.setMusic(music);
 		result.setChilds(children);
 		result.setBankAccountNumber(bankAccountNumber);
-		result.setCreditCard(new CreditCard());
 
 		result.setVehicles(vehicles);
 		result.setRoutes(routes);
@@ -138,17 +135,14 @@ public class DriverService {
 	public Driver save(final Driver driver) {
 		Assert.notNull(driver);
 
-		final Calendar calendar = Calendar.getInstance();
-		calendar.set(driver.getCreditCard().getExpYear(), driver.getCreditCard().getExpMonth(), 1);
-		final Date expiration = new Date(calendar.getTimeInMillis());
-		final Date now = new Date();
-
-		Assert.isTrue(expiration.after(now));
-
 		Driver result;
 		result = (Driver) this.actorService.save(driver);
 
 		return result;
+	}
+	
+	public Driver saveUpdateNotifications(Driver driver) {
+		return (Driver) actorService.save(driver);
 	}
 
 	public void delete(final Driver driver) {
@@ -167,57 +161,55 @@ public class DriverService {
 
 			driver.setRoutes(result.getRoutes());
 			driver.setVehicles(result.getVehicles());
-			driver.setBankAccountNumber(result.getBankAccountNumber());
-			driver.getCreditCard().setCvv(result.getCreditCard().getCvv());
-			driver.getCreditCard().setExpMonth(result.getCreditCard().getExpMonth());
-			driver.getCreditCard().setExpYear(result.getCreditCard().getExpYear());
-			driver.getCreditCard().setNumber(result.getCreditCard().getNumber());
 			driver.setCash(result.getCash());
 			driver.getUserAccount().setAuthorities(result.getUserAccount().getAuthorities());
 			driver.getUserAccount().setId(result.getUserAccount().getId());
 			driver.getUserAccount().setVersion(result.getUserAccount().getVersion());
 			driver.getUserAccount().setEnabled(result.getUserAccount().isEnabled());
+			driver.getUserAccount().setBanned(result.getUserAccount().getBanned());
 			driver.getUserAccount().setUsername(result.getUserAccount().getUsername());
 			driver.getUserAccount().setPassword(result.getUserAccount().getPassword());
 			driver.setComments(result.getComments());
 			driver.setNumberOfTrips(result.getNumberOfTrips());
 			driver.setMediumStars(result.getMediumStars());
+			driver.setNewMessages(result.getNewMessages());
+			driver.setNewAlerts(result.getNewAlerts());
 		}
 
 		this.validator.validate(driver, binding);
 		return driver;
 	}
-	
-	public CredentialsfForm constructCredential(Driver driver) {
-		CredentialsfForm credentialsfForm = new CredentialsfForm();
+
+	public CredentialsfForm constructCredential(final Driver driver) {
+		final CredentialsfForm credentialsfForm = new CredentialsfForm();
 		credentialsfForm.setId(driver.getId());
 		return credentialsfForm;
 	}
-	
-	public Driver reconstructCredential(CredentialsfForm credentialsfForm, BindingResult binding) {
-		Driver driver = findOne(credentialsfForm.getId());
-		
-		String pass = credentialsfForm.getPassword();
+
+	public Driver reconstructCredential(final CredentialsfForm credentialsfForm, final BindingResult binding) {
+		final Driver driver = this.findOne(credentialsfForm.getId());
+
+		final String pass = credentialsfForm.getPassword();
 		driver.getUserAccount().setPassword(pass);
-		
+
 		this.validator.validate(driver, binding);
-		
+
 		return driver;
 	}
-	
-	public Driver saveCredentials(Driver driver) {
+
+	public Driver saveCredentials(final Driver driver) {
 		Driver res;
-		
+
 		String pass = driver.getUserAccount().getPassword();
-		
+
 		final Md5PasswordEncoder code = new Md5PasswordEncoder();
-		
+
 		pass = code.encodePassword(pass, null);
-		
+
 		driver.getUserAccount().setPassword(pass);
 
 		res = this.driverRepository.save(driver);
-		
+
 		return res;
 	}
 

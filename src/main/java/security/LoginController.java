@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ActorService;
 import controllers.AbstractController;
 
 @Controller
@@ -31,6 +32,13 @@ public class LoginController extends AbstractController {
 
 	@Autowired
 	LoginService	service;
+	
+	
+	@Autowired
+	UserAccountService uaService;
+	
+	@Autowired
+	ActorService actorService;
 
 
 	// Constructors -----------------------------------------------------------

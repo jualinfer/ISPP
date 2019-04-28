@@ -16,11 +16,6 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<!DOCTYPE html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript"
@@ -34,16 +29,18 @@
 <script src="${routecss}"></script>
 <link rel="stylesheet" href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 <div class="text-center active-routes">
-	<h3>Make a reservation</h3>
+	<h3><spring:message code="makeReservation" /></h3>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-
 <security:authorize access="hasRole('PASSENGER')">
 	<center>
-		<form:form action="${requestURI}" modelAttribute="reservation" id = "fmID">
+		<form:form action="${requestURI}" id="reservationForm" modelAttribute="reservation">
+
 			<form:hidden path="route"/>
 			<form:hidden path="availableSeats"/>
+			<form:hidden path="stripeToken"/>
+			<form:hidden path="stripeEmail"/>
 			
 			<div class="form-group col-md-6">
 				<div class="input-group">
@@ -88,11 +85,15 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="luggage2"><spring:message code="reservation.luggage" /></span>
 					</div>
+				<spring:message code="reserv.luggage.none"  var = "noneMsg"/>	
+				<spring:message code="reserv.luggage.small"  var = "smallMsg"/>
+				<spring:message code="reserv.luggage.medium"  var = "mediumMsg"/>
+				<spring:message code="reserv.luggage.big"  var = "bigMsg"/>
 					<form:select path="luggageSize" class="form-control" required="true" id="luggage">
-						<form:option value="NOTHING" label="Nothing"/>
-						<form:option value="SMALL" label="Small"/>
-						<form:option value="MEDIUM" label="Medium"/>
-						<form:option value="BIG" label="Big"/>
+						<form:option value="NOTHING" label="${noneMsg}"/>
+						<form:option value="SMALL" label="${smallMsg}"/>
+						<form:option value="MEDIUM" label="${mediumMsg}"/>
+						<form:option value="BIG" label="${bigMsg}"/>
 					</form:select>
 				</div>
 				<form:errors cssClass="error" path="luggageSize" />
@@ -101,16 +102,21 @@
 			<h4><spring:message code="reservation.price" />: <span class="badge badge-success" id="price"></span></h4>
 			<br />
 
-			<input type="submit" id="subHidden" hidden="true"  name="save" class="btn btn btn-success"
-				value="<spring:message code="route.save" />" />
-			<input type="button" id="canHidden" name="cancel" class="btn btn-danger"
+			
+			<script src="https://checkout.stripe.com/checkout.js"></script>
+			<input type="submit" id="stripeButton" name="request" class="btn btn-success" value="<spring:message code="reservation.request" />" />
+			
+			<input type="button" name="cancel" class="btn btn-danger"
 				value="<spring:message code="route.cancel" />"
 				onclick="javascript: relativeRedir('route/display.do?routeId=${reservation.route.id}');" />
-<br />
-
+			<br />
+			
 		</form:form>
+		
+		
 	</center>
 	<script type="text/javascript">
+		var finalPrice = 0;
 		function calculatePrice() {
 			var cpOrders = {};
 			var cpDistances = {};
@@ -131,64 +137,45 @@
 				if (totalDistance > 9.0) {
 					price = price + (totalDistance - 9.0) * 0.11;
 				}
-				price = price * parseInt(document.getElementById("seats").value);
+				price = price * Number.parseInt(document.getElementById("seats").value);
 				price = Number.parseFloat(price + 0.1).toFixed(2);
 				document.getElementById("price").innerHTML = price.toString().concat("&euro;");
+				finalPrice = price * 100;
+				finalPrice = Number.parseInt(finalPrice);
 			}
 			else {
 				document.getElementById("price").innerHTML = "ERROR";
+				finalPrice = 110;
 			}
 		};
 		calculatePrice();
+		// https://stripe.com/img/documentation/checkout/marketplace.png
+		var handler = StripeCheckout.configure({
+			key: '${stripePublicKey}',
+			image: './images/trondicon2.png',
+			locale: 'auto',
+			token: function(token) {
+				document.getElementById("stripeToken").value = token.id;
+				document.getElementById("stripeEmail").value = token.email;
+				document.getElementById("reservationForm").submit();
+			}
+		});
+		
+		document.getElementById("reservationForm").addEventListener("submit", function(e) {
+			handler.open({
+				name: 'Trond',
+				description: '<spring:message code="makeReservation" />',
+				zipCode: false,
+				amount: finalPrice,
+				currency: '${currency}'
+			});
+			e.preventDefault();
+		});
+		
+		window.addEventListener("popstate", function() {
+			handler.close();
+		});
 	</script>
-	
- <script
-    src="https://www.paypal.com/sdk/js?client-id=AbV1oH0J1AvYtUC1msIZkIc8P2OlSEpbcdalsYTCDhwcCt4VOqczhC0zZ3LytbeFPxomTTb627YX4dAW&currency=EUR">
- </script>
 
- <div id="paypal-button-container"></div>
-
-<script>
-	  paypal.Buttons({
-	    createOrder: function(data, actions) {
-	      return actions.order.create({
-	        purchase_units: [{
-	          amount: {
-	            value: parseFloat(document.getElementById("price").innerHTML)
-	          }
-	        }]
-	      });
-	    },
-	    onApprove: function(data, actions) {
-	      return actions.order.capture().then(function(details) {
-	    	  document.getElementById("subHidden").removeAttribute("hidden");
-	    	  document.getElementById("canHidden").setAttribute("hidden",true);
-	        // Call your server to save the transaction
-	        document.getElementById("fmID").setAttribute("action", document.getElementById("fmID").getAttribute("action") +"?orderId="+ data.orderID);
-	      });
-	    }
-	  }).render('#paypal-button-container');
-</script>
-
-	
-<!-- 	       $.ajax({ -->
-<!-- 	            url: '/reservation/passenger/paypal.do', -->
-<!-- 	            type: 'POST', -->
-<!-- 	            dataType: 'json', -->
-<!-- 	            data: JSON.stringify({orderID: data.orderID}) -->
-<!-- 	            }); -->
-	
-	
-	
-	
-<!-- return fetch("/reservation/passenger/paypal.do", { -->
-<!-- 	          method: 'post', -->
-<!-- 	          headers: { -->
-<!-- 	            'content-type': 'application/json' -->
-<!-- 	          }, -->
-<!-- 	          body: JSON.stringify({ -->
-<!-- 	            orderID: data.orderID -->
-<!-- 	          }) -->
-<!-- 	        }); -->
 	
 </security:authorize>

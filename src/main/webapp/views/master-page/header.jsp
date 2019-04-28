@@ -62,56 +62,71 @@ window.cookieconsent.initialise({
 		
 		<img src="images/logoicon.png" /></a>
 		</security:authorize>
+		<security:authorize access="hasRole('ADMIN')">
+		<a href="administrator/controlPanel.do" >
+		
+		<img src="images/logoicon.png" /></a>
+		</security:authorize>
 	</div>
 	<div class="user-details d-flex justify-content-end">
 		<div class="item-details messages">
-			<a class="nav-link border-right" href="#"> 
+			<a class="nav-link border-right" href="thread/message/list.do"> 
 				<i class="far fa-envelope">
-					<!-- <span class="badge badge-danger">11</span> --> <!-- numero de mensajes -->
+					<!-- <span class="badge badge-danger"></span> --> <!-- numero de mensajes -->
 				</i>
 			</a>
-		</div>
-		<div class="item-details notificaciones">
+		</div> 
+		<!-- <div class="item-details notificaciones">
 			<a class="nav-link border-right" href="#"> 
 				<i class="far fa-bell"></i>
 			</a>
-		</div>
+		</div> -->
 		<div class="item-details perfil">
 			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
  				<security:authentication property="principal.username" />
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 				<security:authorize access="hasRole('DRIVER')">
-					<a class="dropdown-item" href="driver/displayPrincipal.do">Visit my profile</a> 
-					<!-- driver/display.do?driverId= -->
+					<a class="dropdown-item" href="driver/displayPrincipal.do"><spring:message code="master.page.myProfile" /></a>
+					<a class="dropdown-item" href="vehicle/driver/list.do"><spring:message code="master.page.myVehicles" /></a>
+					<a class="dropdown-item" href="driver/edit.do"><spring:message code="master.page.editProfile" /></a>
+					<a class="dropdown-item" href="driver/editCredentials.do"><spring:message code="master.page.editCredentials" /></a>
 				</security:authorize>
+				
 				<security:authorize access="hasRole('PASSENGER')">
-					<a class="dropdown-item" href="passenger/displayPrincipal.do">Visit my profile</a> 
-					<!-- passenger/display.do?passengerId= -->
+					<a class="dropdown-item" href="passenger/displayPrincipal.do"><spring:message code="master.page.myProfile" /></a>
+					<a class="dropdown-item" href="passenger/edit.do"><spring:message code="master.page.editProfile" /></a>
+					<a class="dropdown-item" href="passenger/editCredentials.do"><spring:message code="master.page.editCredentials" /></a>
 				</security:authorize>
-				<security:authorize access="hasRole('DRIVER')">
-					<a class="dropdown-item" href="driver/edit.do">Edit Profile</a> 
-					<!-- driver/edit.do -->
+				
+				<security:authorize access="hasAnyRole('DRIVER', 'PASSENGER')">
+					<div class="dropdown-divider"></div>
 				</security:authorize>
-				<security:authorize access="hasRole('PASSENGER')">
-					<a class="dropdown-item" href="passenger/edit.do">Edit Profile</a> 
-					<!-- passenger/edit.do -->
-				</security:authorize>
-				<a class="dropdown-item" href="#">Configuration</a>
-				<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="j_spring_security_logout"><spring:message code="master.page.logout" /></a>
 			</div>
 		</div>
 	</div>
 	
 	<div class="header_nav backgroundcolor-pink">
-		<nav class="nav-bar navbar-expand-lg">
-			<!-- <ul class="navbar-nav mr-auto">
+<!-- 		<div class="add_search"> -->
+<%-- 			<security:authorize access="hasRole('DRIVER')"> --%>
+<!-- 				<a href="route/driver/create.do" class="btn btn-success btn-lg p-1 text-white"> -->
+<%-- 					<spring:message code="master.page.addRoute" /> --%>
+<!-- 				</a> -->
+<%-- 			</security:authorize> --%>
+<%-- 			<security:authorize access="hasRole('PASSENGER')"> --%>
+<!-- 				<a href="route/search.do" class="btn btn-success btn-lg p-1 text-white"> -->
+<%-- 					<spring:message code="master.page.searchRoute" /> --%>
+<!-- 				</a> -->
+<%-- 			</security:authorize> --%>
+<!-- 		</div> -->
+		<!-- <nav class="nav-bar navbar-expand-lg">
+			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">
 	        		<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 	      		</li>
-			</ul> -->
-		</nav>
+			</ul>
+		</nav> -->
 	</div>
 	
 	<!-- --- -->

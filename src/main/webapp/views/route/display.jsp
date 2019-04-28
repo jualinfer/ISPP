@@ -16,9 +16,24 @@
 <spring:url value="/styles/route.css" var="routecss" />
 	<link href="${routecss}" rel="stylesheet" />
 	<script src="${routecss}"></script>
-	
+
+<spring:message code="route.route"  var = "routeMsg"/>	
+<spring:message code="route.details"  var = "detailsMsg"/>	
+<spring:message code="route.seats"  var = "seatsMsg"/>	
+<spring:message code="route.driver"  var = "driverMsg"/>	
+<spring:message code="route.vehicle"  var = "vehicleMsg"/>
+<spring:message code="route.preferences"  var = "preferencesMsg"/>
+<spring:message code="route.maxLuggage"  var = "luggageMsg"/>
+<spring:message code="route.vehicle.type"  var = "typeMsg"/>	
+<spring:message code="route.vehicle.model"  var = "modelMsg"/>
+<spring:message code="route.vehicle.brand"  var = "brandMsg"/>
+<spring:message code="route.vehicle.plate"  var = "plateMsg"/>
+<spring:message code="route.vehicle.description"  var = "descriptionMsg"/>
+<spring:message code="route.available.seats"  var = "availableMsg"/>	
+<spring:message code="route.price.per.passenger"  var = "priceMsg"/>	
+
 <div class="text-center active-routes">
-	<h3>Route</h3>
+	<h3>${routeMsg}</h3>
 </div>
 <div class="content">
 	<!-- origin, destination and date -->
@@ -46,7 +61,7 @@
 				<h2 class="mb-0">
 					<button class="btn btn-link" data-toggle="collapse"
 						data-target="#collapseOne" aria-expanded="true"
-						aria-controls="collapseOne">Route</button>
+						aria-controls="collapseOne">${routeMsg}</button>
 				</h2>
 			</div>
 		</div>
@@ -79,7 +94,7 @@
 				<h2 class="mb-0">
 					<button class="btn btn-link collapsed" data-toggle="collapse"
 						data-target="#collapseTwo" aria-expanded="false"
-						aria-controls="collapseTwo">Details</button>
+						aria-controls="collapseTwo">${detailsMsg}</button>
 				</h2>
 			</div>
 		</div>
@@ -92,38 +107,86 @@
 			<div class="card-body d-flex flex-column">
 
 				<div class="driver">
-					<div class="driver-name d-flex flex-row justify-content-center m-1">
-						<h5>Driver: &nbsp</h5>
+					<div class="text-center m-1">
+						<div
+							class="driver-name d-flex flex-row justify-content-center m-1">
+							<h5>${driverMsg}: &nbsp</h5>
+							<p>
+								<jstl:out value="${route.driver.name}" />
+								<jstl:out value="${route.driver.surname}" />
+								<jstl:if test="${route.driver.id != connectedUser.id}">
+									<a href="thread/message/create.do?userId=${route.driver.id}&routeId=${route.id}"><i class="far fa-envelope"></i></a>
+								</jstl:if>
+							</p>
+
+						</div>
 						<p>
-							<jstl:out value="${route.driver.name}" />
-							<jstl:out value="${route.driver.surname}" />
+							<jstl:out value="${route.driver.mediumStars}" />
 						</p>
+					</div>
+
+					<div class="text-center m-3">
+						<jstl:if test="${canComment}">
+							<security:authorize access="hasRole('PASSENGER')">
+
+								<form:form action="comment/create.do?routeId=${route.id}"
+									modelAttribute="commentForm" method="post">
+
+									<form:hidden path="route" />
+
+									<form:label path="star">
+										<spring:message code="comment.star" />:
+               					</form:label>
+									<form:input path="star" />
+									<form:errors cssClass="error" path="star" />
+									<br />
+
+									<form:label path="text">
+										<spring:message code="comment.text" />:
+               					</form:label>
+									<form:input path="text" />
+									<form:errors cssClass="error" path="text" />
+									<br />
+
+
+									<button type="submit" name="save" class="btn btn-primary">
+										<spring:message code="comment.save" />
+									</button>
+
+								</form:form>
+
+
+							</security:authorize>
+
+
+
+						</jstl:if>
 					</div>
 
 					<div class="vehicle d-flex flex-row justify-content-center m-1">
 						<div class="vehile-foto">
-							<h5>Vehicle: &nbsp</h5>
+							<h5>${vehicleMsg}: &nbsp</h5>
 							<img src="${route.vehicle.image}" width="200" height="150" />
 						</div>
 						<div class="vehicle-description">
 							<p>
-								Type: &nbsp
+								${typeMsg}: &nbsp
 								<jstl:out value="${route.vehicle.type}" />
 							</p>
 							<p>
-								Model: &nbsp
+								${modelMsg}: &nbsp
 								<jstl:out value="${route.vehicle.model}" />
 							</p>
 							<p>
-								Brand: &nbsp
+								${brandMsg}: &nbsp
 								<jstl:out value="${route.vehicle.vehicleBrand}" />
 							</p>
 							<p>
-								Plate: &nbsp
+								${plateMsg}: &nbsp
 								<jstl:out value="${route.vehicle.plate}" />
 							</p>
 							<p>
-								Description: &nbsp
+								${descriptionMsg}: &nbsp
 								<jstl:out value="${route.vehicle.description}" />
 							</p>
 						</div>
@@ -131,7 +194,7 @@
 
 					<div
 						class="preferences d-flex flex-column justify-content-center align-items-center m-1">
-						<h5>Preferences: &nbsp</h5>
+						<h5>${preferencesMsg}: &nbsp</h5>
 						<div class="preferences-items">
 							<spring:message code="route.preferences" var="routePref" />
 							<spring:message code="route.pets" var="routePets" />
@@ -186,14 +249,14 @@
 
 					<div
 						class="luggage d-flex flex-row align-items-baseline justify-content-center m-2">
-						<h5>Luggage size: &nbsp</h5>
+						<h5>${luggageMsg}: &nbsp</h5>
 						<p>
 							<jstl:out value="${route.maxLuggage}" />
 						</p>
 					</div>
 
 					<div class="details d-flex flex-row justify-content-center m-1">
-						<h5>Details: &nbsp</h5>
+						<h5>${detailsMsg}: &nbsp</h5>
 						<p>
 							<jstl:out value="${route.details}" />
 						</p>
@@ -209,7 +272,7 @@
 				<h2 class="mb-0">
 					<button class="btn btn-link collapsed" data-toggle="collapse"
 						data-target="#collapseThree" aria-expanded="false"
-						aria-controls="collapseThree">Seats</button>
+						aria-controls="collapseThree">${seatsMsg}</button>
 				</h2>
 			</div>
 		</div>
@@ -220,11 +283,11 @@
 
 				<div class="num-seats price text-center">
 					<p>
-						Avaiblable seats: &nbsp
+						${availableMsg}: &nbsp
 						<jstl:out value="${remainingSeats}"></jstl:out>
 					</p>
 					<p>
-						Price per passenger: &nbsp
+						${priceMsg}: &nbsp
 						<jstl:out value="${route.pricePerPassenger}"></jstl:out>
 					</p>
 				</div>
@@ -237,10 +300,13 @@
 								<jstl:out value="----------------------------" />
 							</dd> --%>
 							<div class="passengers-- m-1 p-3">
-								<dd>
+								<span><dd>
 									<jstl:out
 										value="${res.passenger.name} ${res.passenger.surname}" />
-								</dd>
+										<jstl:if test="${res.passenger.id != connectedUser.id}">
+											<a href="thread/message/create.do?userId=${res.passenger.id}&routeId=${route.id}"><i class="far fa-envelope"></i></a>
+										</jstl:if>
+								</dd></span>
 								<dd>
 									<jstl:out value="${res.passenger.mediumStars}/5" />
 								</dd>
@@ -250,6 +316,43 @@
 								<dd>
 									<jstl:out value="${res.origin} -> ${res.destination}" />
 								</dd>
+								<jstl:if test="${canComment}">
+
+									<security:authorize access="hasRole('DRIVER')">
+
+										<jstl:forEach items="${passengersToComment}" var="passenger">
+									
+											<form:form
+												action="comment/create.do?passengerId=${passenger.id}"
+												modelAttribute="commentForm" method="post">
+
+												<form:hidden path="route" />
+
+												<form:label path="star">
+													<spring:message code="comment.star" />:
+                    							</form:label>
+												<form:input type="number" path="star" />
+												<form:errors cssClass="error" path="star" />
+												<br />
+
+												<form:label path="text">
+													<spring:message code="comment.text" />:
+                    							</form:label>
+												<form:input type="text" path="text" />
+												<form:errors cssClass="error" path="text" />
+												<br />
+
+
+												<button type="submit" name="save" class="btn btn-primary">
+													<spring:message code="comment.save" />
+												</button>
+
+											</form:form>
+
+										</jstl:forEach>
+
+									</security:authorize>
+								</jstl:if>
 
 								<!-- (COMO CONDUCTOR) PARA CADA PASAJERO, BOTONES DE ACEPTAR O RECHAZAR SOLICITUD -->
 								<security:authorize access="hasRole('DRIVER')">
@@ -299,12 +402,14 @@
 									<jstl:out value="${rrp}" />
 								</dd>
 								<dd>
+								<spring:message code="reserv.cancel.confirm" var="confirm" />
 									<jstl:if test="${reservation.status != 'REJECTED' }">
 										<form name="cancelReservation" method="POST"
 											action="reservation/passenger/cancelReservation.do?reservationId=${reservation.id}">
 											<button type="submit" name="cancelReservation"
-												class="btn btn-danger">
+												onclick="return confirm('${confirm}')"  class="btn btn-danger">
 												<spring:message code="route.reserv.cancel" />
+												
 											</button>
 										</form>
 
@@ -433,7 +538,7 @@
 
 	</div>
 	<div>
-    <jstl:if test="${canComment}">
+    <%-- <jstl:if test="${canComment}">
         
         <security:authorize access="hasRole('DRIVER')">
         
@@ -500,7 +605,7 @@
         
         
     
-    </jstl:if>
+    </jstl:if> --%>
     
     <jstl:if test="${commentResultOk != null}">
 

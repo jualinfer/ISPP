@@ -19,22 +19,27 @@
 		
 		
 	<definition name="driver/edit" extends="master.page">	
-		<put-attribute name="title" value="Editar un Conductor" />
+		<put-attribute name="title" value="" /> <!-- Editar un Conductor -->
 		<put-attribute name="body" value="/views/driver/edit.jsp" />
 	</definition>
 	
+	<definition name="driver/editCredentials" extends="master.page">	
+		<put-attribute name="title" value="" /><!-- Edit Credentials -->
+		<put-attribute name="body" value="/views/driver/edit_credentials.jsp" />
+	</definition>
+	
 	<definition name="driver/create" extends="master.page">	
-		<put-attribute name="title" value="Registrar Conductor" />
+		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="/views/driver/create.jsp" />
 	</definition>
 	
 	<definition name="driver/display" extends="master.page">
-		<put-attribute name="title" value="Mostrar Conductor"/>
+		<put-attribute name="title" value=""/>
 		<put-attribute name="body" value="/views/driver/display.jsp"/>
 	</definition>
 	
 	<definition name="driver/displayPrincipal" extends="master.page">
-		<put-attribute name="title" value="Mostrar Conductor"/>
+		<put-attribute name="title" value=""/>
 		<put-attribute name="body" value="/views/driver/display.jsp"/>
 	</definition>
 	

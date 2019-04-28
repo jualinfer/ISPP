@@ -51,115 +51,99 @@
 		class="resume d-flex flex-column justify-content-center align-items-center">
 
 			<div class="form-row">
-				<div class="col">
-
-					<input type="text" class="form-control"
-						placeholder=<spring:message code="passenger.name"/>>
-					<form:errors cssClass="error" path="name"/><br />
-				</div>
+			<div class="col">
+			<spring:message code="passenger.name" var="passengerName"/>
+				<form:input path="name" type="text" class="form-control"
+					placeholder="${passengerName}"/>
+				<form:errors cssClass="error" path="name" />
+				<br />
 			</div>
-				<div class="form-row">
-					<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="passenger.surname"/>>
-						<form:errors cssClass="error" path="surname"/><br />
-					</div>
-				</div>
-
-			</br>
-
-			<div class="form-row">
-				<div class="col">
-
-					<input type="text" class="form-control"
-						placeholder=<spring:message code="passenger.country"/>>
-					<form:errors cssClass="error" path="country"/><br />
-				</div>
+		</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.surname" var="passengerSurname"/>
+				<form:input path="surname" type="text" class="form-control"
+					placeholder="${passengerSurname }"/>
+				<form:errors cssClass="error" path="surname" />
+				<br />
 			</div>
-			<div class="form-row">
-				<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="passenger.city"/>>
-						<form:errors cssClass="error" path="city"/><br />
-					
-				</div>
+		</div>
 
+		</br>
+
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.country" var="passengerCountry"/>
+				<form:input path="country" type="text" class="form-control"
+					placeholder="${passengerCountry }"/>
+				<form:errors cssClass="error" path="country" />
+				<br />
 			</div>
-
-			<div class="form-row">
-				<div class="col">
-
-					<input type="text" class="form-control"
-						placeholder=<spring:message code="passenger.phone"/>>
-					<form:errors cssClass="error" path="phone"/><br />
-				</div>
+		</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.city" var="passengerCity"/>
+				<form:input path="city" type="text" class="form-control"
+					placeholder="${passengerCity }"/>
+				<form:errors cssClass="error" path="city" />
+				<br />
 
 			</div>
 
-			<div class="form-row">
-				<div class="col">
+		</div>
 
-					<input type="text" class="form-control"
-						placeholder=<spring:message code="passenger.username"/>>
-					<form:errors cssClass="error" path="userAccount.username"/><br />
-				</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.phone" var="passengerPhone"/>
+				<form:input path="phone" type="text" class="form-control"
+					placeholder="${passengerPhone }"/>
+				<form:errors cssClass="error" path="phone" />
+				<br />
 			</div>
-			<div class="form-row">
-					<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="userAccount.password"/>>
-						<form:errors cssClass="error" path="userAccount.password"/><br />
-					</div>
-				</div>
 
-			
-			
-			<div class="form-row">
-					<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="creditCard.number"/>>
-						<form:errors cssClass="error" path="creditCard.number"/><br />
-					</div>
-				</div>
+		</div>
 
-			
-			
-			<div class="form-row">
-					<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="creditCard.expMonth"/>>
-						<form:errors cssClass="error" path="creditCard.expMonth"/><br />
-					</div>
-				</div>
-
-			
-			
-			<div class="form-row">
-					<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="creditCard.expYear"/>>
-						<form:errors cssClass="error" path="creditCard.expYear"/><br />
-					</div>
-				</div>
-
-			
-			<div class="form-row">
-					<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="creditCard.cvv"/>>
-						<form:errors cssClass="error" path="creditCard.cvv"/><br />
-					</div>
-				</div>
-
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.username" var="passengerUsername"/>
+				<form:input path="userAccount.username" type="text" class="form-control"
+					placeholder="${passengerUsername }"/>
+				<form:errors cssClass="error" path="userAccount.username" />
+				<br />
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.password" var="passengerPass"/>
+				<form:input path="userAccount.password" type="password" class="form-control"
+					placeholder="${passengerPass }"/>
+				<form:errors cssClass="error" path="userAccount.password" />
+				<br />
+			</div>
+		</div>
 		
-			
-			<div class="form-row">
-					<div class="col">
-						<input type="text" class="form-control"
-							placeholder=<spring:message code="passenger.bankAccountNumber"/>>
-						<form:errors cssClass="error" path="bankAccountNumber"/><br />
-					</div>
-				</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.image" var="passengerImage"/>
+				<form:input path="image" type="text" class="form-control"
+					placeholder="${passengerImage }"/>
+				<form:errors cssClass="error" path="image" />
+				<br />
+			</div>
+		</div>
+
+
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="passenger.bankAccountNumber" var="passengerBA"/>
+				<form:input path="bankAccountNumber" type="text" class="form-control"
+					placeholder="${passengerBA }"/>
+				<form:errors cssClass="error" path="bankAccountNumber" />
+				<br />
+			</div>
+		</div>
+
+
 
 			
 			

@@ -24,7 +24,7 @@
 <link rel="stylesheet"
 	href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 <div class="text-center active-routes">
-	<h3>Create route</h3>
+	<h3><spring:message code="createRoute" /></h3>
 </div>
 
 
@@ -38,10 +38,7 @@
 
 			<div class="col-sm-6 text-center" style="padding-top: 20px;">
 				<div class="form-group">
-					<form:label path="departureDate">
-						<spring:message code="route.departureDate"
-							var="routeDepartureDate" />
-					</form:label>
+					<spring:message code="route.departureDate" var="routeDepartureDate" />
 					<div class="input-group date" id="datetimepicker"
 						data-target-input="nearest">
 						<form:input type="text" path="departureDate"
@@ -235,12 +232,17 @@
 						<span class="input-group-text" id="routeMaxLuggage"><spring:message
 								code="route.maxLuggage" /></span>
 					</div>
+					
+		<spring:message code="route.luggage.none"  var = "noneMsg"/>	
+		<spring:message code="route.luggage.small"  var = "smallMsg"/>
+		<spring:message code="route.luggage.medium"  var = "mediumMsg"/>
+		<spring:message code="route.luggage.big"  var = "bigMsg"/>
 					<form:select path="maxLuggage" class="form-control"
 						aria-describedby="routeMaxLuggage">
-						<form:option label="None" value="NOTHING" />
-						<form:option label="Small" value="SMALL" />
-						<form:option label="Medium" value="MEDIUM" />
-						<form:option label="Big" value="BIG" />
+						<form:option label="${noneMsg}" value="NOTHING" />
+						<form:option label="${smallMsg}" value="SMALL" />
+						<form:option label="${mediumMsg}" value="MEDIUM" />
+						<form:option label="${bigMsg}" value="BIG" />
 					</form:select>
 				</div>
 				<form:errors path="maxLuggage" cssClass="error" />

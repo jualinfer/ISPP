@@ -1,5 +1,15 @@
 @CHARSET "ISO-8859-1";
 
+.newVehicle{
+	top: -29px;
+    position: relative;
+}
+
+.list-group .thumbnail{
+	border: 2px solid #e6e6e6;
+	max-width: 500px;
+} 
+
 .passengers-route .cancelReservation{
 	padding: 5px;
 	margin: 2rem;

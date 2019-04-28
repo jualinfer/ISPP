@@ -193,15 +193,17 @@ public class RouteController extends AbstractController {
 		result.addObject("canComment", canComment);
 		result.addObject("passengersToComment", passengersToComment);
 		result.addObject("commentForm", commentForm);
+		result.addObject("connectedUser", actorService.findByPrincipal());
 
 		return result;
 	}
+	
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView searchView() {
 		final ModelAndView result;
 		Finder finder;
 
-		finder = new Finder();
+		finder = routeService.createFinder();
 		result = new ModelAndView("route/search");
 		result.addObject("finder", finder);
 
@@ -209,21 +211,42 @@ public class RouteController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public ModelAndView searchResult(@Valid final Finder finder, final BindingResult bindingResult) {
+	public ModelAndView searchResult(@Valid final Finder finder, final BindingResult binding) {
 		ModelAndView result;
-		Collection<Route> routes;
-
-		try {
-			routes = this.routeService.searchRoutes(finder);
-			result = new ModelAndView("route/searchResults");
-			result.addObject("routes", routes);
-
-		} catch (final Throwable oops) {
-			oops.printStackTrace();
-			result = this.searchView();
-			result.addObject(finder);
+		
+		if (binding.hasErrors()) {
+			result = searchModelAndView(finder);
+		}
+		else {
+			try {
+				Collection<Route> routes = routeService.searchRoutes(finder, binding);
+				if (binding.hasErrors()) {
+					result = searchModelAndView(finder);
+				}
+				else {
+					result = new ModelAndView("route/searchResults");
+					result.addObject("routes", routes);
+				}
+			}
+			catch (final Throwable oops) {
+				oops.printStackTrace();
+				result = searchModelAndView(finder, "route.commit.error");
+			}
 		}
 
+		return result;
+	}
+	
+	private ModelAndView searchModelAndView(Finder finder) {
+		return searchModelAndView(finder, null);
+	}
+	
+	private ModelAndView searchModelAndView(Finder finder, String message) {
+		ModelAndView result = new ModelAndView("route/search");
+		result.addObject("finder", finder);
+		result.addObject("message", message);
+		result.addObject("requestURI", "route/search.do");
+		
 		return result;
 	}
 

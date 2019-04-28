@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -33,6 +35,12 @@ import security.UserAccount;
 import services.ActorService;
 import services.ReservationService;
 import services.RouteService;
+import utilities.StripeConfig;
+
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+
 import controllers.AbstractController;
 import domain.Actor;
 import domain.Administrator;
@@ -59,7 +67,7 @@ public class ReservationPassengerController extends AbstractController {
 	public ReservationPassengerController() {
 		super();
 	}
-	// Create ---------------------------------------------------------------		
+	// Create ---------------------------------------------------------------
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create(@RequestParam final int routeId) {
@@ -77,26 +85,47 @@ public class ReservationPassengerController extends AbstractController {
 		return result;
 	}
 
-	@RequestMapping(value = "/save", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@ModelAttribute(value = "reservation") @RequestParam final String orderId, @Valid final ReservationForm reservationForm, final BindingResult binding) {
+
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public ModelAndView save(@ModelAttribute(value = "reservation") @Valid final ReservationForm reservationForm, final BindingResult binding) {
+
 		ModelAndView result = null;
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(reservationForm);
-		else
+		}
+		else {
 			try {
 				final Passenger passenger = (Passenger) this.actorService.findByPrincipal();
 
 				Reservation reservation = this.reservationService.reconstruct(reservationForm, passenger, binding);
 				if (binding.hasErrors()) {
-					System.out.println(binding.getAllErrors());
+
 					result = this.createEditModelAndView(reservationForm);
-				} else {
+				}
+				else {
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					Double finalPrice = reservation.getPrice() * 100;
+					Map<String, Object> chargeParams = new HashMap<>();
+					chargeParams.put("amount", Integer.toString(finalPrice.intValue()));
+					chargeParams.put("currency", StripeConfig.CURRENCY);
+					chargeParams.put("description", "Reservation from user ID '"+reservation.getPassenger().getId()+"' on route ID '"+reservation.getRoute().getId()+"'");
+					chargeParams.put("source", reservationForm.getStripeToken());
+					Charge charge = Charge.create(chargeParams);
+
+
 					reservation = this.reservationService.save2(reservation);
 					result = new ModelAndView("redirect:/route/display.do?routeId=" + reservation.getRoute().getId());
 				}
-			} catch (final Throwable oops) {
+			}
+			catch (final StripeException e) {
+				e.printStackTrace();
 				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
 			}
+			catch (final Throwable oops) {
+				oops.printStackTrace();
+				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
+			}
+		}
 		return result;
 	}
 	private ModelAndView createEditModelAndView(final ReservationForm reservation) {
@@ -108,6 +137,8 @@ public class ReservationPassengerController extends AbstractController {
 		result.addObject("reservation", reservation);
 		result.addObject("requestURI", "reservation/passenger/save.do");
 		result.addObject("message", message);
+		result.addObject("stripePublicKey", StripeConfig.PUBLIC_KEY);
+		result.addObject("currency", StripeConfig.CURRENCY);
 
 		return result;
 	}
@@ -319,7 +350,7 @@ public class ReservationPassengerController extends AbstractController {
 	 * 
 	 * }
 	 */
-	// Confirmacion de que conductor me ha recogido ---------------------------------------------------------------		
+	// Confirmacion de que conductor me ha recogido ---------------------------------------------------------------
 
 	@RequestMapping(value = "/driverPickUp", method = RequestMethod.GET)
 	public ModelAndView driverPickUp(final int reservationId) {
@@ -377,7 +408,7 @@ public class ReservationPassengerController extends AbstractController {
 					for (final Reservation r : reservations)
 						//...y ha hecho alguna reserva en la ruta
 						if (r.getPassenger().equals(passenger)) {
-							rol = 2;		//...se considerara como "pasajero con reserva" 
+							rol = 2;		//...se considerara como "pasajero con reserva"
 							result.addObject("reservation", r);
 							if (route.getDepartureDate().before(new Date()))
 								startedRoute = true;
@@ -420,7 +451,7 @@ public class ReservationPassengerController extends AbstractController {
 
 		return result;
 	}
-	// Confirmacion de que conductor NO me ha recogido ---------------------------------------------------------------		
+	// Confirmacion de que conductor NO me ha recogido ---------------------------------------------------------------
 
 	@RequestMapping(value = "/driverNoPickUp", method = RequestMethod.GET)
 	public ModelAndView driverNoPickUp(final int reservationId) {
@@ -477,7 +508,7 @@ public class ReservationPassengerController extends AbstractController {
 					for (final Reservation r : reservations)
 						//...y ha hecho alguna reserva en la ruta
 						if (r.getPassenger().equals(passenger)) {
-							rol = 2;		//...se considerara como "pasajero con reserva" 
+							rol = 2;		//...se considerara como "pasajero con reserva"
 							result.addObject("reservation", r);
 							if (route.getDepartureDate().before(new Date()))
 								startedRoute = true;
@@ -564,7 +595,7 @@ public class ReservationPassengerController extends AbstractController {
 		//		places.add(route.getOrigin());
 
 		//	if (route.getControlPoints() != null && !route.getControlPoints().isEmpty())
-		//	for (final ControlPoint c : route.getControlPoints()) 
+		//	for (final ControlPoint c : route.getControlPoints())
 		//		places.add(c.getLocation());
 		//		places.add(route.getDestination());
 		//-----------------------------------------------------
@@ -587,7 +618,7 @@ public class ReservationPassengerController extends AbstractController {
 		return result;
 	}
 
-	// Action-2 ---------------------------------------------------------------		
+	// Action-2 ---------------------------------------------------------------
 
 	@RequestMapping("/driverPickMe")
 	public ModelAndView action3() {

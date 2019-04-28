@@ -35,6 +35,9 @@ public class CommentService {
 	@Autowired
 	private PassengerService	passengerService;
 
+	@Autowired
+	private DriverService		driverService;
+
 
 	//CRUD 
 	public Comment create() {
@@ -68,10 +71,45 @@ public class CommentService {
 		this.validateComment(comment);
 
 		Comment result;
+		Driver driver;
+		Passenger passenger;
 
 		result = this.commentRepository.save(comment);
 
+		// Update actor average Stars
+		if (result.getFromDriver()) {
+			passenger = result.getPassenger();
+			passenger.getComments().add(result);
+			passenger.setMediumStars(this.avgStarsFromPassenger(passenger.getId()));
+			this.passengerService.save(passenger);
+
+		} else {
+			driver = result.getDriver();
+			driver.getComments().add(result);
+			driver.setMediumStars(this.avgStarsFromDriver(driver.getId()));
+			this.driverService.save(driver);
+
+		}
+
 		return result;
+	}
+
+	private Double avgStarsFromDriver(int driverId) {
+		Double res;
+
+		res = this.commentRepository.avgStarsFromDriver(driverId);
+
+		return res;
+	}
+
+	private Double avgStarsFromPassenger(int passengerId) {
+
+		Double res;
+
+		res = this.commentRepository.avgStarsFromPassenger(passengerId);
+
+		return res;
+
 	}
 
 	public void validateComment(Comment comment) {
@@ -133,22 +171,6 @@ public class CommentService {
 		return result;
 	}
 
-	public Double avgStarsFromDriver(int driverId) {
-		Double result;
-
-		result = this.commentRepository.avgStarsFromDriver(driverId);
-
-		return result;
-	}
-
-	public Double avgStarsFromPassenger(int passengerId) {
-		Double result;
-
-		result = this.commentRepository.avgStarsFromPassenger(passengerId);
-
-		return result;
-	}
-
 	public Comment findCommentFromDriver(int routeId, int passengerId, int driverId) {
 		Comment result;
 
@@ -179,31 +201,26 @@ public class CommentService {
 		routeCommentPeriodStart.setTime(route.getDepartureDate());
 		routeCommentPeriodStart.add(Calendar.MINUTE, route.getEstimatedDuration());
 
-		if (now.before(routeCommentPeriodStart)) {
+		if (now.before(routeCommentPeriodStart))
 			return result;
-		}
 
 		// Reutilizamos esta variable y ahora sería el fin del periodo:
 		routeCommentPeriodStart.add(Calendar.HOUR, 24);
 
-		if (now.after(routeCommentPeriodStart)) {
+		if (now.after(routeCommentPeriodStart))
 			return result;
-		}
 
 		// Si se llega hasta aquí, le está permitido comentar, faltaria ver si es alguien de los passengers con reservations aceptadas o el driver
 		if (actor instanceof Driver) {
-			if (route.getDriver().getId() == actor.getId()) {
+			if (route.getDriver().getId() == actor.getId())
 				result = true;
-			}
 		} else {
 
 			passengers = this.passengerService.findPassengersAcceptedByRoute(route.getId());
-			if (passengers.contains(actor)) {
+			if (passengers.contains(actor))
 				// En caso de ser un pasenger, además comprobaremos si ya ha comentado o no a este driver para esta ruta
-				if (this.findCommentFromPassenger(route.getId(), actor.getId(), route.getDriver().getId()) == null) {
+				if (this.findCommentFromPassenger(route.getId(), actor.getId(), route.getDriver().getId()) == null)
 					result = true;
-				}
-			}
 		}
 
 		return result;
@@ -215,13 +232,9 @@ public class CommentService {
 
 		aux = this.passengerService.findPassengersAcceptedByRoute(routeId);
 
-		for (Passenger passenger : aux) {
-
-			if (this.findCommentFromDriver(routeId, passenger.getId(), driver.getId()) == null) {
+		for (Passenger passenger : aux)
+			if (this.findCommentFromDriver(routeId, passenger.getId(), driver.getId()) == null)
 				result.add(passenger);
-			}
-
-		}
 
 		return result;
 	}

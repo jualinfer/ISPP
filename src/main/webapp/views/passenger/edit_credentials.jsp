@@ -20,26 +20,53 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
+<spring:url value="/styles/profileManagement.css"
+	var="profileManagementcss" />
+<link href="${profileManagementcss}" rel="stylesheet" />
+<script src="${profileManagementcss}"></script>
+
+<div class="title-principal">
+	<h3>
+		<spring:message code="passenger.title.principal" />
+	</h3>
+</div>
+
+<div class="nav-profile-management nav background_orange">
+	<div class="nav-profile-enlaces d-flex flex-row">
+		<a class="nav-link text-white" href="passenger/edit.do"><spring:message code="driver.nav.profile" /></a> 
+		<%-- PAYMENT <a class="nav-link text-white" href="payment/passenger/edit.do"><spring:message code="driver.nav.payment" /></a> --%> 
+		<a class="nav-link active text-white" href="passenger/editCredentials.do"><spring:message code="driver.nav.credentials" /></a>
+	</div>
+</div>
+
+
 <form:form id="form_edit_credentials" action="${requestURI}" modelAttribute="credentialsfForm">
 	<form:hidden path="id"/>
 
-	<form:label path="password">
-		<spring:message code="passenger.password"/>: 
-	</form:label>
-	<form:password id="password" path="password"/>
-	<form:errors cssClass="error" path="password"/><br />
+	<div class="content-principal">
+		<div class="profile-management d-flex flex-column justify-content-center">
+			<div class="item-profile-management d-flex d-row justify-content-arround">
+				<span><p><form:label path="password">
+					<spring:message code="passenger.password"/>: 
+				</form:label></p></span>
+				<div><form:password id="password" path="password"/>
+				<form:errors cssClass="error" path="password"/></div>
+			</div>
+			
+			<div class="item-profile-management d-flex d-row justify-content-arround">
+				<span><p><form:label path="repeatPassword">
+					<spring:message code="passenger.repeat.password"/>: 
+				</form:label></p></span>
+				<div><form:password id="repeatPassword" path="repeatPassword"/>
+				<form:errors cssClass="error" path="repeatPassword"/></div>
+			</div>
+		</div>
 	
-	<form:label path="repeatPassword">
-		<spring:message code="passenger.repeat.password"/>: 
-	</form:label>
-	<form:password id="repeatPassword" path="repeatPassword"/>
-	<form:errors cssClass="error" path="repeatPassword"/><br />
-
-	<input type="submit" name="save" value="<spring:message code="passenger.register"/>" />
-	
-	<input type="button" name="cancel"
-		value="<spring:message code="passenger.cancel" />"
-		onclick="javascript: relativeRedir('./');" />		
+		<div class="save-cancel-management">
+			<input class="btn btn-success" type="submit" name="save" value="<spring:message code="passenger.register"/>" />
+			
+		</div>	
+	</div>	
 	
 </form:form>
 
