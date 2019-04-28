@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
@@ -33,6 +34,7 @@ public class Alert extends DomainEntity {
 
 	@Valid
 	@NotNull
+	@ManyToOne(optional = false)
 	public Route getRelatedRoute() {
 		return this.relatedRoute;
 	}
@@ -45,11 +47,15 @@ public class Alert extends DomainEntity {
 	}
 
 	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
 	public Actor getSender() {
 		return this.sender;
 	}
 
 	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
 	public Actor getReceiver() {
 		return this.receiver;
 	}
@@ -64,6 +70,10 @@ public class Alert extends DomainEntity {
 	}
 
 	//Setters
+
+	public void setRelatedRoute(final Route relatedRoute) {
+		this.relatedRoute = relatedRoute;
+	}
 
 	public void setDate(final Date date) {
 		this.date = date;
