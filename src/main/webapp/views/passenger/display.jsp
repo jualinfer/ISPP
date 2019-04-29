@@ -17,6 +17,7 @@
 <spring:message code="comment.text" var="vehText" />
 <spring:message code="comment.date" var="vehDate" />
 <spring:message code="comment.star" var="vehStar" />
+<spring:message code="alert.list" var="alert" />
 
 
 <spring:message code="route.formatDate" var="formatDate" />
@@ -344,7 +345,12 @@
 							<fmt:formatDate value="${reservation.route.departureDate}"
 								pattern="${formatDate}" />
 						</div>
-
+<spring:url var="alertUrl"
+		value="alert/list.do">
+		<spring:param name="actorId"
+			value="${passenger.id}"/>
+	</spring:url>
+	<a href="${alertUrl}"><jstl:out value="${alert}" /></a>
 					</div>
 				</jstl:forEach>
 

@@ -31,6 +31,7 @@
 		<value>/views/passenger/tiles.xml</value>
 		<value>/views/thread/tiles.xml</value>
 		<value>/views/vehicle/tiles.xml</value>
+		<value>/views/alert/tiles.xml</value>
 	</util:list>
 
 </beans>

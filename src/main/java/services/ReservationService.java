@@ -17,7 +17,6 @@ import repositories.ReservationRepository;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
-import domain.Alert;
 import domain.ControlPoint;
 import domain.Driver;
 import domain.LuggageSize;
@@ -25,7 +24,6 @@ import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
 import domain.Route;
-import domain.TypeAlert;
 import forms.ReservationForm;
 
 @Service
@@ -74,12 +72,12 @@ public class ReservationService {
 		result.setSeat(1);
 
 		//We create an alert
-		final Alert alert = this.alertService.create();
-		final Collection<Actor> receivers = new ArrayList<Actor>();
-		final Driver receiver = result.getRoute().getDriver();
-		receivers.add(receiver);
-		alert.setReceiver(receivers);
-		alert.setTypeAlert(TypeAlert.APPLICATION_PLACE);
+		//		final Alert alert = this.alertService.create();
+		//		final Collection<Actor> receivers = new ArrayList<Actor>();
+		//		final Driver receiver = result.getRoute().getDriver();
+		//		receivers.add(receiver);
+		//		alert.setReceiver(receivers);
+		//		alert.setTypeAlert(TypeAlert.APPLICATION_PLACE);
 
 		return result;
 	}
@@ -381,12 +379,12 @@ public class ReservationService {
 		reservation.setStatus(ReservationStatus.ACCEPTED);
 
 		//We create an alert
-		final Alert alert = this.alertService.create();
-		final Collection<Actor> receivers = new ArrayList<Actor>();
-		final Passenger receiver = reservation.getPassenger();
-		receivers.add(receiver);
-		alert.setReceiver(receivers);
-		alert.setTypeAlert(TypeAlert.ACCEPTANCE_PLACE);
+		//		final Alert alert = this.alertService.create();
+		//		final Collection<Actor> receivers = new ArrayList<Actor>();
+		//		final Passenger receiver = reservation.getPassenger();
+		//		receivers.add(receiver);
+		//		alert.setReceiver(receivers);
+		//		alert.setTypeAlert(TypeAlert.ACCEPTANCE_PLACE);
 
 		this.reservationRepository.save(reservation);
 	}
@@ -401,13 +399,13 @@ public class ReservationService {
 		reservation.setStatus(ReservationStatus.REJECTED);
 
 		//We create an alert
-		final Alert alert = this.alertService.create();
-		final Collection<Actor> receivers = new ArrayList<Actor>();
-		final Passenger receiver = reservation.getPassenger();
-		receivers.add(receiver);
-		alert.setReceiver(receivers);
-		alert.setTypeAlert(TypeAlert.REJECTION_PLACE);
-		this.reservationRepository.save(reservation);
+		//		final Alert alert = this.alertService.create();
+		//		final Collection<Actor> receivers = new ArrayList<Actor>();
+		//		final Passenger receiver = reservation.getPassenger();
+		//		receivers.add(receiver);
+		//		alert.setReceiver(receivers);
+		//		alert.setTypeAlert(TypeAlert.REJECTION_PLACE);
+		//		this.reservationRepository.save(reservation);
 	}
 
 	public void cancelReservation(final int reservationId) {
@@ -420,12 +418,12 @@ public class ReservationService {
 		reservation.setStatus(ReservationStatus.CANCELLED);
 
 		//We create an alert
-		final Alert alert = this.alertService.create();
-		final Collection<Actor> receivers = new ArrayList<Actor>();
-		final Driver receiver = reservation.getRoute().getDriver();
-		receivers.add(receiver);
-		alert.setReceiver(receivers);
-		alert.setTypeAlert(TypeAlert.CANCELLATION_PLACE);
+		//		final Alert alert = this.alertService.create();
+		//		final Collection<Actor> receivers = new ArrayList<Actor>();
+		//		final Driver receiver = reservation.getRoute().getDriver();
+		//		receivers.add(receiver);
+		//		alert.setReceiver(receivers);
+		//		alert.setTypeAlert(TypeAlert.CANCELLATION_PLACE);
 
 		this.reservationRepository.save(reservation);
 	}

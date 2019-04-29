@@ -92,6 +92,8 @@
 		<security:intercept-url pattern="/thread/message/view.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/thread/message/list.do" access="isAuthenticated()" />
 		
+		<security:intercept-url pattern="/alert/**" access="isAuthenticated()" />
+		
 		<security:intercept-url pattern="/comment/create.do" access="hasRole('PASSENGER') || hasRole('DRIVER')" />
 		
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />

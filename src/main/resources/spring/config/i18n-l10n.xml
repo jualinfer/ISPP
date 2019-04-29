@@ -30,6 +30,7 @@
 		<value>/views/passenger/messages</value>
 		<value>/views/thread/messages</value>
 		<value>/views/vehicle/messages</value>
+		<value>/views/alert/messages</value>
 	</util:list>
 
 </beans>

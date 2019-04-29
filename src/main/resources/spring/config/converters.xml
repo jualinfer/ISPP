@@ -40,6 +40,8 @@
 		<bean class="converters.StringToMessagesThreadConverter" />
 		<bean class="converters.ActorToStringConverter" />
 		<bean class="converters.StringToActorConverter" />
+		<bean class="converters.AlertToStringConverter" />
+		<bean class="converters.StringToAlertConverter" />
 	</util:list>
 	
 </beans>
