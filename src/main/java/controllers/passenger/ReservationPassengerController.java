@@ -39,7 +39,10 @@ import utilities.StripeConfig;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.BankAccount;
 import com.stripe.model.Charge;
+import com.stripe.model.Customer;
+import com.stripe.model.Payout;
 import com.stripe.model.Refund;
 
 import controllers.AbstractController;
@@ -350,7 +353,6 @@ public class ReservationPassengerController extends AbstractController {
 	public ModelAndView driverPickUp(final int reservationId) {
 		ModelAndView result;
 
-		this.reservationService.driverPickedMe(reservationId);
 		result = new ModelAndView("reservation/passenger/driverPickUp");
 
 		//TENGO QUE PASARLE OTRA VEZ TODA LA INFO QUE HAY EN EL DISPLAY DE ROUTE
@@ -372,6 +374,39 @@ public class ReservationPassengerController extends AbstractController {
 		Assert.notNull(route);
 		reservation = this.reservationService.create();
 		reservation.setRoute(route);
+
+		try {
+			//customer
+			Stripe.apiKey = StripeConfig.SECRET_KEY;
+
+			final Map<String, Object> customerParams = new HashMap<String, Object>();
+			final Customer customer = Customer.create(customerParams);
+
+			//Bank Account
+			final Map<String, Object> params = new HashMap<String, Object>();
+			final Map<String, Object> baParams = new HashMap<String, Object>();
+			baParams.put("account_number", "00012345");
+			baParams.put("object", "bank_account");
+			baParams.put("country", "UK");
+			baParams.put("currency", StripeConfig.CURRENCY);
+			params.put("source", baParams);
+
+			final BankAccount bankAccount = (BankAccount) customer.getSources().create(params);
+
+			//payout
+
+			final Map<String, Object> payoutParams = new HashMap<String, Object>();
+			payoutParams.put("amount", Integer.toString(currentReservation.getPrice().intValue() * 100));
+			payoutParams.put("currency", StripeConfig.CURRENCY);
+			//			payoutParams.put("destination", bankAccount.getId());
+
+			Payout.create(payoutParams);
+
+			this.reservationService.driverPickedMe(reservationId);
+		} catch (final StripeException e) {
+			e.printStackTrace();
+
+		}
 
 		reservations = route.getReservations();
 		System.out.println(reservations);
