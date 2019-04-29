@@ -23,13 +23,17 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 
 import repositories.RouteRepository;
+import domain.Actor;
+import domain.Alert;
 import domain.ControlPoint;
 import domain.Driver;
 import domain.Finder;
 import domain.LuggageSize;
+import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
 import domain.Route;
+import domain.TypeAlert;
 import domain.VehicleType;
 import forms.ControlPointFormCreate;
 import forms.RouteForm;
@@ -55,6 +59,9 @@ public class RouteService {
 	private ReservationService	reservationService;
 	@Autowired
 	private DriverService		driverService;
+
+	@Autowired
+	private AlertService		alertService;
 
 
 	//Simple CRUD methods
@@ -175,6 +182,17 @@ public class RouteService {
 		this.reservationService.autoReject(route);
 
 		route.setIsCancelled(true);
+
+		//We create an alert
+		final Alert alert = this.alertService.create();
+		final Collection<Reservation> reservations = route.getReservations();
+		final Collection<Actor> receivers = new ArrayList<Actor>();
+		for (final Reservation r : reservations) {
+			final Passenger p = r.getPassenger();
+			receivers.add(p);
+		}
+		alert.setReceiver(receivers);
+		alert.setTypeAlert(TypeAlert.CANCELLATION_ROUTE);
 
 		this.routeRepository.save(route);
 	}

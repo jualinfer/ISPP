@@ -18,7 +18,7 @@ import security.UserAccount;
 @Entity
 @Access(AccessType.PROPERTY)
 //@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "userAccount")})
-public class Actor extends DomainEntity {    //Attributes   
+public class Actor extends DomainEntity {    //Attributes
 
 	private String		name;
 	private String		surname;
@@ -80,12 +80,12 @@ public class Actor extends DomainEntity {    //Attributes
 	public Integer getNumberOfTrips() {
 		return this.numberOfTrips;
 	}
-	
+
 	@Min(0)
 	public Integer getNewMessages() {
 		return this.newMessages;
 	}
-	
+
 	@Min(0)
 	public Integer getNewAlerts() {
 		return this.newAlerts;
@@ -129,13 +129,13 @@ public class Actor extends DomainEntity {    //Attributes
 	public void setNumberOfTrips(final Integer numberOfTrips) {
 		this.numberOfTrips = numberOfTrips;
 	}
-	
-	public void setNewMessages(Integer newMessages) {
+
+	public void setNewMessages(final Integer newMessages) {
 		this.newMessages = newMessages;
 	}
-	
-	public void setNewAlerts(Integer newAlerts) {
+
+	public void setNewAlerts(final Integer newAlerts) {
 		this.newAlerts = newAlerts;
 	}
-	
+
 }
