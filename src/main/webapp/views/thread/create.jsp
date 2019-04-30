@@ -22,20 +22,23 @@
 
 <security:authorize access="hasAnyRole('DRIVER', 'PASSENGER', 'ADMIN')">
 	<center>
-		Message for: ${threadForm.user.name} ${threadForm.user.surname}
+		<i class="fa fa-envelope" aria-hidden="true"></i>
+		<spring:message code="messages.for" /><span class="badge badge-pill badge-primary" style="font-size: 22px">
+				${threadForm.user.name} ${threadForm.user.surname}</span>
 		<br>
-		Route: ${threadForm.route.origin} -> ${threadForm.route.destination}
+		<p style="font-size: 22px">${threadForm.route.origin}<i class="fas fa-arrow-right"></i>${threadForm.route.destination}</p>
 		<br>
 		<form:form action="${requestURI}" modelAttribute="threadForm">
 			<form:hidden path="route" />
 			<form:hidden path="user" />
-
-			<div class="form-group col-md-6">
-				<form:textarea path="message" class="form-control" />
+			
+			<spring:message code="placeholderMessages" var="vrMessagesPl"/>
+			<div class="form-group col-md-12">
+				<form:textarea path="message" class="form-control" placeholder="${vrMessagesPl}" />
 				<form:errors cssClass="error" path="message" />
 			</div>
 
-			<div class="form-group col-md-6 text-center">
+			<div class="form-group col-md-12 text-center">
 				<input type="submit" class="btn btn-success"
 					value="<spring:message code="thread.send" />" />
 
