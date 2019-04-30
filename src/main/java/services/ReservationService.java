@@ -17,6 +17,7 @@ import repositories.ReservationRepository;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
+import domain.Alert;
 import domain.ControlPoint;
 import domain.Driver;
 import domain.LuggageSize;
@@ -141,17 +142,17 @@ public class ReservationService {
 	public Reservation save2(final Reservation reservation) {
 		Assert.notNull(reservation);
 
-		if (reservation.getId() == 0) {
-			//		We create an alert
-			final Alert alert = this.alertService.create();
-			final Collection<Actor> receivers = new ArrayList<Actor>();
-			final Driver receiver = reservation.getRoute().getDriver();
-			receivers.add(receiver);
-			alert.setReceiver(receivers);
-			alert.setTypeAlert(TypeAlert.APPLICATION_PLACE);
-			alert.setRelatedRoute(reservation.getRoute());
-			this.alertService.save(alert);
-		}
+		//		if (reservation.getId() == 0) {
+		//			//		We create an alert
+		//			final Alert alert = this.alertService.create();
+		//			final Collection<Actor> receivers = new ArrayList<Actor>();
+		//			final Driver receiver = reservation.getRoute().getDriver();
+		//			receivers.add(receiver);
+		//			alert.setReceiver(receivers);
+		//			alert.setTypeAlert(TypeAlert.APPLICATION_PLACE);
+		//			alert.setRelatedRoute(reservation.getRoute());
+		//			this.alertService.save(alert);
+		//		}
 		return this.reservationRepository.saveAndFlush(reservation);
 	}
 

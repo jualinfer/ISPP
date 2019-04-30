@@ -374,23 +374,23 @@ public class ReservationPassengerController extends AbstractController {
 		reservation = this.reservationService.create();
 		reservation.setRoute(route);
 
-		try {
-			Stripe.apiKey = StripeConfig.SECRET_KEY;
-
-			//payout
-
-			final Map<String, Object> payoutParams = new HashMap<String, Object>();
-			final Double reservPrice = currentReservation.getPrice() * 100;
-			payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
-			payoutParams.put("currency", StripeConfig.CURRENCY);
-			//			payoutParams.put("destination", bankAccount.getId());
-			Payout.create(payoutParams);
-
-			this.reservationService.driverPickedMe(reservationId);
-		} catch (final StripeException e) {
-			e.printStackTrace();
-
-		}
+		//		try {
+		//			Stripe.apiKey = StripeConfig.SECRET_KEY;
+		//
+		//			//payout
+		//
+		//			final Map<String, Object> payoutParams = new HashMap<String, Object>();
+		//			final Double reservPrice = currentReservation.getPrice() * 100;
+		//			payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+		//			payoutParams.put("currency", StripeConfig.CURRENCY);
+		//			//			payoutParams.put("destination", bankAccount.getId());
+		//			Payout.create(payoutParams);
+		//
+		//			this.reservationService.driverPickedMe(reservationId);
+		//		} catch (final StripeException e) {
+		//			e.printStackTrace();
+		//
+		//		}
 
 		reservations = route.getReservations();
 

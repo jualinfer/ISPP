@@ -134,7 +134,7 @@ public class RouteController extends AbstractController {
 					for (final Reservation r : reservations)
 						//...y ha hecho alguna reserva en la ruta
 						if (r.getPassenger().equals(passenger)) {
-							rol = 2;		//...se considerara como "pasajero con reserva" 
+							rol = 2;		//...se considerara como "pasajero con reserva"
 							result.addObject("reservation", r);
 							if (route.getDepartureDate().before(new Date()))
 								startedRoute = true;
@@ -193,17 +193,17 @@ public class RouteController extends AbstractController {
 		result.addObject("canComment", canComment);
 		result.addObject("passengersToComment", passengersToComment);
 		result.addObject("commentForm", commentForm);
-		result.addObject("connectedUser", actorService.findByPrincipal());
+		result.addObject("connectedUser", this.actorService.findByPrincipal());
 
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView searchView() {
 		final ModelAndView result;
 		Finder finder;
 
-		finder = routeService.createFinder();
+		finder = this.routeService.createFinder();
 		result = new ModelAndView("route/search");
 		result.addObject("finder", finder);
 
@@ -213,40 +213,36 @@ public class RouteController extends AbstractController {
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public ModelAndView searchResult(@Valid final Finder finder, final BindingResult binding) {
 		ModelAndView result;
-		
-		if (binding.hasErrors()) {
-			result = searchModelAndView(finder);
-		}
-		else {
+
+		if (binding.hasErrors())
+			result = this.searchModelAndView(finder);
+		else
 			try {
-				Collection<Route> routes = routeService.searchRoutes(finder, binding);
-				if (binding.hasErrors()) {
-					result = searchModelAndView(finder);
-				}
+				final Collection<Route> routes = this.routeService.searchRoutes(finder, binding);
+				if (binding.hasErrors())
+					result = this.searchModelAndView(finder);
 				else {
 					result = new ModelAndView("route/searchResults");
 					result.addObject("routes", routes);
 				}
-			}
-			catch (final Throwable oops) {
-				oops.printStackTrace();
-				result = searchModelAndView(finder, "route.commit.error");
-			}
+			} catch (final Throwable oops) {
+			oops.printStackTrace();
+			result = this.searchModelAndView(finder, "route.commit.error");
 		}
 
 		return result;
 	}
-	
-	private ModelAndView searchModelAndView(Finder finder) {
-		return searchModelAndView(finder, null);
+
+	private ModelAndView searchModelAndView(final Finder finder) {
+		return this.searchModelAndView(finder, null);
 	}
-	
-	private ModelAndView searchModelAndView(Finder finder, String message) {
-		ModelAndView result = new ModelAndView("route/search");
+
+	private ModelAndView searchModelAndView(final Finder finder, final String message) {
+		final ModelAndView result = new ModelAndView("route/search");
 		result.addObject("finder", finder);
 		result.addObject("message", message);
 		result.addObject("requestURI", "route/search.do");
-		
+
 		return result;
 	}
 
