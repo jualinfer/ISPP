@@ -54,6 +54,19 @@ public class AlertService {
 
 		return alert;
 	}
+
+	public Alert save(final Alert alert) {
+		Assert.notNull(alert);
+		Assert.notNull(alert.getReceiver());
+		Assert.notNull(alert.getSender());
+		Assert.notNull(alert.getRelatedRoute());
+
+		Alert result;
+		result = this.alertRepository.save(alert);
+
+		return result;
+	}
+
 	public Collection<Alert> listByActor(final int id) {
 		final Collection<Alert> result = new ArrayList<Alert>();
 
