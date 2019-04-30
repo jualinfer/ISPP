@@ -25,9 +25,9 @@
 
 <security:authorize access="hasAnyRole('DRIVER', 'PASSENGER', 'ADMIN')">
 	<center>
-		<h3 class="display-4">${thread.route.origin}
+		<p style="font-size: 25px">${thread.route.origin}
 			<i class="fas fa-arrow-right"></i> ${thread.route.destination}
-		</h3>
+		</p>
 		<br>
 	</center>
 	<jstl:forEach items="${thread.messages}" var="message">
