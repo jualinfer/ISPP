@@ -23,13 +23,17 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 
 import repositories.RouteRepository;
+import domain.Actor;
+import domain.Alert;
 import domain.ControlPoint;
 import domain.Driver;
 import domain.Finder;
 import domain.LuggageSize;
+import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
 import domain.Route;
+import domain.TypeAlert;
 import domain.VehicleType;
 import forms.ControlPointFormCreate;
 import forms.RouteForm;
@@ -54,7 +58,11 @@ public class RouteService {
 	@Autowired
 	private ReservationService	reservationService;
 	@Autowired
-	private DriverService	driverService;
+	private DriverService		driverService;
+
+	@Autowired
+	private AlertService		alertService;
+
 
 	//Simple CRUD methods
 
@@ -75,14 +83,14 @@ public class RouteService {
 
 		return r;
 	}
-	
+
 	public Finder createFinder() {
-		Finder result = new Finder();
+		final Finder result = new Finder();
 		result.setAvailableSeats(1);
-//		result.setDepartureDate(new Date(new Date().getTime() + 600000));
+		//		result.setDepartureDate(new Date(new Date().getTime() + 600000));
 		return result;
 	}
-	
+
 	public Route findOne(final int id) {
 		Assert.isTrue(id > 0);
 		return this.routeRepository.findOne(id);
@@ -145,17 +153,16 @@ public class RouteService {
 		r.setPricePerPassenger(price);
 		r.setDistance(distance);
 		final Route saved = this.routeRepository.save(r);
-		
-		if (this.actorService.findByPrincipal() instanceof Driver){
-			Driver driver = saved.getDriver();
-			
-			Collection<Route> routes = driver.getRoutes();
+
+		if (this.actorService.findByPrincipal() instanceof Driver) {
+			final Driver driver = saved.getDriver();
+
+			final Collection<Route> routes = driver.getRoutes();
 			routes.add(saved);
 			driver.setRoutes(routes);
 			this.driverService.save(driver);
-			
+
 		}
-		
 
 		return saved;
 	}
@@ -175,6 +182,17 @@ public class RouteService {
 		this.reservationService.autoReject(route);
 
 		route.setIsCancelled(true);
+
+		//We create an alert
+		final Alert alert = this.alertService.create();
+		final Collection<Reservation> reservations = route.getReservations();
+		final Collection<Actor> receivers = new ArrayList<Actor>();
+		for (final Reservation r : reservations) {
+			final Passenger p = r.getPassenger();
+			receivers.add(p);
+		}
+		alert.setReceiver(receivers);
+		alert.setTypeAlert(TypeAlert.CANCELLATION_ROUTE);
 
 		this.routeRepository.save(route);
 	}
@@ -235,261 +253,275 @@ public class RouteService {
 
 	}
 
-	/*public Double getPrice(final Double distance) {
-		Double price = 0.0;
-		final Double price3km = 0.33;
-		final Double profit = 0.10;
-		if (distance < 9.0)
-			price = 1 + profit;
-		else {
-			final String str = String.valueOf(distance / 3);
-			final Integer intNumber = Integer.parseInt(str.substring(0, str.indexOf('.')));
-			price = intNumber * price3km + profit;
+	public Integer getDurationMinutes(final String origin, final String destination) {
+		Double value = 0.0;
+		try {
+			final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin.replaceAll(" ", "+") + "&destination=" + destination.replaceAll(" ", "+") + "&key=AIzaSyAKoI-jZJQyPjIp1XGUSsbWh47JBix7qws";
+			final URL obj = new URL(url);
+			final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			//	final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			final BufferedReader in = new BufferedReader(new InputStreamReader(((HttpURLConnection) (new URL(url)).openConnection()).getInputStream(), Charset.forName("UTF-8")));
+			String inputLine;
+			final StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null)
+				response.append(inputLine);
+			in.close();
 
+			final JSONObject myResponse = new JSONObject(response.toString());
+
+			final JSONArray routes = myResponse.getJSONArray("routes");
+			final JSONObject obj1 = routes.getJSONObject(0);
+			final JSONArray dst = obj1.getJSONArray("legs");
+			final JSONObject obj2 = dst.getJSONObject(0);
+			final JSONObject obj3 = obj2.getJSONObject("duration");
+			value = obj3.getDouble("value");
+			value = value / 60;
+		} catch (final Exception e) {
+			e.printStackTrace();
 		}
-		return DoubleRounder.round(price, 2);
-	}*/
-	
+		return value.intValue();
+	}
+	/*
+	 * public Double getPrice(final Double distance) {
+	 * Double price = 0.0;
+	 * final Double price3km = 0.33;
+	 * final Double profit = 0.10;
+	 * if (distance < 9.0)
+	 * price = 1 + profit;
+	 * else {
+	 * final String str = String.valueOf(distance / 3);
+	 * final Integer intNumber = Integer.parseInt(str.substring(0, str.indexOf('.')));
+	 * price = intNumber * price3km + profit;
+	 *
+	 * }
+	 * return DoubleRounder.round(price, 2);
+	 * }
+	 */
+
 	public Double getPrice(final double distance) {
 		Assert.isTrue(distance >= 0);
 		double result = 1.1d;
-		if (distance > 9d) {
+		if (distance > 9d)
 			result += (distance - 9d) * 0.11d;
-		}
 		return DoubleRounder.round(result, 2);
 	}
-	
+
 	public Integer getCurrentAvailableSeats(final int routeId) {
-		return getCurrentAvailableSeats(findOne(routeId));
+		return this.getCurrentAvailableSeats(this.findOne(routeId));
 	}
-	
+
 	public Integer getCurrentAvailableSeats(final Route route) {
 		Assert.notNull(route);
 		Assert.isTrue(route.getId() > 0);
-		Collection<Reservation> reservations = reservationService.findReservationsByRouteAndStatus(route.getId(), ReservationStatus.ACCEPTED);
+		final Collection<Reservation> reservations = this.reservationService.findReservationsByRouteAndStatus(route.getId(), ReservationStatus.ACCEPTED);
 		int occupiedSeats = 0;
-		for (Reservation r : reservations) {
+		for (final Reservation r : reservations)
 			occupiedSeats += r.getSeat();
-		}
 		return route.getAvailableSeats() - occupiedSeats;
 	}
 
-	//Finder 
+	//Finder
 
-	public Collection<Route> searchRoutes(Finder finder, BindingResult binding) {
+	public Collection<Route> searchRoutes(final Finder finder, final BindingResult binding) {
 		Assert.notNull(finder);
 		Assert.notNull(binding);
-		
+
 		Collection<Route> queryResult = null;
-		queryResult = routeRepository.search(finder.getDestination(), finder.getAvailableSeats());
-		Collection<Route> result = new ArrayList<Route>();
-		
-		for (Route r : queryResult) {
+		queryResult = this.routeRepository.search(finder.getDestination(), finder.getAvailableSeats());
+		final Collection<Route> result = new ArrayList<Route>();
+
+		for (final Route r : queryResult) {
 			// Filtrar por preferencias
-			if (finder.getChilds() && !r.getDriver().getChilds()) {
+			if (finder.getChilds() && !r.getDriver().getChilds())
 				continue;
-			}
-			if (finder.getMusic() && !r.getDriver().getMusic()) {
+			if (finder.getMusic() && !r.getDriver().getMusic())
 				continue;
-			}
-			if (finder.getPets() && !r.getDriver().getPets()) {
+			if (finder.getPets() && !r.getDriver().getPets())
 				continue;
-			}
-			if (finder.getSmoke() && !r.getDriver().getSmoke()) {
+			if (finder.getSmoke() && !r.getDriver().getSmoke())
 				continue;
-			}
-			
+
 			// Filtrar por vehículo
 			if (finder.getVehicleType() != null) {
-				if (finder.getVehicleType() == 1 && r.getVehicle().getType() != VehicleType.CAR) {
+				if (finder.getVehicleType() == 1 && r.getVehicle().getType() != VehicleType.CAR)
 					continue;
-				}
-				if (finder.getVehicleType() == 2 && r.getVehicle().getType() != VehicleType.BIKE) {
+				if (finder.getVehicleType() == 2 && r.getVehicle().getType() != VehicleType.BIKE)
 					continue;
-				}
 			}
-			
+
 			// Filtrar por tamaño del equipaje
-			if (finder.getLuggageSize() != null && r.getMaxLuggage().getId() < finder.getLuggageSize().getId()) {
+			if (finder.getLuggageSize() != null && r.getMaxLuggage().getId() < finder.getLuggageSize().getId())
 				continue;
-			}
-			
+
 			// Filtrar por asientos disponibles
 			int availableSeats = r.getAvailableSeats();
-			for (Reservation re : r.getReservations()) {
-				if (re.getStatus() == ReservationStatus.ACCEPTED) {
+			for (final Reservation re : r.getReservations())
+				if (re.getStatus() == ReservationStatus.ACCEPTED)
 					availableSeats -= re.getSeat();
-				}
-			}
-			if (availableSeats < finder.getAvailableSeats()) {
+			if (availableSeats < finder.getAvailableSeats())
 				continue;
-			}
-			
+
 			// Obtener el controlpoint de destino
-			String destinationLocation = finder.getDestination().trim().toLowerCase();
+			final String destinationLocation = finder.getDestination().trim().toLowerCase();
 			ControlPoint destination = null;
-			for (ControlPoint cp : r.getControlPoints()) {
-				if (cp.getLocation().toLowerCase().contains(destinationLocation)) {
+			for (final ControlPoint cp : r.getControlPoints())
+				if (cp.getLocation().toLowerCase().contains(destinationLocation))
 					destination = cp;
-				}
-			}
-			
+
 			// Filtrar por fecha y hora de llegada
 			if (finder.getArrivalDate() != null) {
-				Date minTime = new Date(finder.getArrivalDate().getTime() - 900000);
-				Date maxTime = new Date(finder.getArrivalDate().getTime() + 900000);
-				if (destination.getArrivalTime().before(minTime) || destination.getArrivalTime().after(maxTime)) {
+				final Date minTime = new Date(finder.getArrivalDate().getTime() - 900000);
+				final Date maxTime = new Date(finder.getArrivalDate().getTime() + 900000);
+				if (destination.getArrivalTime().before(minTime) || destination.getArrivalTime().after(maxTime))
 					continue;
-				}
 			}
-			
+
 			// Filtrar por origen
 			ControlPoint origin = null;
 			if (finder.getOrigin() != null && !finder.getOrigin().trim().isEmpty()) {
-				String originLocation = finder.getOrigin().trim().toLowerCase();
-				for (ControlPoint cp : r.getControlPoints()) {
+				final String originLocation = finder.getOrigin().trim().toLowerCase();
+				for (final ControlPoint cp : r.getControlPoints())
 					if (cp.getLocation().toLowerCase().contains(originLocation)) {
 						origin = cp;
 						break;
 					}
-				}
 				// No existe la ubicación de origen en la ruta, o es una parada posterior al destino
-				if (origin == null || destination.getArrivalOrder() <= origin.getArrivalOrder()) {
+				if (origin == null || destination.getArrivalOrder() <= origin.getArrivalOrder())
 					continue;
-				}
 			}
-			
+
 			// Filtrar por fecha de salida
 			if (finder.getDepartureDate() != null && origin != null) {
-				Date minTime = new Date(finder.getDepartureDate().getTime() - 900000);
-				Date maxTime = new Date(finder.getDepartureDate().getTime() + 900000);
-				if (origin.getArrivalTime().before(minTime) || origin.getArrivalTime().after(maxTime)) {
+				final Date minTime = new Date(finder.getDepartureDate().getTime() - 900000);
+				final Date maxTime = new Date(finder.getDepartureDate().getTime() + 900000);
+				if (origin.getArrivalTime().before(minTime) || origin.getArrivalTime().after(maxTime))
 					continue;
-				}
 			}
-			
+
 			result.add(r);
 		}
-		
+
 		return result;
 	}
-	
+
 	/*
-	public Collection<Route> searchRoutes2(final Finder finder) {
+	 * public Collection<Route> searchRoutes2(final Finder finder) {
+	 *
+	 * this.validateFinder(finder);
+	 *
+	 * Collection<Route> queryResult, finalResult;
+	 *
+	 * final Date departureDate = finder.getDepartureDate();
+	 * final LocalTime timeStart = finder.getOriginTime();
+	 * final LocalTime timeEnds = finder.getDestinationTime();
+	 * final Integer availableSeats = finder.getAvailableSeats();
+	 * final Boolean pets = finder.getPets();
+	 * final Boolean childs = finder.getChilds();
+	 * final Boolean smoke = finder.getSmoke();
+	 * final Boolean music = finder.getMusic();
+	 * final LuggageSize luggageSize = finder.getLuggageSize();
+	 * VehicleType vehicleType = null;
+	 *
+	 * final Integer vehicleTypeInteger = finder.getVehicleType();
+	 *
+	 * if (vehicleTypeInteger != 0)
+	 * vehicleType = finder.getVehicleTypeById(vehicleTypeInteger);
+	 *
+	 * // En los set de origin y destination, se ponen como "" o lo que sea en minusculas
+	 * final String origin = finder.getOrigin();
+	 * final String destination = finder.getDestination();
+	 *
+	 * final Calendar departureDateFinder = Calendar.getInstance();
+	 *
+	 * if (departureDate != null)
+	 * departureDateFinder.setTime(departureDate);
+	 *
+	 * // Buscamos todas las rutas no canceladas futuras
+	 * queryResult = this.routeRepository.searchRoutes(availableSeats);
+	 * finalResult = new ArrayList<Route>();
+	 *
+	 * final Calendar rutaActual = Calendar.getInstance();
+	 *
+	 * for (final Route r : queryResult) {
+	 *
+	 * rutaActual.setTime(r.getDepartureDate());
+	 *
+	 * // Primero filtramos por FECHA Y HORA:
+	 * if (departureDate != null && rutaActual.get(Calendar.DAY_OF_YEAR) != departureDateFinder.get(Calendar.DAY_OF_YEAR))
+	 * continue;
+	 *
+	 * final LocalTime departureTime = LocalTime.fromDateFields(r.getDepartureDate());
+	 *
+	 * if (timeStart != null && departureTime.isBefore(timeStart))
+	 * // Si la hora de inicio de la ruta es anterior a la del finder, ignorar esta ruta
+	 * continue;
+	 *
+	 * if (timeEnds != null && departureTime.isAfter(timeEnds))
+	 * //Si la hora de fin de la ruta es posterior a la del finder, ignorar esta ruta
+	 * continue;
+	 *
+	 * // Luego por origen y destino:
+	 *
+	 * if (origin != "" && !r.getOrigin().toLowerCase().contains(origin))
+	 * continue;
+	 *
+	 * if (destination != "" && !r.getDestination().toLowerCase().contains(destination))
+	 * continue;
+	 *
+	 * // Después smoke, pets, childs, music
+	 *
+	 * final Driver driver = r.getDriver();
+	 *
+	 * if (smoke && !driver.getSmoke())
+	 * continue;
+	 *
+	 * if (pets && !driver.getPets())
+	 * continue;
+	 *
+	 * if (childs && !driver.getChilds())
+	 * continue;
+	 *
+	 * if (music && !driver.getMusic())
+	 * continue;
+	 *
+	 * // Y por ultimo LuggageSize y VehicleType
+	 * if (vehicleType != null && r.getVehicle().getType() != vehicleType)
+	 * continue;
+	 *
+	 * if (luggageSize != null && r.getMaxLuggage().getId() < luggageSize.getId())
+	 * continue;
+	 *
+	 * finalResult.add(r);
+	 *
+	 * }
+	 *
+	 * return finalResult;
+	 * }
+	 *
+	 * private void validateFinder(final Finder finder) {
+	 *
+	 * Assert.notNull(finder);
+	 *
+	 * // Origen o destino deben estar presentes
+	 * Assert.isTrue(!finder.getDestination().isEmpty());
+	 *
+	 * // La hora minima de salida debe ser inferior a la hora máxima de salida
+	 * if (finder.getOriginTime() != null && finder.getDestinationTime() != null)
+	 * Assert.isTrue((finder.getOriginTime().isBefore(finder.getDestinationTime())));
+	 *
+	 * //Solamente podemos buscar rutas que sean del día actual hasta el futuro
+	 * if (finder.getDepartureDate() != null) {
+	 * final Calendar de = Calendar.getInstance();
+	 * final Calendar now = Calendar.getInstance();
+	 * de.setTime(finder.getDepartureDate());
+	 * now.setTime(new Date());
+	 * Assert.isTrue(de.get(Calendar.DAY_OF_YEAR) >= now.get(Calendar.DAY_OF_YEAR));
+	 * }
+	 * }
+	 */
 
-		this.validateFinder(finder);
-
-		Collection<Route> queryResult, finalResult;
-
-		final Date departureDate = finder.getDepartureDate();
-		final LocalTime timeStart = finder.getOriginTime();
-		final LocalTime timeEnds = finder.getDestinationTime();
-		final Integer availableSeats = finder.getAvailableSeats();
-		final Boolean pets = finder.getPets();
-		final Boolean childs = finder.getChilds();
-		final Boolean smoke = finder.getSmoke();
-		final Boolean music = finder.getMusic();
-		final LuggageSize luggageSize = finder.getLuggageSize();
-		VehicleType vehicleType = null;
-
-		final Integer vehicleTypeInteger = finder.getVehicleType();
-
-		if (vehicleTypeInteger != 0)
-			vehicleType = finder.getVehicleTypeById(vehicleTypeInteger);
-
-		// En los set de origin y destination, se ponen como "" o lo que sea en minusculas
-		final String origin = finder.getOrigin();
-		final String destination = finder.getDestination();
-
-		final Calendar departureDateFinder = Calendar.getInstance();
-
-		if (departureDate != null)
-			departureDateFinder.setTime(departureDate);
-
-		// Buscamos todas las rutas no canceladas futuras
-		queryResult = this.routeRepository.searchRoutes(availableSeats);
-		finalResult = new ArrayList<Route>();
-
-		final Calendar rutaActual = Calendar.getInstance();
-
-		for (final Route r : queryResult) {
-
-			rutaActual.setTime(r.getDepartureDate());
-
-			// Primero filtramos por FECHA Y HORA:
-			if (departureDate != null && rutaActual.get(Calendar.DAY_OF_YEAR) != departureDateFinder.get(Calendar.DAY_OF_YEAR))
-				continue;
-
-			final LocalTime departureTime = LocalTime.fromDateFields(r.getDepartureDate());
-
-			if (timeStart != null && departureTime.isBefore(timeStart))
-				// Si la hora de inicio de la ruta es anterior a la del finder, ignorar esta ruta
-				continue;
-
-			if (timeEnds != null && departureTime.isAfter(timeEnds))
-				//Si la hora de fin de la ruta es posterior a la del finder, ignorar esta ruta
-				continue;
-
-			// Luego por origen y destino:
-
-			if (origin != "" && !r.getOrigin().toLowerCase().contains(origin))
-				continue;
-
-			if (destination != "" && !r.getDestination().toLowerCase().contains(destination))
-				continue;
-
-			// Después smoke, pets, childs, music
-
-			final Driver driver = r.getDriver();
-
-			if (smoke && !driver.getSmoke())
-				continue;
-
-			if (pets && !driver.getPets())
-				continue;
-
-			if (childs && !driver.getChilds())
-				continue;
-
-			if (music && !driver.getMusic())
-				continue;
-
-			// Y por ultimo LuggageSize y VehicleType
-			if (vehicleType != null && r.getVehicle().getType() != vehicleType)
-				continue;
-
-			if (luggageSize != null && r.getMaxLuggage().getId() < luggageSize.getId())
-				continue;
-
-			finalResult.add(r);
-
-		}
-
-		return finalResult;
-	}
-
-	private void validateFinder(final Finder finder) {
-
-		Assert.notNull(finder);
-
-		// Origen o destino deben estar presentes
-		Assert.isTrue(!finder.getDestination().isEmpty());
-
-		// La hora minima de salida debe ser inferior a la hora máxima de salida
-		if (finder.getOriginTime() != null && finder.getDestinationTime() != null)
-			Assert.isTrue((finder.getOriginTime().isBefore(finder.getDestinationTime())));
-
-		//Solamente podemos buscar rutas que sean del día actual hasta el futuro
-		if (finder.getDepartureDate() != null) {
-			final Calendar de = Calendar.getInstance();
-			final Calendar now = Calendar.getInstance();
-			de.setTime(finder.getDepartureDate());
-			now.setTime(new Date());
-			Assert.isTrue(de.get(Calendar.DAY_OF_YEAR) >= now.get(Calendar.DAY_OF_YEAR));
-		}
-	}
-	*/
-	
 	public Collection<Route> findActiveRoutesByPassenger(final int passengerId) {
 		Assert.isTrue(passengerId != 0);
 
@@ -532,7 +564,7 @@ public class RouteService {
 			routeForm.setOrigin(this.controlPointService.constructCreate(this.controlPointService.create(), route));
 			final ControlPoint cp = this.controlPointService.create();
 			cp.setArrivalOrder(1);
-			ControlPointFormCreate cpfc = this.controlPointService.constructCreate(cp, route);
+			final ControlPointFormCreate cpfc = this.controlPointService.constructCreate(cp, route);
 			cpfc.setEstimatedTime(1);
 			routeForm.setDestination(cpfc);
 			routeForm.setControlpoints(new ArrayList<ControlPointFormCreate>());
@@ -542,9 +574,8 @@ public class RouteService {
 			routeForm.setDestination(this.controlPointService.constructCreate(cps.removeLast(), route));
 			routeForm.setControlpoints(new ArrayList<ControlPointFormCreate>());
 
-			for (final ControlPoint cp : cps) {
+			for (final ControlPoint cp : cps)
 				routeForm.getControlpoints().add(this.controlPointService.constructCreate(cp, route));
-			}
 		}
 		routeForm.setDepartureDate(route.getDepartureDate());
 		routeForm.setDetails(route.getDetails());
@@ -556,15 +587,15 @@ public class RouteService {
 		return routeForm;
 	}
 
-	public Route reconstruct(RouteForm routeForm, Driver driver, BindingResult binding) {
+	public Route reconstruct(final RouteForm routeForm, final Driver driver, final BindingResult binding) {
 		Assert.notNull(driver);
 		Assert.notNull(routeForm);
-//		Assert.notNull(routeForm.getOrigin());
-//		Assert.notNull(routeForm.getDestination());
-//		Assert.notNull(routeForm.getVehicle());
-//		Assert.isTrue(routeForm.getAvailableSeats() < routeForm.getVehicle().getSeatsCapacity());
-//		Assert.isTrue(routeForm.getDepartureDate().after(new Date(new Date().getTime() + 960000l))); // 16 minutos en ms
-//		Assert.isTrue(routeForm.getVehicle().getDriver().getId() == driver.getId());
+		//		Assert.notNull(routeForm.getOrigin());
+		//		Assert.notNull(routeForm.getDestination());
+		//		Assert.notNull(routeForm.getVehicle());
+		//		Assert.isTrue(routeForm.getAvailableSeats() < routeForm.getVehicle().getSeatsCapacity());
+		//		Assert.isTrue(routeForm.getDepartureDate().after(new Date(new Date().getTime() + 960000l))); // 16 minutos en ms
+		//		Assert.isTrue(routeForm.getVehicle().getDriver().getId() == driver.getId());
 		boolean keepGoing = true;
 		if (routeForm.getAvailableSeats() >= routeForm.getVehicle().getSeatsCapacity()) {
 			binding.rejectValue("availableSeats", "route.error.seatsCapacity");
@@ -578,43 +609,30 @@ public class RouteService {
 			binding.rejectValue("vehicle", "route.error.incorrectVehicle");
 			keepGoing = false;
 		}
-		
+
 		Route result = null;
 		if (keepGoing) {
-			List<ControlPointFormCreate> cps = new ArrayList<ControlPointFormCreate>();
+			final List<ControlPointFormCreate> cps = new ArrayList<ControlPointFormCreate>();
 			cps.add(routeForm.getOrigin());
-			if (routeForm.getControlpoints() != null) {
-				for (ControlPointFormCreate cp : routeForm.getControlpoints()) {
+			if (routeForm.getControlpoints() != null)
+				for (final ControlPointFormCreate cp : routeForm.getControlpoints())
 					cps.add(cp);
-				}
-			}
 			cps.add(routeForm.getDestination());
-			List<ControlPoint> controlPoints = this.controlPointService.reconstructCreate(cps, routeForm.getDepartureDate());
-	
+			final List<ControlPoint> controlPoints = this.controlPointService.reconstructCreate(cps, routeForm.getDepartureDate());
+
 			Double routeDistance = 0d;
-			for (ControlPoint cp : controlPoints) {
+			for (final ControlPoint cp : controlPoints)
 				routeDistance += cp.getDistance();
-			}
 			routeDistance = DoubleRounder.round(routeDistance, 2);
-	
+
 			Integer estimatedDuration = 0;
-			for (ControlPointFormCreate cp : cps) {
+			for (final ControlPointFormCreate cp : cps)
 				estimatedDuration += cp.getEstimatedTime();
-			}
-			/*
-			 * for (ControlPoint cp : controlPoints) {
-			 * routeDistance += cp.getDistance();
-			 * if (lastTime != 0l) {
-			 * estimatedDuration += TimeUnit.MINUTES.convert(cp.getArrivalTime().getTime() - lastTime, TimeUnit.MILLISECONDS);
-			 * }
-			 * lastTime = cp.getArrivalTime().getTime();
-			 * }
-			 */
-	
-			double pricePerPassenger = getPrice(routeDistance);
-	
+
+			final double pricePerPassenger = this.getPrice(routeDistance);
+
 			result = this.create();
-	
+
 			result.setAvailableSeats(routeForm.getAvailableSeats());
 			result.setDaysRepeat(null);
 			result.setDepartureDate(routeForm.getDepartureDate());
@@ -625,7 +643,7 @@ public class RouteService {
 			result.setIsCancelled(false);
 			result.setVehicle(routeForm.getVehicle());
 			result.setVersion(0);
-	
+
 			result.setControlPoints(controlPoints);
 			//		result.setDestination(controlPoints.last().getLocation());
 			result.setDestination(controlPoints.get(controlPoints.size() - 1).getLocation());

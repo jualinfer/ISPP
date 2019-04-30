@@ -1,8 +1,8 @@
 /*
  * ReservationController.java
- *
+ * 
  * Copyright (C) 2019 Universidad de Sevilla
- *
+ * 
  * The use of this project is hereby constrained to the conditions of the
  * TDG Licence, a copy of which you may download from
  * http://www.tdg-seville.info/License.html
@@ -82,13 +82,14 @@ public class ReservationPassengerController extends AbstractController {
 			final ReservationForm reservation = this.reservationService.construct(this.reservationService.create(), route, passenger);
 			result = this.createEditModelAndView(reservation);
 		} catch (final Throwable oops) {
-			result = new ModelAndView("redirect:/misc/403.do");
+			result = new ModelAndView("redirect:/welcome.do");
 		}
 		return result;
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ModelAndView save(@ModelAttribute(value = "reservation") @Valid final ReservationForm reservationForm, final BindingResult binding) {
+
 		ModelAndView result = null;
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(reservationForm);
@@ -114,6 +115,7 @@ public class ReservationPassengerController extends AbstractController {
 					result = new ModelAndView("redirect:/route/display.do?routeId=" + reservation.getRoute().getId());
 				}
 			} catch (final StripeException e) {
+
 				e.printStackTrace();
 				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
 			} catch (final Throwable oops) {
@@ -122,7 +124,6 @@ public class ReservationPassengerController extends AbstractController {
 			}
 		return result;
 	}
-
 	private ModelAndView createEditModelAndView(final ReservationForm reservation) {
 		return this.createEditModelAndView(reservation, null);
 	}
@@ -146,20 +147,20 @@ public class ReservationPassengerController extends AbstractController {
 	 * Reservation reservation;
 	 * UserAccount ua;
 	 * Passenger passenger;
-	 *
+	 * 
 	 * ua = LoginService.getPrincipal();
 	 * passenger = (Passenger) this.actorService.findByUserAccount(ua);
 	 * Assert.notNull(passenger);
-	 *
+	 * 
 	 * route = this.routeService.findOne(routeId);
-	 *
+	 * 
 	 * reservation = this.reservationService.create();
 	 * reservation.setRoute(route);
 	 * reservation.setPrice(route.getPricePerPassenger());
 	 * reservation.setPassenger(passenger);
-	 *
+	 * 
 	 * result = this.createEditModelAndView(reservation);
-	 *
+	 * 
 	 * return result;
 	 * }
 	 */
@@ -169,7 +170,7 @@ public class ReservationPassengerController extends AbstractController {
 	 * public ModelAndView save(@Valid final Reservation reservation, final BindingResult binding) {
 	 * ModelAndView result;
 	 * Route route;
-	 *
+	 * 
 	 * if (binding.hasErrors()) {
 	 * result = this.createEditModelAndView(reservation);
 	 * System.out.println(binding.getAllErrors());
@@ -279,41 +280,41 @@ public class ReservationPassengerController extends AbstractController {
 	 * Passenger passenger;
 	 * UserAccount ua;
 	 * Route route;
-	 *
+	 * 
 	 * ua = LoginService.getPrincipal();
 	 * passenger = (Passenger) this.actorService.findByUserAccount(ua);
 	 * Assert.notNull(passenger);
-	 *
+	 * 
 	 * reservation = this.reservationService.findOne(reservationId);
 	 * this.reservationService.confirmReservation(reservation);
-	 *
+	 * 
 	 * route = reservation.getRoute();
 	 * Assert.notNull(route);
 	 * result = new ModelAndView("redirect: /route/display.do?routeId=" + route.getId());
-	 *
+	 * 
 	 * //TENGO QUE PASARLE OTRA VEZ TODA LA INFO QUE HAY EN EL DISPLAY DE ROUTE
-	 *
+	 * 
 	 * Collection<Reservation> reservations, displayableReservations;
 	 * Integer occupiedSeats;
 	 * boolean startedRoute = false;
 	 * boolean hasPassed10Minutes = false;
 	 * boolean arrivalPlus10Min = false;
-	 *
+	 * 
 	 * reservations = route.getReservations();
 	 * displayableReservations = new ArrayList<Reservation>();
 	 * occupiedSeats = 0;
 	 * ua = LoginService.getPrincipal();
-	 *
+	 * 
 	 * if (reservations != null && reservations.size() > 0)
 	 * for (final Reservation res : reservations)
 	 * if (res.getStatus().equals(ReservationStatus.ACCEPTED)) {
 	 * occupiedSeats++; //Contamos asientos ocupados
 	 * displayableReservations.add(res); //añadimos las reservas aceptadas
 	 * }
-	 *
+	 * 
 	 * if (route.getDepartureDate().before(new Date()))
 	 * startedRoute = true;
-	 *
+	 * 
 	 * //----proceso para conseguir la fecha de llegada---
 	 * final Calendar date = Calendar.getInstance();
 	 * date.setTime(route.getDepartureDate());
@@ -322,7 +323,7 @@ public class ReservationPassengerController extends AbstractController {
 	 * final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 	 * sdf.format(arrivalDate);
 	 * //------------------------------------------------
-	 *
+	 * 
 	 * //----proceso para conseguir la fecha de salida + 10 minutos---
 	 * final Date tenMinutesAfterDeparture = new Date(departureDateMilis + 600000);
 	 * if (new Date().after(tenMinutesAfterDeparture))
@@ -340,9 +341,9 @@ public class ReservationPassengerController extends AbstractController {
 	 * result.addObject("startedRoute", startedRoute);
 	 * result.addObject("hasPassed10Minutes", hasPassed10Minutes);
 	 * result.addObject("arrivalPlus10Min", arrivalPlus10Min);
-	 *
+	 * 
 	 * return result;
-	 *
+	 * 
 	 * }
 	 */
 	// Confirmacion de que conductor me ha recogido ---------------------------------------------------------------

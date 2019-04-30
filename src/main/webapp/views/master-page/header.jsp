@@ -69,14 +69,14 @@ window.cookieconsent.initialise({
 		</security:authorize>
 	</div>
 	<div class="user-details d-flex justify-content-end">
-		<!-- <div class="item-details messages">
-			<a class="nav-link border-right" href="#"> 
-				<i class="far fa-envelope"> -->
-					<!-- <span class="badge badge-danger">11</span> --> <!-- numero de mensajes -->
-				<!-- </i>
+		<div class="item-details messages">
+			<a class="nav-link border-right" href="thread/message/list.do"> 
+				<i class="far fa-envelope">
+					<!-- <span class="badge badge-danger"></span> --> <!-- numero de mensajes -->
+				</i>
 			</a>
 		</div> 
-		<div class="item-details notificaciones">
+		<!-- <div class="item-details notificaciones">
 			<a class="nav-link border-right" href="#"> 
 				<i class="far fa-bell"></i>
 			</a>
@@ -108,28 +108,27 @@ window.cookieconsent.initialise({
 	</div>
 	
 	<div class="header_nav backgroundcolor-pink">
-<!-- 		<div class="add_search"> -->
-<%-- 			<security:authorize access="hasRole('DRIVER')"> --%>
-<!-- 				<a href="route/driver/create.do" class="btn btn-success btn-lg p-1 text-white"> -->
-<%-- 					<spring:message code="master.page.addRoute" /> --%>
-<!-- 				</a> -->
-<%-- 			</security:authorize> --%>
-<%-- 			<security:authorize access="hasRole('PASSENGER')"> --%>
-<!-- 				<a href="route/search.do" class="btn btn-success btn-lg p-1 text-white"> -->
-<%-- 					<spring:message code="master.page.searchRoute" /> --%>
-<!-- 				</a> -->
-<%-- 			</security:authorize> --%>
-<!-- 		</div> -->
-		<!-- <nav class="nav-bar navbar-expand-lg">
+		<div class="add_search">
+			<security:authorize access="hasRole('DRIVER')">
+				<a href="route/driver/create.do" class="btn btn-success btn-lg p-1 text-white">
+					<spring:message code="master.page.addRoute" />
+				</a>
+			</security:authorize>
+			<security:authorize access="hasRole('PASSENGER')">
+				<a href="route/search.do" class="btn btn-success btn-lg p-1 text-white">
+					<spring:message code="master.page.searchRoute" />
+				</a>
+			</security:authorize>
+		</div>
+		 <nav class="nav-bar navbar-expand-lg">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">
 	        		<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 	      		</li>
 			</ul>
-		</nav> -->
+		</nav> 
 	</div>
 	
-	<!-- --- -->
 <%-- 
 	<nav class="navbar navbar-icon-top navbar-expand-lg" style="background-color: #fa3274;">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

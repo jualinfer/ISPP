@@ -110,50 +110,13 @@
 		
 		<div class="form-row">
 			<div class="col">
-			<spring:message code="creditCard.number" var="driverCreditCard"/>
-				<form:input path="creditCard.number" type="text" class="form-control"
-					placeholder="${driverCreditCard }"/>
-				<form:errors cssClass="error" path="creditCard.number" />
+			<spring:message code="driver.image" var="driverImage"/>
+				<form:input path="image" type="text" class="form-control"
+					placeholder="${driverImage }"/>
+				<form:errors cssClass="error" path="image" />
 				<br />
 			</div>
 		</div>
-
-
-
-		<div class="form-row">
-			<div class="col">
-			<spring:message code="creditCard.expMonth" var="driverExpMonth"/>
-				<form:input path="creditCard.expMonth" type="text" class="form-control"
-					placeholder="${driverExpMonth }"/>
-				<form:errors cssClass="error" path="creditCard.expMonth" />
-				<br />
-			</div>
-		</div>
-
-
-
-		<div class="form-row">
-			<div class="col">
-			<spring:message code="creditCard.expYear" var="driverExpYear"/>
-				<form:input path="creditCard.expYear" type="text" class="form-control"
-					placeholder="${driverExpYear }"/>
-				<form:errors cssClass="error" path="creditCard.expYear" />
-				<br />
-			</div>
-		</div>
-
-
-		<div class="form-row">
-			<div class="col">
-			<spring:message code="creditCard.cvv" var="driverCVV"/>
-				<form:input path="creditCard.cvv" type="text" class="form-control"
-					placeholder="${driverCVV }"/>
-				<form:errors cssClass="error" path="creditCard.cvv" />
-				<br />
-			</div>
-		</div>
-
-
 
 		<div class="form-row">
 			<div class="col">

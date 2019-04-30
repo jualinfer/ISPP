@@ -114,6 +114,9 @@
 							<p>
 								<jstl:out value="${route.driver.name}" />
 								<jstl:out value="${route.driver.surname}" />
+								<jstl:if test="${route.driver.id != connectedUser.id}">
+									<a href="thread/message/create.do?userId=${route.driver.id}&routeId=${route.id}"><i class="far fa-envelope"></i></a>
+								</jstl:if>
 							</p>
 
 						</div>
@@ -300,6 +303,9 @@
 								<span><dd>
 									<jstl:out
 										value="${res.passenger.name} ${res.passenger.surname}" />
+										<jstl:if test="${res.passenger.id != connectedUser.id}">
+											<a href="thread/message/create.do?userId=${res.passenger.id}&routeId=${route.id}"><i class="far fa-envelope"></i></a>
+										</jstl:if>
 								</dd></span>
 								<dd>
 									<jstl:out value="${res.passenger.mediumStars}/5" />

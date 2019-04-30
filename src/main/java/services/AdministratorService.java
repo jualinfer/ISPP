@@ -80,5 +80,9 @@ public class AdministratorService {
 
 		return result;
 	}
+	
+	public Administrator saveUpdateNotifications(Administrator admin) {
+		return (Administrator) actorService.save(admin);
+	}
 
 }
