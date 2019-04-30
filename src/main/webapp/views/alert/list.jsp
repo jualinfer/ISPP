@@ -23,7 +23,8 @@
 <%-- Stored message variables --%>
 
 
-<spring:message code="alert.relatedRoute" var="route" />
+<spring:message code="alert.relatedRoute.orig" var="routeOrig" />
+<spring:message code="alert.relatedRoute.dest" var="routeDest" />
 <spring:message code="alert.alertType" var="alertType" />
 <spring:message code="alert.delete" var="delete" />
 <spring:message code="alert.seen" var="seen" />
@@ -36,8 +37,9 @@
 	name="alerts" requestURI="${requestURI}" id="row">
 
 	<%-- Attributes --%>
-
-	<display:column property="relatedRoute" title="${route}" sortable="true" />
+	
+	<display:column property="relatedRoute.origin" title="${routeOrig}" sortable="true" />
+	<display:column property="relatedRoute.destination" title="${routeDest}" sortable="true" />
 
 	<display:column property="typeAlert" title="${alertType}" sortable="true" />
 	

@@ -1,13 +1,11 @@
 
 package domain;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -23,14 +21,15 @@ public class Alert extends DomainEntity {
 
 	//Attributes
 
-	private Date				date;
-	private Actor				sender;
-	private Collection<Actor>	receiver;
-	private TypeAlert			typeAlert;
-	private Boolean				isRead;
+	private Date		date;
+	private Actor		sender;
+	private Actor		receiver;
+	private TypeAlert	typeAlert;
+	private Boolean		isRead;
+	private String		alertBody;
 	//Relationships
 
-	private Route				relatedRoute;
+	private Route		relatedRoute;
 
 
 	//Getters
@@ -58,8 +57,8 @@ public class Alert extends DomainEntity {
 
 	@NotNull
 	@Valid
-	@ManyToMany
-	public Collection<Actor> getReceiver() {
+	@OneToOne(optional = false)
+	public Actor getReceiver() {
 		return this.receiver;
 	}
 
@@ -70,6 +69,10 @@ public class Alert extends DomainEntity {
 
 	public TypeAlert getTypeAlert() {
 		return this.typeAlert;
+	}
+
+	public String getAlertBody() {
+		return this.alertBody;
 	}
 
 	//Setters
@@ -86,7 +89,7 @@ public class Alert extends DomainEntity {
 		this.sender = sender;
 	}
 
-	public void setReceiver(final Collection<Actor> receiver) {
+	public void setReceiver(final Actor receiver) {
 		this.receiver = receiver;
 	}
 
@@ -96,5 +99,9 @@ public class Alert extends DomainEntity {
 
 	public void setIsRead(final Boolean isRead) {
 		this.isRead = isRead;
+	}
+
+	public void setAlertBody(final String alertBody) {
+		this.alertBody = alertBody;
 	}
 }

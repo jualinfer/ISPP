@@ -72,9 +72,8 @@ public class AlertService {
 
 		final Collection<Alert> allAlerts = this.alertRepository.findAll();
 		for (final Alert al : allAlerts)
-			for (final Actor ac : al.getReceiver())
-				if (ac.getId() == id)
-					result.add(al);
+			if (al.getReceiver().getId() == id)
+				result.add(al);
 		return result;
 	}
 

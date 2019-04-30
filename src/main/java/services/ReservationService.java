@@ -144,10 +144,8 @@ public class ReservationService {
 		if (reservation.getId() == 0) {
 			//		We create an alert
 			final Alert alert = this.alertService.create();
-			final Collection<Actor> receivers = new ArrayList<Actor>();
 			final Driver receiver = reservation.getRoute().getDriver();
-			receivers.add(receiver);
-			alert.setReceiver(receivers);
+			alert.setReceiver(receiver);
 			alert.setTypeAlert(TypeAlert.APPLICATION_PLACE);
 			alert.setRelatedRoute(reservation.getRoute());
 			this.alertService.save(alert);
@@ -386,10 +384,8 @@ public class ReservationService {
 
 		//We create an alert
 		final Alert alert = this.alertService.create();
-		final Collection<Actor> receivers = new ArrayList<Actor>();
 		final Passenger receiver = reservation.getPassenger();
-		receivers.add(receiver);
-		alert.setReceiver(receivers);
+		alert.setReceiver(receiver);
 		alert.setTypeAlert(TypeAlert.ACCEPTANCE_PLACE);
 		alert.setRelatedRoute(route);
 		this.alertService.save(alert);
@@ -409,10 +405,8 @@ public class ReservationService {
 
 		//We create an alert
 		final Alert alert = this.alertService.create();
-		final Collection<Actor> receivers = new ArrayList<Actor>();
 		final Passenger receiver = reservation.getPassenger();
-		receivers.add(receiver);
-		alert.setReceiver(receivers);
+		alert.setReceiver(receiver);
 		alert.setRelatedRoute(route);
 		alert.setTypeAlert(TypeAlert.REJECTION_PLACE);
 		this.alertService.save(alert);
@@ -430,10 +424,8 @@ public class ReservationService {
 
 		//We create an alert
 		final Alert alert = this.alertService.create();
-		final Collection<Actor> receivers = new ArrayList<Actor>();
 		final Driver receiver = reservation.getRoute().getDriver();
-		receivers.add(receiver);
-		alert.setReceiver(receivers);
+		alert.setReceiver(receiver);
 		alert.setTypeAlert(TypeAlert.CANCELLATION_PLACE);
 		alert.setRelatedRoute(route);
 		this.alertService.save(alert);

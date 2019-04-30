@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ActorService;
 import services.AlertService;
 import domain.Alert;
 
@@ -21,6 +22,9 @@ public class AlertController extends AbstractController {
 
 	@Autowired
 	private AlertService	alertService;
+
+	@Autowired
+	private ActorService	actorService;
 
 
 	//Listing all actor alerts
@@ -35,6 +39,47 @@ public class AlertController extends AbstractController {
 		result = new ModelAndView("alert/list");
 		result.addObject("alerts", alerts);
 		result.addObject("requestURI", "alert/list.do");
+
+		return result;
+	}
+	//Delete
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public ModelAndView delete(@RequestParam final int varId) {
+		final ModelAndView result;
+		Alert alert;
+		Collection<Alert> alerts;
+
+		alert = this.alertService.findOne(varId);
+
+		this.alertService.delete(alert);
+
+		result = new ModelAndView("alert/list");
+
+		alerts = this.alertService.listByActor(this.actorService.findByPrincipal().getId());
+
+		result.addObject("alerts", alerts);
+		result.addObject("requestURI", "alert/actor/list");
+
+		return result;
+	}
+
+	//Seen
+	@RequestMapping(value = "/alertSeen", method = RequestMethod.GET)
+	public ModelAndView alertSeen(@RequestParam final int varId) {
+		final ModelAndView result;
+		Alert alert;
+		Collection<Alert> alerts;
+
+		alert = this.alertService.findOne(varId);
+
+		this.alertService.alertSeen(alert);
+
+		result = new ModelAndView("alert/list");
+
+		alerts = this.alertService.listByActor(this.actorService.findByPrincipal().getId());
+
+		result.addObject("alerts", alerts);
+		result.addObject("requestURI", "alert/actor/list");
 
 		return result;
 	}
