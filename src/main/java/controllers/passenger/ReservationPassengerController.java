@@ -39,9 +39,7 @@ import utilities.StripeConfig;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.BankAccount;
 import com.stripe.model.Charge;
-import com.stripe.model.Customer;
 import com.stripe.model.Payout;
 import com.stripe.model.Refund;
 
@@ -376,30 +374,15 @@ public class ReservationPassengerController extends AbstractController {
 		reservation.setRoute(route);
 
 		try {
-			//customer
 			Stripe.apiKey = StripeConfig.SECRET_KEY;
-
-			final Map<String, Object> customerParams = new HashMap<String, Object>();
-			final Customer customer = Customer.create(customerParams);
-
-			//Bank Account
-			final Map<String, Object> params = new HashMap<String, Object>();
-			final Map<String, Object> baParams = new HashMap<String, Object>();
-			baParams.put("account_number", "00012345");
-			baParams.put("object", "bank_account");
-			baParams.put("country", "UK");
-			baParams.put("currency", StripeConfig.CURRENCY);
-			params.put("source", baParams);
-
-			final BankAccount bankAccount = (BankAccount) customer.getSources().create(params);
 
 			//payout
 
 			final Map<String, Object> payoutParams = new HashMap<String, Object>();
-			payoutParams.put("amount", Integer.toString(currentReservation.getPrice().intValue() * 100));
+			final Double reservPrice = currentReservation.getPrice() * 100;
+			payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
 			payoutParams.put("currency", StripeConfig.CURRENCY);
 			//			payoutParams.put("destination", bankAccount.getId());
-
 			Payout.create(payoutParams);
 
 			this.reservationService.driverPickedMe(reservationId);
@@ -409,7 +392,7 @@ public class ReservationPassengerController extends AbstractController {
 		}
 
 		reservations = route.getReservations();
-		System.out.println(reservations);
+
 		displayableReservations = new ArrayList<Reservation>();
 		occupiedSeats = 0;
 		ua = LoginService.getPrincipal();
@@ -608,11 +591,20 @@ public class ReservationPassengerController extends AbstractController {
 				final long departureDateMilis = date.getTimeInMillis();
 				final Date fifteenMinutesBeforeDeparture = new Date(departureDateMilis - 900000);
 
-				if (fifteenMinutesBeforeDeparture.after(new Date())) {
+				if ((fifteenMinutesBeforeDeparture.after(new Date())) || (!fifteenMinutesBeforeDeparture.after(new Date()) && reservation.getStatus().equals(ReservationStatus.PENDING))) {
 					Stripe.apiKey = StripeConfig.SECRET_KEY;
 					final Map<String, Object> params = new HashMap<>();
 					params.put("charge", reservation.getChargeId());
 					final Refund refund = Refund.create(params);
+				} else if (!fifteenMinutesBeforeDeparture.after(new Date()) && reservation.getStatus().equals(ReservationStatus.ACCEPTED)) {
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					//payout
+					final Map<String, Object> payoutParams = new HashMap<String, Object>();
+					final Double reservPrice = reservation.getPrice() * 100;
+					payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+					payoutParams.put("currency", StripeConfig.CURRENCY);
+					//			payoutParams.put("destination", bankAccount.getId());
+					Payout.create(payoutParams);
 				}
 			}
 			this.reservationService.cancelReservation(reservationId);
@@ -671,13 +663,6 @@ public class ReservationPassengerController extends AbstractController {
 		result.addObject("message", message);
 
 		return result;
-	}
-
-	// Action-2 ---------------------------------------------------------------
-
-	@RequestMapping("/driverPickMe")
-	public ModelAndView action3() {
-		throw new RuntimeException("Oops! An *expected* exception was thrown. This is normal behaviour.");
 	}
 
 }
