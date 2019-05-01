@@ -74,6 +74,8 @@
 		<security:intercept-url pattern="/driver/edit.do" access="hasRole('DRIVER')" /> 
 		<security:intercept-url pattern="/driver/display.do" access="isAuthenticated()" /> 
 		<security:intercept-url pattern="/driver/displayPrincipal.do" access="hasRole('DRIVER')" /> 
+		<security:intercept-url pattern="/driver/unsubscribe.do" access="hasRole('DRIVER')" /> 
+		
 		
 		<security:intercept-url pattern="/vehicle/driver/list.do" access="hasRole('DRIVER')" /> 
 		<security:intercept-url pattern="/vehicle/driver/edit.do" access="hasRole('DRIVER')" /> 
@@ -86,6 +88,7 @@
 		<security:intercept-url pattern="/passenger/display.do" access="isAuthenticated()" /> 
 		<security:intercept-url pattern="/passenger/displayPrincipal.do" access="hasRole('PASSENGER')" /> 
 		<security:intercept-url pattern="/passenger/editCredentials.do" access="hasRole('PASSENGER')" />
+		<security:intercept-url pattern="/passenger/unsubscribe.do" access="hasRole('PASSENGER')" /> 
 		
 		<security:intercept-url pattern="/thread/message/create.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/thread/message/add.do" access="isAuthenticated()" />

@@ -18,9 +18,14 @@ import security.UserAccount;
 import services.ActorService;
 import services.CommentService;
 import services.PassengerService;
+import services.ReservationService;
+import services.RouteService;
 import domain.Actor;
 import domain.Comment;
 import domain.Passenger;
+import domain.Reservation;
+import domain.ReservationStatus;
+import domain.Route;
 import forms.CredentialsfForm;
 
 @Controller
@@ -33,6 +38,12 @@ public class PassegerController extends AbstractController {
 
 	@Autowired
 	private ActorService		actorService;
+
+	@Autowired
+	private RouteService		routeService;
+
+	@Autowired
+	private ReservationService	reservationService;
 
 	@Autowired
 	private CommentService		commentService;
@@ -74,6 +85,7 @@ public class PassegerController extends AbstractController {
 		comments = this.commentService.findCommentsMadeToPassenger(passenger.getId());
 		result = new ModelAndView("passenger/display");
 		result.addObject("passenger", passenger);
+		result.addObject("passengerConnected", passenger);
 		result.addObject("comments", comments);
 		result.addObject("isPrincipal", true);
 
@@ -100,7 +112,7 @@ public class PassegerController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors().toString());
 			result = this.createEditModelAndView(passenger, "passenger/create");
-		} else {
+		} else
 			try {
 				userAccount = super.hashSavePassword(passenger.getUserAccount());
 				passenger.setUserAccount(userAccount);
@@ -109,7 +121,6 @@ public class PassegerController extends AbstractController {
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(passenger, "passenger.commit.error");
 			}
-		}
 		return result;
 	}
 	// Edition -----------------------------------------------------------
@@ -137,14 +148,13 @@ public class PassegerController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors());
 			result = this.createEditModelAndView(passenger, "passenger/edit");
-		} else {
+		} else
 			try {
 				this.passengerService.save(passengerReconstruct);
 				result = new ModelAndView("redirect:/passenger/display.do?passengerId=" + passengerReconstruct.getId());
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(passenger, "passenger.commit.error");
 			}
-		}
 		return result;
 	}
 
@@ -167,11 +177,11 @@ public class PassegerController extends AbstractController {
 		ModelAndView res;
 		Passenger passenger;
 
-		if (binding.hasErrors()) {
+		if (binding.hasErrors())
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "passenger.params.error");
-		} else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword())) {
+		else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword()))
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "passenger.commit.errorPassword");
-		} else {
+		else
 			try {
 				passenger = this.passengerService.reconstructCredential(credentialsfForm, binding);
 				this.passengerService.saveCredentials(passenger);
@@ -179,9 +189,58 @@ public class PassegerController extends AbstractController {
 			} catch (final Throwable oops) {
 				res = this.createEditModelAndViewEditCredentials(credentialsfForm, "passenger.commit.error");
 			}
-		}
 
 		return res;
+	}
+
+	//Darse de baja
+
+	@RequestMapping(value = "/unsubscribe", method = RequestMethod.GET)
+	public ModelAndView unsubscribe() {
+
+		ModelAndView result;
+		Passenger passenger;
+		Passenger passengerLogged;
+		Actor principal;
+
+		principal = this.actorService.findByPrincipal();
+		Assert.isTrue(principal instanceof Passenger);
+		passenger = (Passenger) principal;
+		passengerLogged = (Passenger) this.actorService.findByPrincipal();
+
+		if (passenger.equals(passengerLogged)) {
+
+			final UserAccount ua = passenger.getUserAccount();
+
+			try {
+
+				for (final Route r : this.routeService.findActiveRoutesByPassenger(passenger.getId()))
+					for (final Reservation re : this.reservationService.findReservationsByRouteAndPassenger(r.getId(), passenger.getId())) {
+						re.setStatus(ReservationStatus.CANCELLED);
+						this.reservationService.save(re);
+					}
+
+				ua.setEnabled(false);
+				passenger.setUserAccount(ua);
+				passenger.setName("deleted");
+				passenger.setSurname("deleted");
+				passenger.setCountry("deleted");
+				passenger.setCity("deleted");
+				passenger.setBankAccountNumber("ES7748382522549520946697");
+				passenger.setCash(0.0);
+				passenger.setMediumStars(0.0);
+				passenger.setPhone("600000000");
+				passenger.setImage("https://cdn.pixabay.com/photo/2016/03/10/16/33/icons-1248706_960_720.png");
+				this.passengerService.save(passenger);
+
+				result = new ModelAndView("redirect:/j_spring_security_logout");
+			} catch (final Throwable e) {
+				e.printStackTrace();
+				result = new ModelAndView("redirect:/passenger/displayPrincipal.do");
+			}
+		} else
+			result = new ModelAndView("redirect:/passenger/displayPrincipal.do");
+		return result;
 	}
 
 	// Ancilliary methods -----------------------------------------------------------

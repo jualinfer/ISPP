@@ -2,6 +2,7 @@
 package controllers;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -18,9 +19,13 @@ import security.UserAccount;
 import services.ActorService;
 import services.CommentService;
 import services.DriverService;
+import services.RouteService;
 import domain.Actor;
 import domain.Comment;
 import domain.Driver;
+import domain.Route;
+import domain.Vehicle;
+import domain.VehicleType;
 import forms.CredentialsfForm;
 
 @Controller
@@ -36,6 +41,9 @@ public class DriverController extends AbstractController {
 
 	@Autowired
 	private CommentService	commentService;
+
+	@Autowired
+	private RouteService	routeService;
 
 
 	// Constructor ------------------------------
@@ -74,6 +82,7 @@ public class DriverController extends AbstractController {
 		comments = this.commentService.findCommentsMadeToDriver(driver.getId());
 		result = new ModelAndView("driver/display");
 		result.addObject("driver", driver);
+		result.addObject("driverConnected", driver);
 		result.addObject("comments", comments);
 		result.addObject("isPrincipal", true);
 
@@ -100,7 +109,7 @@ public class DriverController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors().toString());
 			result = this.createEditModelAndView(driver, "driver/create");
-		} else {
+		} else
 			try {
 				userAccount = super.hashSavePassword(driver.getUserAccount());
 				driver.setUserAccount(userAccount);
@@ -109,7 +118,6 @@ public class DriverController extends AbstractController {
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(driver, "driver.commit.error");
 			}
-		}
 		return result;
 	}
 	// Edition -----------------------------------------------------------
@@ -137,14 +145,13 @@ public class DriverController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors());
 			result = this.createEditModelAndView(driver, "driver/edit");
-		} else {
+		} else
 			try {
 				this.driverService.save(driverReconstruct);
 				result = new ModelAndView("redirect:/driver/display.do?driverId=" + driverReconstruct.getId());
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(driver, "driver.commit.error");
 			}
-		}
 		return result;
 	}
 
@@ -167,11 +174,11 @@ public class DriverController extends AbstractController {
 		ModelAndView res;
 		Driver driver;
 
-		if (binding.hasErrors()) {
+		if (binding.hasErrors())
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "driver.params.error");
-		} else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword())) {
+		else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword()))
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "driver.commit.errorPassword");
-		} else {
+		else
 			try {
 				driver = this.driverService.reconstructCredential(credentialsfForm, binding);
 				this.driverService.saveCredentials(driver);
@@ -179,9 +186,69 @@ public class DriverController extends AbstractController {
 			} catch (final Throwable oops) {
 				res = this.createEditModelAndViewEditCredentials(credentialsfForm, "driver.commit.error");
 			}
-		}
 
 		return res;
+	}
+
+	//Darse de baja
+
+	@RequestMapping(value = "/unsubscribe", method = RequestMethod.GET)
+	public ModelAndView unsubscribe() {
+
+		ModelAndView result;
+		Driver driver;
+		Driver driverLogged;
+		Actor principal;
+
+		principal = this.actorService.findByPrincipal();
+		Assert.isTrue(principal instanceof Driver);
+		driver = (Driver) principal;
+		driverLogged = (Driver) this.actorService.findByPrincipal();
+
+		if (driver.equals(driverLogged)) {
+
+			final UserAccount ua = driver.getUserAccount();
+
+			try {
+
+				for (final Route r : this.routeService.findActiveRoutesByDriver(driver.getId(), new Date()))
+					this.routeService.cancel(r);
+
+				for (final Vehicle v : driver.getVehicles()) {
+					v.setDescription("deleted");
+					v.setModel("deleted");
+					v.setPlate("0000ABC");
+					v.setImage("https://cdn.pixabay.com/photo/2016/03/10/16/33/icons-1248706_960_720.png");
+					v.setSeatsCapacity(4);
+					v.setVehicleBrand("deleted");
+					v.setType(VehicleType.CAR);
+				}
+
+				ua.setEnabled(false);
+				driver.setUserAccount(ua);
+				driver.setName("deleted");
+				driver.setSurname("deleted");
+				driver.setCountry("deleted");
+				driver.setCity("deleted");
+				driver.setBankAccountNumber("ES7748382522549520946697");
+				driver.setCash(0.0);
+				driver.setMediumStars(0.0);
+				driver.setPhone("600000000");
+				driver.setChilds(false);
+				driver.setMusic(false);
+				driver.setPets(false);
+				driver.setSmoke(false);
+				driver.setImage("https://cdn.pixabay.com/photo/2016/03/10/16/33/icons-1248706_960_720.png");
+				this.driverService.save(driver);
+
+				result = new ModelAndView("redirect:/j_spring_security_logout");
+			} catch (final Throwable e) {
+				e.printStackTrace();
+				result = new ModelAndView("redirect:/driver/displayPrincipal.do");
+			}
+		} else
+			result = new ModelAndView("redirect:/driver/displayPrincipal.do");
+		return result;
 	}
 
 	// Ancilliary methods -----------------------------------------------------------
