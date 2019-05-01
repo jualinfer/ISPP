@@ -362,6 +362,14 @@
 
 </div>
 
+<jstl:if test="${isPrincipal}">
+
+	<div class="text-center">
+		<br/>
+		<a class="btn btn-primary" href="profile/download.do"><spring:message code="profile.download"/></a>
+	</div>
+
+</jstl:if>
 
 <div class="endList">
 	<div class="circle background_pink"></div>
