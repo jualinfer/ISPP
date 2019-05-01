@@ -9,9 +9,28 @@
  */
 @import url(https://fonts.googleapis.com/css?family=Poppins);
 body{
-	width: 80%;
+	/* width: 80%; */
+	background-color: white;
 	margin: 0 auto;
 	font-family: "Poppins", sans-serif;
+}
+
+.title-principal{
+	color: white; 
+	text-transform: uppercase;
+	text-align: center;
+    position: relative;
+    top: -46px;
+}
+
+.content-principal{
+	margin: 0 auto;
+	/* width: 50%; */
+	width: 80%;
+}
+
+span{
+	font-weight: bold;
 }
 
 .error {
@@ -36,6 +55,15 @@ body{
 	margin:40px 4px;
 	border:1px solid black;
 	border-radius:100%
+}
+
+.rectangle{
+	width: 45px;
+    height: 15px;
+	content:'';
+	position: relative;
+	margin:20px 4px;
+	border-radius:10%
 }
 
  /**** VAR. COLORS ****/
@@ -78,4 +106,8 @@ body{
 
 .background_orange{
 	background-color: #FFA513;
+}
+
+.background_red{
+	background-color: #ce4848;
 }

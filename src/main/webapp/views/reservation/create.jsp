@@ -16,80 +16,166 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+<spring:url value="/styles/route.css" var="routecss" />
+<link href="${routecss}" rel="stylesheet" />
+<script src="${routecss}"></script>
+<link rel="stylesheet" href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+<div class="text-center active-routes">
+	<h3><spring:message code="makeReservation" /></h3>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <security:authorize access="hasRole('PASSENGER')">
-<form:form action="reservation/passenger/create.do"	modelAttribute="reservation">
-			<form:hidden path="id" />
-			<form:hidden path="version" />
-			<form:hidden path="passenger"/>
+	<center>
+		<form:form action="${requestURI}" id="reservationForm" modelAttribute="reservation">
+
 			<form:hidden path="route"/>
-			<form:hidden path="driverPickedMe"/>
-			<form:hidden path="driverNoPickedMe"/>
-			<form:hidden path="status"/>
-
-
-			<form:label path="seat">
-				<spring:message code="route.request.seats" />: </form:label>
-			<form:select path="seat" onclick="multiplicar()" id="seatId">
-				<jstl:forEach var="x" begin="1" end="${remainingSeats}">
-					<form:option label="${x}" value="${x}">
-					</form:option>
-				</jstl:forEach>
-			</form:select>
-			<form:errors cssClass="error" path="seat" />
+			<form:hidden path="availableSeats"/>
+			<form:hidden path="stripeToken"/>
+			<form:hidden path="stripeEmail"/>
+			
+			<div class="form-group col-md-6">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="orig2"><spring:message code="reservation.origin" /></span>
+					</div>
+					<form:select path="origin" class="form-control" required="true" id="orig" onchange="calculatePrice()">
+						<form:options items="${reservation.route.controlPoints}" itemLabel="location" />
+					</form:select>
+				</div>
+				<form:errors cssClass="error" path="origin" />
+			</div>
+			
+			<div class="form-group col-md-6">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="dest2"><spring:message code="reservation.destination" /></span>
+					</div>
+					<form:select path="destination" class="form-control" required="true" id="dest" onchange="calculatePrice()">
+						<form:options items="${reservation.route.controlPoints}" itemLabel="location" />
+					</form:select>
+				</div>
+				<form:errors cssClass="error" path="destination" />
+			</div>
+			
+			<div class="form-group col-md-6">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="seats2"><spring:message code="reservation.seats" /></span>
+					</div>
+					<form:select path="requestedSeats" id="seats" class="form-control" required="true" onchange="calculatePrice()">
+						<jstl:forEach var="x" begin="1" end="${reservation.availableSeats}">
+							<form:option label="${x}" value="${x}"></form:option>
+						</jstl:forEach>
+					</form:select>
+				</div>
+				<form:errors cssClass="error" path="requestedSeats" />
+			</div>
+			
+			<div class="form-group col-md-6">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="luggage2"><spring:message code="reservation.luggage" /></span>
+					</div>
+				<spring:message code="reserv.luggage.none"  var = "noneMsg"/>	
+				<spring:message code="reserv.luggage.small"  var = "smallMsg"/>
+				<spring:message code="reserv.luggage.medium"  var = "mediumMsg"/>
+				<spring:message code="reserv.luggage.big"  var = "bigMsg"/>
+					<form:select path="luggageSize" class="form-control" required="true" id="luggage">
+						<form:option value="NOTHING" label="${noneMsg}"/>
+						<form:option value="SMALL" label="${smallMsg}"/>
+						<form:option value="MEDIUM" label="${mediumMsg}"/>
+						<form:option value="BIG" label="${bigMsg}"/>
+					</form:select>
+				</div>
+				<form:errors cssClass="error" path="luggageSize" />
+			</div>
+			
+			<h4><spring:message code="reservation.price" />: <span class="badge badge-success" id="price"></span></h4>
 			<br />
 
-
-
-			<form:label path="origin">
-				<spring:message code="route.origin" />: </form:label>
-			<form:select path="origin">
-				<form:option value="${route.origin }" />
-			</form:select>
-			<form:errors cssClass="error" path="origin" />
-			<br />
-
-			<form:label path="destination">
-				<spring:message code="route.destination" />: </form:label>
-			<form:select path="destination">
-				<form:option value="${route.destination}" />
-			</form:select>
-			<form:errors cssClass="error" path="destination" />
-			<br />
-
-			<form:label path="luggageSize">
-				<spring:message code="route.luggage" />: </form:label>
-			<form:select path="luggageSize">
-				<form:option value="NOTHING" label="NOTHING"/>
-				<form:option value="SMALL" label="SMALL"/>
-				<form:option value="MEDIUM" label="MEDIUM"/>
-				<form:option value="BIG" label="BIG"/>
-			</form:select>
-			<form:errors cssClass="error" path="luggageSize" />
-			<br />
-
-			<form:label path="price">
-				<spring:message code="route.total" />: 
-			</form:label>
-			<form:input path="price" readonly="readonly" id="precioTotal"/>
-			<br />
-
-
-
-			<input type="submit" name="save"
-				value="<spring:message code="route.save" />" />
-			<input type="button" name="cancel"
+			
+			<script src="https://checkout.stripe.com/checkout.js"></script>
+			<input type="submit" id="stripeButton" name="request" class="btn btn-success" value="<spring:message code="reservation.request" />" />
+			
+			<input type="button" name="cancel" class="btn btn-danger"
 				value="<spring:message code="route.cancel" />"
-				onclick="javascript: relativeRedir('route/passenger/listActive.do');" />
+				onclick="javascript: relativeRedir('route/display.do?routeId=${reservation.route.id}');" />
 			<br />
-
+			
 		</form:form>
+		
+		
+	</center>
+	<script type="text/javascript">
+		var finalPrice = 0;
+		function calculatePrice() {
+			var cpOrders = {};
+			var cpDistances = {};
+			<jstl:forEach items="${reservation.route.controlPoints}" var="cp" varStatus="status">
+			cpOrders["<jstl:out value="${cp.id}" />"] = <jstl:out value="${cp.arrivalOrder}" />;
+			cpDistances["<jstl:out value="${cp.arrivalOrder}" />"] = <jstl:out value="${cp.distance}" />;
+			</jstl:forEach>
+			var originId = document.getElementById("orig").value;
+			var destinationId = document.getElementById("dest").value;
+			var originOrder = parseInt(cpOrders[originId]);
+			var destinationOrder = parseInt(cpOrders[destinationId]);
+			if (originOrder < destinationOrder) {
+				var totalDistance = 0.0;
+				for (var i = originOrder + 1; i <= destinationOrder; i++) {
+					totalDistance = totalDistance + parseFloat(cpDistances[i.toString()]);
+				}
+				var price = 1.0;
+				if (totalDistance > 9.0) {
+					price = price + (totalDistance - 9.0) * 0.11;
+				}
+				price = price * Number.parseInt(document.getElementById("seats").value);
+				price = Number.parseFloat(price + 0.1).toFixed(2);
+				document.getElementById("price").innerHTML = price.toString().concat("&euro;");
+				finalPrice = price * 100;
+				finalPrice = Number.parseInt(finalPrice);
+			}
+			else {
+				document.getElementById("price").innerHTML = "ERROR";
+				finalPrice = 110;
+			}
+		};
+		calculatePrice();
+		// https://stripe.com/img/documentation/checkout/marketplace.png
+		var handler = StripeCheckout.configure({
+			key: '${stripePublicKey}',
+			image: './images/trondicon2.png',
+			locale: 'auto',
+			token: function(token) {
+				document.getElementById("stripeToken").value = token.id;
+				document.getElementById("stripeEmail").value = token.email;
+				document.getElementById("reservationForm").submit();
+			}
+		});
+		
+		document.getElementById("reservationForm").addEventListener("submit", function(e) {
+			handler.open({
+				name: 'Trond',
+				description: '<spring:message code="makeReservation" />',
+				zipCode: false,
+				amount: finalPrice,
+				currency: '${currency}'
+			});
+			e.preventDefault();
+		});
+		
+		window.addEventListener("popstate", function() {
+			handler.close();
+		});
+	</script>
 
-		<script type="text/javascript">
-			function multiplicar() {
-
-				var result = document.getElementById("seatId").value * ${route.pricePerPassenger};
-				document.getElementById("precioTotal").innerHTML = result.toFixed(2);
-			};
-		</script>
-
+	
 </security:authorize>

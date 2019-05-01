@@ -17,13 +17,13 @@
 <tiles-definitions>
 
 	<definition name="reservation/passenger/create" extends="master.page">	
-		<put-attribute name="title" value="Make a reservation" />
+		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="/views/reservation/create.jsp" />
 	</definition>
 	
-	<definition name="reservation/display" extends="master.page">	
-		<put-attribute name="title" value="Reservation" />
-		<put-attribute name="body" value="/views/reservation/display.jsp" />
+	<definition name="reservation/passenger/confirmReservation" extends="master.page">	
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/views/reservation/confirmReservation.jsp" />
 	</definition>
 	
 </tiles-definitions>

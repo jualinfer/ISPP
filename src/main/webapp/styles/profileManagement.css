@@ -1,0 +1,57 @@
+@CHARSET "ISO-8859-1";
+
+.nav-profile-management{
+	position: relative;
+	top: -49px;
+}
+
+.nav-profile-management .active{
+	color:#B143DD!important; 
+}
+
+.nav-profile-management .nav-link{
+	/* margin: 3px 0;
+	padding: 3px auto;
+	border-right: 1px solid white; */
+}
+
+/* .nav-profile-management .nav-link:after{
+	content:'';
+	padding: 1px;
+	height: 2px;
+	background-color: white;
+} */
+
+.nav-profile-enlaces{
+	width: auto%;
+	margin: 0 auto;
+}
+
+.item-preferences-list-management{
+	margin: 0 2rem;
+	display: flex;
+    justify-content: space-between;
+    width: 23%;
+    align-items: baseline;
+}
+
+.item-profile-management{
+	display: flex;
+    justify-content: space-between;
+    width: 77%;
+    align-items: baseline;
+}
+
+.save-cancel-management{
+	margin: 1rem auto;
+	display: flex;
+    justify-content: space-between;
+    width: 35%;
+}
+
+.item-profile-management input{
+	/* width: 100%; */
+	
+	/* width: 300px;
+	margin: 0 auto; */
+}

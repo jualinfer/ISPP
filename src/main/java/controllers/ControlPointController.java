@@ -9,7 +9,7 @@ import services.ActorService;
 import services.RouteService;
 
 @Controller
-@RequestMapping("/route")
+@RequestMapping("/controlpoint")
 public class ControlPointController extends AbstractController {
 
 	// Services ---------------------------------------------------------------
@@ -17,12 +17,16 @@ public class ControlPointController extends AbstractController {
 	private ActorService	actorService;
 	@Autowired
 	private RouteService	routeService;
+	@Autowired
+	private RouteController routeController;
 
 
 	// Constructors -----------------------------------------------------------
 	public ControlPointController() {
 		super();
 	}
+	
+	
 
 	/*
 	 * // Listing -------------------------------------

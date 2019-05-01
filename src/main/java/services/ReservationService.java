@@ -11,17 +11,22 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 
 import repositories.ReservationRepository;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
+import domain.Alert;
+import domain.ControlPoint;
 import domain.Driver;
 import domain.LuggageSize;
 import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
 import domain.Route;
+import domain.TypeAlert;
+import forms.ReservationForm;
 
 @Service
 @Transactional
@@ -41,6 +46,9 @@ public class ReservationService {
 
 	@Autowired
 	private PassengerService		passengerService;
+
+	@Autowired
+	private AlertService			alertService;
 
 
 	//Constructor
@@ -63,6 +71,7 @@ public class ReservationService {
 		//		result.setPassenger(passenger);
 		result.setStatus(ReservationStatus.PENDING);
 		result.setLuggageSize(LuggageSize.NOTHING);
+		result.setSeat(1);
 
 		return result;
 	}
@@ -100,7 +109,6 @@ public class ReservationService {
 		UserAccount ua;
 		Passenger passenger;
 		Route route;
-		Collection<Reservation> reservationsRoute, reservationsPassenger;
 
 		//Comprobamos que el usuario registrado es el mismo pasajero que ha creado la reserva
 		ua = LoginService.getPrincipal();
@@ -122,13 +130,54 @@ public class ReservationService {
 		if (reservation.getStatus() == ReservationStatus.ACCEPTED)
 			route.setAvailableSeats(route.getAvailableSeats() - reservation.getSeat());
 
-		//Al guardarse la reserva se añade a la lista de reservas de la ruta
+		reservation.setPrice(((route.getPricePerPassenger() - 0.10) * reservation.getSeat()) + 0.10);
+
+		//	result = this.reservationRepository.save(reservation);
+
+		result = reservation;
+
+		return result;
+	}
+
+	public Reservation save2(final Reservation reservation) {
+		Assert.notNull(reservation);
+		if (reservation.getId() == 0) {
+			//		We create an alert
+			final Alert alert = this.alertService.create();
+			final Driver receiver = reservation.getRoute().getDriver();
+			alert.setReceiver(receiver);
+			alert.setTypeAlert(TypeAlert.APPLICATION_PLACE);
+			alert.setRelatedRoute(reservation.getRoute());
+			this.alertService.save(alert);
+		}
+		return this.reservationRepository.saveAndFlush(reservation);
+	}
+
+	public Reservation confirmReservation(final Reservation reservation) {
+		Assert.notNull(reservation);
+		Assert.notNull(reservation.getOrigin());
+		Assert.notNull(reservation.getDestination());
+		Assert.isTrue(!reservation.getOrigin().equals(reservation.getDestination()));
+		Assert.notNull(reservation.getRoute());
+		Assert.notNull(reservation.getSeat());
+		Assert.notNull(reservation.getLuggageSize());
+		Assert.notNull(reservation.getPrice());
+		Assert.notNull(reservation.getStatus());
+
+		Reservation result;
+		Route route;
+		Passenger passenger;
+		Collection<Reservation> reservationsRoute, reservationsPassenger;
+
+		route = reservation.getRoute();
+		//Al confirmarse la reserva se añade a la lista de reservas de la ruta
 		reservationsRoute = route.getReservations();
 		reservationsRoute.add(reservation);
 		route.setReservations(reservationsRoute);
 		this.routeService.save(route);
 
-		//Al guardarse la reserva se añade a la lista de reservas del pasajero
+		passenger = reservation.getPassenger();
+		//Al confirmarse la reserva se añade a la lista de reservas del pasajero
 		reservationsPassenger = passenger.getReservations();
 		reservationsPassenger.add(reservation);
 		passenger.setReservations(reservationsPassenger);
@@ -209,6 +258,28 @@ public class ReservationService {
 		Collection<Reservation> result;
 
 		result = this.reservationRepository.findReservationsByRoute(routeId);
+
+		return result;
+	}
+
+	public Collection<Reservation> findReservationsByRouteAndStatus(final int routeId, final ReservationStatus status) {
+		Assert.isTrue(routeId != 0);
+		Assert.notNull(status);
+
+		Collection<Reservation> result;
+
+		result = this.reservationRepository.findReservationsByRouteAndStatus(routeId, status);
+
+		return result;
+	}
+
+	public Collection<Reservation> findReservationsByRouteAndPassenger(final int routeId, final int passengerId) {
+		Assert.isTrue(routeId != 0);
+		Assert.isTrue(passengerId != 0);
+
+		Collection<Reservation> result;
+
+		result = this.reservationRepository.findReservationsByRouteAndPassenger(routeId, passengerId);
 
 		return result;
 	}
@@ -310,7 +381,17 @@ public class ReservationService {
 		Assert.isTrue(totalSeats >= 0);
 
 		reservation.setStatus(ReservationStatus.ACCEPTED);
+
+		//We create an alert
+		final Alert alert = this.alertService.create();
+		final Passenger receiver = reservation.getPassenger();
+		alert.setReceiver(receiver);
+		alert.setTypeAlert(TypeAlert.ACCEPTANCE_PLACE);
+		alert.setRelatedRoute(route);
+		this.alertService.save(alert);
+
 		this.reservationRepository.save(reservation);
+
 	}
 
 	public void rejectReservation(final int reservationId) {
@@ -321,6 +402,14 @@ public class ReservationService {
 		Assert.isTrue(route.getDepartureDate().after(new Date()));
 
 		reservation.setStatus(ReservationStatus.REJECTED);
+
+		//We create an alert
+		final Alert alert = this.alertService.create();
+		final Passenger receiver = reservation.getPassenger();
+		alert.setReceiver(receiver);
+		alert.setRelatedRoute(route);
+		alert.setTypeAlert(TypeAlert.REJECTION_PLACE);
+		this.alertService.save(alert);
 		this.reservationRepository.save(reservation);
 	}
 
@@ -328,11 +417,131 @@ public class ReservationService {
 		Assert.isTrue(reservationId > 0);
 		final Reservation reservation = this.findOne(reservationId);
 		final Route route = reservation.getRoute();
-		Assert.isTrue(reservation.getStatus().equals(ReservationStatus.ACCEPTED) || reservation.getStatus().equals(ReservationStatus.REJECTED));
+		Assert.isTrue(reservation.getStatus() != (ReservationStatus.REJECTED));
 		Assert.isTrue(route.getDepartureDate().after(new Date()));
 
 		reservation.setStatus(ReservationStatus.CANCELLED);
+
+		//We create an alert
+		final Alert alert = this.alertService.create();
+		final Driver receiver = reservation.getRoute().getDriver();
+		alert.setReceiver(receiver);
+		alert.setTypeAlert(TypeAlert.CANCELLATION_PLACE);
+		alert.setRelatedRoute(route);
+		this.alertService.save(alert);
+
 		this.reservationRepository.save(reservation);
+	}
+
+	public ReservationForm construct(final Reservation reservation, final Route route, final Passenger passenger) {
+		/*
+		 * Verificar las siguientes condiciones:
+		 * - La ruta debe existir, no puede estar cancelada ni comenzada
+		 * - El pasajero no debe de tener ya una reserva para dicha ruta cuyo estado
+		 * es Aceptada, Pendiente o Rechazada
+		 * - A la ruta debe quedarle al menos un asiento libre
+		 */
+		Assert.notNull(reservation);
+		Assert.notNull(passenger);
+		Assert.notNull(route);
+		Assert.isTrue(route.getId() > 0);
+		Assert.isTrue(!route.getIsCancelled());
+		Assert.isTrue(route.getControlPoints().get(0).getArrivalTime().after(new Date()));
+
+		final Collection<Reservation> reservations = this.findReservationsByRouteAndPassenger(route.getId(), passenger.getId());
+		for (final Reservation r : reservations) {
+			Assert.isTrue(r.getStatus() != ReservationStatus.PENDING);
+			Assert.isTrue(r.getStatus() != ReservationStatus.ACCEPTED);
+			Assert.isTrue(r.getStatus() != ReservationStatus.REJECTED);
+		}
+
+		final int currentAvailableSeats = this.routeService.getCurrentAvailableSeats(route);
+		Assert.isTrue(currentAvailableSeats > 0);
+
+		final ReservationForm result = new ReservationForm();
+		result.setRoute(route);
+		if (reservation.getOrigin() == null || reservation.getOrigin().isEmpty())
+			result.setOrigin(route.getControlPoints().get(0));
+		else {
+			boolean found = false;
+			for (final ControlPoint cp : route.getControlPoints())
+				if (cp.getLocation().equals(reservation.getOrigin())) {
+					result.setOrigin(cp);
+					found = true;
+					break;
+				}
+			if (!found)
+				result.setOrigin(route.getControlPoints().get(0));
+		}
+		if (reservation.getDestination() == null || reservation.getDestination().isEmpty())
+			result.setDestination(route.getControlPoints().get(route.getControlPoints().size() - 1));
+		else {
+			boolean found = false;
+			for (final ControlPoint cp : route.getControlPoints())
+				if (cp.getLocation().equals(reservation.getDestination())) {
+					result.setDestination(cp);
+					found = true;
+					break;
+				}
+			if (!found)
+				result.setDestination(route.getControlPoints().get(route.getControlPoints().size() - 1));
+		}
+		result.setLuggageSize(reservation.getLuggageSize());
+		result.setRequestedSeats(reservation.getSeat());
+		result.setAvailableSeats(currentAvailableSeats);
+
+		return result;
+	}
+
+	public Reservation reconstruct(final ReservationForm reservationForm, final Passenger passenger, final BindingResult binding) {
+		Assert.notNull(reservationForm);
+		Assert.notNull(reservationForm.getRoute());
+		Assert.isTrue(reservationForm.getRoute().getId() > 0);
+		Assert.notNull(passenger);
+
+		boolean keepGoing = true;
+		if (reservationForm.getOrigin().getArrivalOrder() >= reservationForm.getDestination().getArrivalOrder()) {
+			binding.rejectValue("destination", "reservation.error.wrongOrder");
+			keepGoing = false;
+		}
+		if (reservationForm.getRequestedSeats() > this.routeService.getCurrentAvailableSeats(reservationForm.getRoute())) {
+			binding.rejectValue("requestedSeats", "reservation.error.tooManySeats");
+			keepGoing = false;
+		}
+		final LuggageSize maxLuggage = reservationForm.getRoute().getMaxLuggage();
+		if (maxLuggage == LuggageSize.NOTHING) {
+			if (reservationForm.getLuggageSize() != LuggageSize.NOTHING) {
+				binding.rejectValue("luggageSize", "reservation.error.luggageNotAllowed");
+				keepGoing = false;
+			}
+		} else if (maxLuggage.getId() < reservationForm.getLuggageSize().getId()) {
+			binding.rejectValue("luggageSize", "reservation.error.luggageTooBig");
+			keepGoing = false;
+		}
+
+		Reservation result = null;
+		if (keepGoing) {
+			result = this.create();
+			result.setOrigin(reservationForm.getOrigin().getLocation());
+			result.setDestination(reservationForm.getDestination().getLocation());
+			result.setLuggageSize(reservationForm.getLuggageSize());
+			result.setRoute(reservationForm.getRoute());
+			result.setSeat(reservationForm.getRequestedSeats());
+
+			double distance = 0d;
+			for (final ControlPoint cp : reservationForm.getRoute().getControlPoints())
+				if (cp.getArrivalOrder() >= reservationForm.getOrigin().getArrivalOrder() && cp.getArrivalOrder() <= reservationForm.getDestination().getArrivalOrder())
+					distance += cp.getDistance();
+			double price = this.routeService.getPrice(distance);
+			price = (price - 0.1d) * reservationForm.getRequestedSeats() + 0.1d;
+			result.setPrice(price);
+
+			result.setPassenger(passenger);
+			result.setStatus(ReservationStatus.PENDING);
+			result.setDriverPickedMe(false);
+			result.setDriverNoPickedMe(false);
+		}
+		return result;
 	}
 
 }

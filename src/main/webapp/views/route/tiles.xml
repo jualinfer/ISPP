@@ -20,9 +20,10 @@
 		<put-attribute name="body" value="/views/route/edit.jsp" />
 	</definition>
 	
-	<definition name="route/driver/confirmRoute" extends="master.page">
-<!-- 		<put-attribute name="title" value="Confirm Route" /> -->
-		<put-attribute name="body" value="/views/route/confirmRoute.jsp" />
+
+	<definition name="route/driver/confirm" extends="master.page">
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/views/route/confirm.jsp" />
 	</definition>
 
 	<definition name="route/display" extends="master.page">

@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -20,12 +21,12 @@ public class Driver extends Actor {
 
 	//Attributes
 	private Double				cash;
-	private CreditCard			creditCard;
 	private String				bankAccountNumber;
 	private Boolean				pets;
 	private Boolean				smoke;
 	private Boolean				music;
 	private Boolean				childs;
+	private String				image;
 
 	//Relationships
 	private Collection<Route>	routes;
@@ -40,16 +41,15 @@ public class Driver extends Actor {
 		return this.cash;
 	}
 
-	@Valid
-	@NotNull
-	public CreditCard getCreditCard() {
-		return this.creditCard;
-	}
-
-	@NotBlank
 	@Pattern(regexp = "^ES\\d{22}$", message = "Invalid Spain Bank Number")
+	@NotBlank
 	public String getBankAccountNumber() {
 		return this.bankAccountNumber;
+	}
+
+	@URL
+	public String getImage() {
+		return this.image;
 	}
 
 	@NotNull
@@ -73,21 +73,18 @@ public class Driver extends Actor {
 	}
 
 	@Valid
-	@NotNull
 	@OneToMany(mappedBy = "driver")
 	public Collection<Route> getRoutes() {
 		return this.routes;
 	}
 
 	@Valid
-	@NotNull
 	@OneToMany(mappedBy = "driver")
 	public Collection<Comment> getComments() {
 		return this.comments;
 	}
 
 	@Valid
-	@NotNull
 	@OneToMany(mappedBy = "driver")
 	public Collection<Vehicle> getVehicles() {
 		return this.vehicles;
@@ -97,10 +94,6 @@ public class Driver extends Actor {
 
 	public void setCash(final Double cash) {
 		this.cash = cash;
-	}
-
-	public void setCreditCard(final CreditCard creditCard) {
-		this.creditCard = creditCard;
 	}
 
 	public void setPets(final Boolean pets) {
@@ -134,4 +127,9 @@ public class Driver extends Actor {
 	public void setVehicles(final Collection<Vehicle> vehicles) {
 		this.vehicles = vehicles;
 	}
+
+	public void setImage(final String image) {
+		this.image = image;
+	}
+
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 
+ * tiles.xml
+ *
+ * Copyright (C) 2017 Universidad de Sevilla
+ * 
+ * The use of this project is hereby constrained to the conditions of the 
+ * TDG Licence, a copy of which you may download from 
+ * http://www.tdg-seville.info/License.html
+ -->
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+       
+<tiles-definitions>
+		
+	<definition name="passenger/edit" extends="master.page">	
+		<put-attribute name="title" value="" /> <!-- Edit Passenger -->
+		<put-attribute name="body" value="/views/passenger/edit.jsp" />
+	</definition>
+	
+	<definition name="passenger/editCredentials" extends="master.page">	
+		<put-attribute name="title" value="" /><!-- Edit Credentials -->
+		<put-attribute name="body" value="/views/passenger/edit_credentials.jsp" />
+	</definition>
+	
+	<definition name="passenger/create" extends="master.page">	
+		<put-attribute name="title" value="Create Passenger" />
+		<put-attribute name="body" value="/views/passenger/create.jsp" />
+	</definition>
+	
+	<definition name="passenger/display" extends="master.page">
+		<put-attribute name="title" value="Display Passenger"/>
+		<put-attribute name="body" value="/views/passenger/display.jsp"/>
+	</definition>
+	
+	<definition name="passenger/displayPrincipal" extends="master.page">
+		<put-attribute name="title" value="Display Passenger"/>
+		<put-attribute name="body" value="/views/passenger/display.jsp"/>
+	</definition>
+	
+</tiles-definitions>
