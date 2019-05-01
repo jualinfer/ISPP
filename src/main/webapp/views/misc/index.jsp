@@ -18,7 +18,7 @@
 
 
 <security:authorize access="hasRole('ADMIN')">
-<jsp:forward page="/route/list.do" />
+<jsp:forward page="/administrator/controlPanel.do" />
 </security:authorize>
 
 <security:authorize access="hasRole('DRIVER')">

@@ -19,6 +19,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	@Query("select r from Reservation r where r.route.id=?1")
 	Collection<Reservation> findReservationsByRoute(int routeId);
 	
+	@Query("select r from Reservation r where r.route.id=?1 and r.status=?2")
+	Collection<Reservation> findReservationsByRouteAndStatus(int routeId, ReservationStatus status);
+	
+	@Query("select r from Reservation r where r.route.id=?1 and r.passenger.id=?2")
+	Collection<Reservation> findReservationsByRouteAndPassenger(int routeId, int passengerId);
+	
 	@Query("select r from Reservation r where r.route.id=?1 and (r.status=?2 or r.status=?3)")
 	Collection<Reservation> findReservationsByRouteAndStatusPendingOrAccepted(int routeId, ReservationStatus pending, ReservationStatus accepted);
 	

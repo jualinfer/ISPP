@@ -21,157 +21,153 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
 <form:form id="form" action="${requestURI}" modelAttribute="driver">
-	<form:hidden path="id"/>
-	<form:hidden path="version"/>
-	<form:hidden path="routes"/>
-	<form:hidden path="vehicles"/>
-	<form:hidden path="cash"/>
+	<form:hidden path="id" />
+	<form:hidden path="version" />
+	<form:hidden path="routes" />
+	<form:hidden path="vehicles" />
+	<form:hidden path="cash" />
 	<form:hidden path="userAccount.id" />
-	<form:hidden path="userAccount.enabled"/>
+	<form:hidden path="userAccount.enabled" />
 	<form:hidden path="userAccount.version" />
 	<form:hidden path="userAccount.authorities" />
-	
-	
 
-	<form:label path="name">
-		<spring:message code="driver.name"/>: 
-	</form:label>
-	<form:input path="name"/>
-	<form:errors cssClass="error" path="name"/><br />
-	
-	<form:label path="surname">
-		<spring:message code="driver.surname"/>: 
-	</form:label>
-	<form:input path="surname"/>
-	<form:errors cssClass="error" path="surname"/><br />
-	
-	<form:label path="country">
-		<spring:message code="driver.country"/>: 
-	</form:label>
-	<form:input path="country"/>
-	<form:errors cssClass="error" path="country"/><br />
-	
-	<form:label path="city">
-		<spring:message code="driver.city"/>: 
-	</form:label>
-	<form:input path="city"/>
-	<form:errors cssClass="error" path="city"/><br />
-	
-	<form:label path="phone">
-		<spring:message code="driver.phone"/>: 
-	</form:label>
-	<form:input id="phone" path="phone"/>
-	<form:errors cssClass="error" path="phone"/><br />
-	
-	<form:label path="pets">
-	<spring:message code="driver.pets"/>
-	</form:label>
-	<form:select path="pets">
-	<form:option
-	label="Yes"
-	value="true">
-	</form:option>
-	<form:option
-	label="No"
-	value="false">
-	</form:option>
-	</form:select>
-	
-	<form:label path="smoke">
-	<spring:message code="driver.smoke"/>
-	</form:label>
-	<form:select path="smoke">
-	<form:option
-	label="Yes"
-	value="true">
-	</form:option>
-	<form:option
-	label="No"
-	value="false">
-	</form:option>
-	</form:select>
-	
-	<form:label path="music">
-	<spring:message code="driver.music"/>
-	</form:label>
-	<form:select path="music">
-	<form:option
-	label="Yes"
-	value="true">
-	</form:option>
-	<form:option
-	label="No"
-	value="false">
-	</form:option>
-	</form:select>
-	
-	<form:label path="childs">
-	<spring:message code="driver.childs"/>
-	</form:label>
-	<form:select path="childs">
-	<form:option
-	label="Yes"
-	value="true">
-	</form:option>
-	<form:option
-	label="No"
-	value="false">
-	</form:option>
-	</form:select><br/>
-	
 
-	
-	<form:label path="userAccount.username">
-		<spring:message code="driver.username"/>: 
-	</form:label>
-	<form:input path="userAccount.username"/>
-	<form:errors cssClass="error" path="userAccount.username"/><br />
-	
-	<form:label path="userAccount.password">
-		<spring:message code="driver.password"/>: 
-	</form:label>
-	<form:password path="userAccount.password"/>
-	<form:errors cssClass="error" path="userAccount.password"/><br />
-	
-	
-	<form:label path="creditCard.number">
-		<spring:message code="creditCard.number"/>: 
-	</form:label>
-	<form:input path="creditCard.number"/>
-	<form:errors cssClass="error" path="creditCard.number"/><br />
-	
-	<form:label path="creditCard.expMonth">
-		<spring:message code="creditCard.expMonth"/>: 
-	</form:label>
-	<form:input path="creditCard.expMonth"/>
-	<form:errors cssClass="error" path="creditCard.expMonth"/><br />
-	
-	<form:label path="creditCard.expYear">
-		<spring:message code="creditCard.expYear"/>: 
-	</form:label>
-	<form:input path="creditCard.expYear"/>
-	<form:errors cssClass="error" path="creditCard.expYear"/><br />
-	
-	<form:label path="creditCard.cvv">
-		<spring:message code="creditCard.cvv"/>: 
-	</form:label>
-	<form:input path="creditCard.cvv"/>
-	<form:errors cssClass="error" path="creditCard.cvv"/><br />
-	
-	<form:label path="bankAccountNumber">
-		<spring:message code="driver.bankAccountNumber"/>: 
-	</form:label>
-	<form:input path="bankAccountNumber"/>
-	<form:errors cssClass="error" path="bankAccountNumber"/><br />
-	
 
-	<input type="submit" name="save" value="<spring:message code="driver.register"/>" />
-	
-	<input type="button" name="cancel"
-		value="<spring:message code="driver.cancel" />"
-		onclick="javascript: relativeRedir('security/login.do');" />		
-	
+	<div
+		class="resume d-flex flex-column justify-content-center align-items-center">
+
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.name" var="driverName"/>
+				<form:input path="name" type="text" class="form-control"
+					placeholder="${driverName}"/>
+				<form:errors cssClass="error" path="name" />
+				<br />
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.surname" var="driverSurname"/>
+				<form:input path="surname" type="text" class="form-control"
+					placeholder="${driverSurname }"/>
+				<form:errors cssClass="error" path="surname" />
+				<br />
+			</div>
+		</div>
+
+		</br>
+
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.country" var="driverCountry"/>
+				<form:input path="country" type="text" class="form-control"
+					placeholder="${driverCountry }"/>
+				<form:errors cssClass="error" path="country" />
+				<br />
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.city" var="driverCity"/>
+				<form:input path="city" type="text" class="form-control"
+					placeholder="${driverCity }"/>
+				<form:errors cssClass="error" path="city" />
+				<br />
+
+			</div>
+
+		</div>
+
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.phone" var="driverPhone"/>
+				<form:input path="phone" type="text" class="form-control"
+					placeholder="${driverPhone }"/>
+				<form:errors cssClass="error" path="phone" />
+				<br />
+			</div>
+
+		</div>
+
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.username" var="driverUsername"/>
+				<form:input path="userAccount.username" type="text" class="form-control"
+					placeholder="${driverUsername }"/>
+				<form:errors cssClass="error" path="userAccount.username" />
+				<br />
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.password" var="driverPass"/>
+				<form:input path="userAccount.password" type="password" class="form-control"
+					placeholder="${driverPass }"/>
+				<form:errors cssClass="error" path="userAccount.password" />
+				<br />
+			</div>
+		</div>
+		
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.image" var="driverImage"/>
+				<form:input path="image" type="text" class="form-control"
+					placeholder="${driverImage }"/>
+				<form:errors cssClass="error" path="image" />
+				<br />
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="col">
+			<spring:message code="driver.bankAccountNumber" var="driverBA"/>
+				<form:input path="bankAccountNumber" type="text" class="form-control"
+					placeholder="${driverBA }"/>
+				<form:errors cssClass="error" path="bankAccountNumber" />
+				<br />
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="col">
+				<spring:message code="driver.preferences"/></br>
+				<div class="form-check form-check-inline">
+					 <form:checkbox path="childs" cssClass="form-check-input" id="inlineCheckbox4" value="option1"/>
+					 <label
+						class="form-check-label" for="inlineCheckbox1">Childs</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<form:checkbox path="pets" cssClass="form-check-input" id="inlineCheckbox4" value="option2"/>
+					<label
+						class="form-check-label" for="inlineCheckbox2">Pets</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<form:checkbox path="smoke" cssClass="form-check-input" id="inlineCheckbox4" value="option3"/>
+					 <label
+						class="form-check-label" for="inlineCheckbox3">Smoking</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<form:checkbox path="music" cssClass="form-check-input" id="inlineCheckbox4" value="option4"/>
+					 <label
+						class="form-check-label" for="inlineCheckbox4">Music</label>
+				</div>
+
+			</div>
+
+	</div>
+
+		<input type="submit" class="btn btn-success" name="save"
+			value="<spring:message code="driver.register"/>" /> <input
+			type="button" class="btn btn-danger" name="cancel"
+			value="<spring:message code="driver.cancel" />"
+			onclick="javascript: relativeRedir('security/login.do');" />
+
+	</div>
+
+
+
 </form:form>
+
 
 
 

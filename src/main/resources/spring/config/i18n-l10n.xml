@@ -28,7 +28,9 @@
 		<value>/views/reservation/messages</value>
 		<value>/views/driver/messages</value>
 		<value>/views/passenger/messages</value>
+		<value>/views/thread/messages</value>
 		<value>/views/vehicle/messages</value>
+		<value>/views/alert/messages</value>
 	</util:list>
 
 </beans>

@@ -12,6 +12,7 @@ package controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -22,6 +23,13 @@ public class AdministratorController extends AbstractController {
 
 	public AdministratorController() {
 		super();
+	}
+	
+	@RequestMapping(value = "/controlPanel", method = RequestMethod.GET)
+	public ModelAndView controlPanel() {
+		ModelAndView result = new ModelAndView("administrator/controlPanel");
+		
+		return result;
 	}
 
 	// Action-1 ---------------------------------------------------------------		

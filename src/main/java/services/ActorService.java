@@ -1,6 +1,10 @@
 
 package services;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 
 import javax.transaction.Transactional;
@@ -13,6 +17,7 @@ import org.springframework.util.Assert;
 import repositories.ActorRepository;
 import security.LoginService;
 import security.UserAccount;
+import security.UserAccountService;
 import domain.Actor;
 
 @Service
@@ -21,7 +26,10 @@ public class ActorService {
 
 	//Managed Repositories
 	@Autowired
-	private ActorRepository	actorRepository;
+	private ActorRepository		actorRepository;
+
+	@Autowired
+	private UserAccountService	uaService;
 
 
 	// Supported Services ---------------------------------
@@ -70,7 +78,6 @@ public class ActorService {
 			Assert.notNull(userAccount.getPassword());
 
 			result = this.actorRepository.save(actor);
-
 		} else {
 			final UserAccount principal, userAccount;
 			final UserAccount savedUserAccount;
@@ -85,6 +92,9 @@ public class ActorService {
 			//Assert.notNull(savedUserAccount);
 			result = this.actorRepository.save(actor);
 		}
+
+		this.actorRepository.flush();
+
 		return result;
 	}
 
@@ -107,4 +117,30 @@ public class ActorService {
 		return a;
 	}
 
+	public File getProfileFile() {
+		File res = null;
+
+		try {
+			Actor me = this.findByPrincipal();
+			res = File.createTempFile("user_profile", ".txt");
+			BufferedWriter writer = new BufferedWriter(new FileWriter(res, true));
+			writer.write(String.format("name: %s", me.getName()));
+			writer.newLine();
+			writer.write(String.format("surname: %s", me.getSurname()));
+			writer.newLine();
+			writer.write(String.format("country: %s", me.getCountry()));
+			writer.newLine();
+			writer.write(String.format("city: %s", me.getCity()));
+			writer.newLine();
+			writer.write(String.format("phone: %s", me.getPhone()));
+			writer.newLine();
+			writer.write(String.format("average stars: %s", me.getMediumStars()));
+			writer.newLine();
+			writer.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return res;
+	}
 }

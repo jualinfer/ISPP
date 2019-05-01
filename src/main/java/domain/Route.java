@@ -210,5 +210,5 @@ public class Route extends DomainEntity {
 	public void setVehicle(final Vehicle vehicle) {
 		this.vehicle = vehicle;
 	}
-
+	
 }

@@ -50,11 +50,15 @@
 				<form:input path="username" type="text" id="login"
 					class="fadeIn second" name="login" placeholder="email" />
 				<form:errors class="error" path="username" />
+				
+				<spring:message code="security.password"  var = "passMsg"/>
 				<form:input path="password" type="password" id="password"
 					class="fadeIn third" name="login" autocomplete="new-password"
-					placeholder="password" />
+					placeholder="${passMsg}" />
 				<form:errors class="error" path="password" />
-				<input type="submit" class="fadeIn fourth" value="Entrar">
+				
+				<spring:message code="security.login.enter"  var = "enterMsg"/>
+				<input type="submit" class="fadeIn fourth" value="${enterMsg}">
 
 				<jstl:if test="${showError == true}">
 					<div class="error">

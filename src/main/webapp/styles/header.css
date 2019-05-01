@@ -2,6 +2,15 @@
 
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
+.add_search{
+	/* width: 30px;
+	height: 30px; */
+	position: relative;
+	float: right;
+	right: 26%;
+	top: 8%;
+}
+
 .header_nav{
 	conten: '';
 	height: 50px;

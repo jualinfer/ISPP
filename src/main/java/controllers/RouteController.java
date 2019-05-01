@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import security.LoginService;
 import security.UserAccount;
 import services.ActorService;
+import services.CommentService;
 import services.ReservationService;
 import services.RouteService;
 import domain.Actor;
@@ -31,6 +32,7 @@ import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
 import domain.Route;
+import forms.CommentForm;
 
 @Controller
 @RequestMapping("/route")
@@ -42,6 +44,9 @@ public class RouteController extends AbstractController {
 
 	@Autowired
 	private ReservationService	reservationService;
+
+	@Autowired
+	private CommentService		commentService;
 
 	@Autowired
 	private ActorService		actorService;
@@ -82,9 +87,13 @@ public class RouteController extends AbstractController {
 		boolean startedRoute = false;
 		boolean hasPassed10Minutes = false;
 		boolean arrivalPlus10Min = false;
+		boolean canComment = false;
+		Collection<Passenger> passengersToComment = new ArrayList<Passenger>();
+		final CommentForm commentForm = new CommentForm();
 
 		route = this.routeService.findOne(routeId);
 		Assert.notNull(route);
+		commentForm.setRoute(route);
 		result = new ModelAndView("route/display");
 		//		reservation = this.reservationService.create();
 		//		reservation.setRoute(route);
@@ -107,7 +116,7 @@ public class RouteController extends AbstractController {
 		if (reservations != null && reservations.size() > 0)
 			for (final Reservation res : reservations) {
 				if (res.getStatus().equals(ReservationStatus.ACCEPTED)) {
-					occupiedSeats++;		//Contamos asientos ocupados
+					occupiedSeats = occupiedSeats + res.getSeat();		//Contamos asientos ocupados
 					displayableReservations.add(res);	//añadimos las reservas aceptadas
 				}
 				if (actor instanceof Driver) {
@@ -159,6 +168,19 @@ public class RouteController extends AbstractController {
 		if (new Date().after(tenMinutesAfterArrival))
 			arrivalPlus10Min = true;
 		//------------------------------------------------
+
+		// Proceso para ver si el actor puede comentar y a quien puede comentar:
+		canComment = this.commentService.canComment(actor, route);
+
+		// En caso de ser un passenger, el metodo anterior ya determina si ha comentado para esta ruta y driver ya.
+		// Pero si el actor es un driver, no se ha determinado aun si le queda algun passenger sobre el que opinar.
+		if (canComment)
+			if (actor instanceof Driver) {
+				passengersToComment = this.commentService.passengersToComment((Driver) actor, route.getId());
+				if (passengersToComment.isEmpty())
+					canComment = false;
+			}
+
 		result.addObject("route", route);
 		result.addObject("remainingSeats", route.getAvailableSeats() - occupiedSeats);
 		result.addObject("arrivalDate", sdf.format(arrivalDate));
@@ -167,16 +189,21 @@ public class RouteController extends AbstractController {
 		//		result.addObject("newReservation", reservation);
 		result.addObject("startedRoute", startedRoute);
 		result.addObject("hasPassed10Minutes", hasPassed10Minutes);
-		result.addObject("hasPassed20Minutes", arrivalPlus10Min);
+		result.addObject("arrivalPlus10Min", arrivalPlus10Min);
+		result.addObject("canComment", canComment);
+		result.addObject("passengersToComment", passengersToComment);
+		result.addObject("commentForm", commentForm);
+		result.addObject("connectedUser", actorService.findByPrincipal());
 
 		return result;
 	}
+	
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView searchView() {
 		final ModelAndView result;
 		Finder finder;
 
-		finder = new Finder();
+		finder = routeService.createFinder();
 		result = new ModelAndView("route/search");
 		result.addObject("finder", finder);
 
@@ -184,21 +211,42 @@ public class RouteController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public ModelAndView searchResult(@Valid final Finder finder, final BindingResult bindingResult) {
+	public ModelAndView searchResult(@Valid final Finder finder, final BindingResult binding) {
 		ModelAndView result;
-		Collection<Route> routes;
-
-		try {
-			routes = this.routeService.searchRoutes(finder);
-			result = new ModelAndView("route/searchResults");
-			result.addObject("routes", routes);
-
-		} catch (final Throwable oops) {
-			oops.printStackTrace();
-			result = this.searchView();
-			result.addObject(finder);
+		
+		if (binding.hasErrors()) {
+			result = searchModelAndView(finder);
+		}
+		else {
+			try {
+				Collection<Route> routes = routeService.searchRoutes(finder, binding);
+				if (binding.hasErrors()) {
+					result = searchModelAndView(finder);
+				}
+				else {
+					result = new ModelAndView("route/searchResults");
+					result.addObject("routes", routes);
+				}
+			}
+			catch (final Throwable oops) {
+				oops.printStackTrace();
+				result = searchModelAndView(finder, "route.commit.error");
+			}
 		}
 
+		return result;
+	}
+	
+	private ModelAndView searchModelAndView(Finder finder) {
+		return searchModelAndView(finder, null);
+	}
+	
+	private ModelAndView searchModelAndView(Finder finder, String message) {
+		ModelAndView result = new ModelAndView("route/search");
+		result.addObject("finder", finder);
+		result.addObject("message", message);
+		result.addObject("requestURI", "route/search.do");
+		
 		return result;
 	}
 
