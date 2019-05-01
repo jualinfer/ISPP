@@ -55,6 +55,7 @@ public class MessagesThreadController extends AbstractController {
 		Collection<MessagesThread> threads = mtService.findMessagesThreadFromParticipant(user.getId());
 		ModelAndView result = new ModelAndView("thread/message/list");
 		result.addObject("threads", threads);
+		result.addObject("connectedUser", user);
 		return result;
 	}
 	
@@ -68,7 +69,7 @@ public class MessagesThreadController extends AbstractController {
 		MessagesThread thread = mtService.findOne(threadId);
 		if (thread != null && (thread.getParticipantA().getId() == sender.getId() ||
 			thread.getParticipantB().getId() == sender.getId())) {
-			result = addMessageThreadModelAndView(messageService.construct(thread));
+			result = addMessageThreadModelAndView(messageService.construct(thread), false);
 		}
 		else {
 			// Error, redirigir a 403
@@ -95,11 +96,11 @@ public class MessagesThreadController extends AbstractController {
 			MessagesThread thread = mtService.findMessagesThreadFromParticipantsAndRoute(route.getId(), sender.getId(), receiver.getId());
 			if (thread == null) {
 				// Redirigir a la vista de creación
-				result = createMessageThreadModelAndView(mtService.construct(route, receiver));
+				result = createThreadModelAndView(mtService.construct(route, receiver), false);
 			}
 			else {
 				// Existe ya una conversación, redirigir al hilo en sí
-				result = addMessageThreadModelAndView(messageService.construct(thread));
+				result = addMessageThreadModelAndView(messageService.construct(thread), false);
 			}
 		}
 		return result;
@@ -109,7 +110,7 @@ public class MessagesThreadController extends AbstractController {
 	public ModelAndView messageThreadCreate(@ModelAttribute(value = "threadForm") @Valid final ThreadForm threadForm, BindingResult binding) {
 		ModelAndView result = null;
 		if (binding.hasErrors()) {
-			result = createMessageThreadModelAndView(threadForm);
+			result = createThreadModelAndView(threadForm, false);
 		}
 		else {
 			Actor sender = actorService.findByPrincipal();
@@ -118,11 +119,11 @@ public class MessagesThreadController extends AbstractController {
 				try {
 					thread = mtService.reconstruct(threadForm, sender, false);
 					thread = mtService.saveNew(thread, threadForm.getMessage());
-					result = addMessageThreadModelAndView(messageService.construct(thread));
+					result = addMessageThreadModelAndView(messageService.construct(thread), false);
 				}
 				catch (Throwable oops) {
 					oops.printStackTrace();
-					result = createMessageThreadModelAndView(threadForm, "thread.commit.error");
+					result = createThreadModelAndView(threadForm, false, "thread.commit.error");
 				}
 			}
 			else {
@@ -137,14 +138,14 @@ public class MessagesThreadController extends AbstractController {
 	public ModelAndView messageAdd(@ModelAttribute(value = "messageForm") @Valid final MessageForm messageForm, BindingResult binding) {
 		ModelAndView result = null;
 		if (binding.hasErrors()) {
-			result = addMessageThreadModelAndView(messageForm);
+			result = addMessageThreadModelAndView(messageForm, false);
 		}
 		else {
 			Actor sender = actorService.findByPrincipal();
 			try {
 				Message message = messageService.reconstruct(messageForm, sender);
 				message = messageService.save(message);
-				result = addMessageThreadModelAndView(messageService.construct(message.getThread()));
+				result = addMessageThreadModelAndView(messageService.construct(message.getThread()), false);
 			}
 			catch (Throwable oops) {
 				oops.printStackTrace();
@@ -155,24 +156,113 @@ public class MessagesThreadController extends AbstractController {
 		return result;
 	}
 	
-	private ModelAndView createMessageThreadModelAndView(ThreadForm form) {
-		return createMessageThreadModelAndView(form, null);
-	}
-	
-	private ModelAndView createMessageThreadModelAndView(ThreadForm form, String message) {
-		ModelAndView result = new ModelAndView("thread/message/create");
-		result.addObject("threadForm", form);
-		result.addObject("isReport", false);
-		result.addObject("message", message);
-		result.addObject("requestURI", "thread/message/create.do");
+	// Reports ----------------------------------
+
+	@RequestMapping(value = "/report/view", method = RequestMethod.GET)
+	public ModelAndView reportThreadView(@RequestParam final int threadId) {
+		Assert.notNull(threadId);
+		
+		Actor sender = actorService.findByPrincipal();
+		
+		ModelAndView result;
+		MessagesThread thread = mtService.findOne(threadId);
+		if (thread != null && (thread.getParticipantA().getId() == sender.getId() ||
+			thread.getParticipantB().getId() == sender.getId())) {
+			result = addMessageThreadModelAndView(messageService.construct(thread), true);
+		}
+		else {
+			// Error, redirigir a 403
+			result = new ModelAndView("redirect:/misc/403.do");
+		}
 		return result;
 	}
 	
-	private ModelAndView addMessageThreadModelAndView(MessageForm form) {
-		return addMessageThreadModelAndView(form, null);
+	@RequestMapping(value = "/report/create", method = RequestMethod.GET)
+	public ModelAndView reportCreate(@RequestParam final int userId, @RequestParam final int routeId) {
+		Assert.notNull(userId);
+		Assert.notNull(routeId);
+		
+		Actor reportingUser = actorService.findByPrincipal();
+		Actor reportedUser = actorService.findOne(userId);
+		Route route = routeService.findOne(routeId);
+		
+		ModelAndView result;
+		if (reportedUser == null || route == null || reportingUser.getId() == reportedUser.getId()) {
+			// Error, redirigir a 403
+			result = new ModelAndView("redirect:/misc/403.do");
+		}
+		else {
+			MessagesThread thread = mtService.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
+			if (thread == null) {
+				// Redirigir a la vista de creación
+				result = createThreadModelAndView(mtService.construct(route, reportedUser), true);
+			}
+			else {
+				// Existe ya un reporte, redirigir al hilo en sí
+				result = null;
+				result = addMessageThreadModelAndView(messageService.construct(thread), true);
+			}
+		}
+		
+		return result;
 	}
 	
-	private ModelAndView addMessageThreadModelAndView(MessageForm form, String message) {
+	@RequestMapping(value = "/report/create", method = RequestMethod.POST)
+	public ModelAndView reportThreadCreate(@ModelAttribute(value = "threadForm") @Valid final ThreadForm threadForm, BindingResult binding) {
+		ModelAndView result = null;
+		if (binding.hasErrors()) {
+			result = createThreadModelAndView(threadForm, false);
+		}
+		else {
+			Actor reportingUser = actorService.findByPrincipal();
+			MessagesThread thread = mtService.findReportsThreadFromParticipantsAndRoute(threadForm.getRoute().getId(), reportingUser.getId(), threadForm.getUser().getId());
+			if (thread == null && threadForm.getUser().getId() != reportingUser.getId()) {
+				try {
+					thread = mtService.reconstruct(threadForm, reportingUser, true);
+					thread = mtService.saveNew(thread, threadForm.getMessage());
+					result = addMessageThreadModelAndView(messageService.construct(thread), true);
+				}
+				catch (Throwable oops) {
+					oops.printStackTrace();
+					result = createThreadModelAndView(threadForm, false, "thread.commit.error");
+				}
+			}
+			else {
+				// Error, redirigir a 403
+				result = new ModelAndView("redirect:/misc/403.do");
+			}
+		}
+		return result;
+	}
+	
+	// Ancillary Methods ---------------------------------------------------------------------
+	
+	private ModelAndView createThreadModelAndView(ThreadForm form, boolean isReport) {
+		return createThreadModelAndView(form, isReport, null);
+	}
+	
+	private ModelAndView createThreadModelAndView(ThreadForm form, boolean isReport, String message) {
+		ModelAndView result;
+		if (isReport) {
+			result = new ModelAndView("thread/report/create");
+			result.addObject("requestURI", "thread/report/create.do");
+		}
+		else {
+			result = new ModelAndView("thread/message/create");
+			result.addObject("requestURI", "thread/message/create.do");
+		}
+		result.addObject("threadForm", form);
+		result.addObject("isReport", isReport);
+		result.addObject("message", message);
+		
+		return result;
+	}
+	
+	private ModelAndView addMessageThreadModelAndView(MessageForm form, boolean isReport) {
+		return addMessageThreadModelAndView(form, isReport, null);
+	}
+	
+	private ModelAndView addMessageThreadModelAndView(MessageForm form, boolean isReport, String message) {
 		MessagesThread thread = form.getThread();
 		// Cuando se accede a una conversación que tiene nuevos mensajes para el usuario conectado,
 		// se tiene que actualizar el número de nuevos mensajes a cero en dicha conversación en el
@@ -185,24 +275,22 @@ public class MessagesThreadController extends AbstractController {
 				thread = mtService.updateReadNewMessages(thread);
 			}
 		}
-		
-		ModelAndView result = new ModelAndView("thread/message/view");
+		ModelAndView result;
+		if (isReport) {
+			result = new ModelAndView("thread/report/view");
+			result.addObject("requestURI", "thread/report/add.do");
+		}
+		else {
+			result = new ModelAndView("thread/message/view");
+			result.addObject("requestURI", "thread/message/add.do");
+		}
 		result.addObject("thread", thread);
 		result.addObject("newMessages", newMessages);
 		result.addObject("messageForm", form);
+		result.addObject("isReport", isReport);
 		result.addObject("message", message);
-		result.addObject("requestURI", "thread/message/add.do");
 		
 		return result;
-	}
-	
-	// Reports ----------------------------------
-
-	@RequestMapping(value = "/report/create", method = RequestMethod.GET)
-	public ModelAndView reportCreate(@RequestParam final int userId, @RequestParam final int routeId) {
-		Assert.notNull(userId);
-		Assert.notNull(routeId);
-		return null;
 	}
 
 }

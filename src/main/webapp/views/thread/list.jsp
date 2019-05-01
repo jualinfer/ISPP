@@ -32,7 +32,20 @@
 				${thread.route.origin} <i class="fas fa-arrow-right"></i> ${thread.route.destination}</a>
 			<span class="fa-stack"> <i class="fa fa-comment fa-stack-2x"
 				style="color: red"></i> <strong
-				class="fa-stack-1x fa-stack-text fa-inverse">${thread.newMessages}</strong>
+				class="fa-stack-1x fa-stack-text fa-inverse">
+				<jstl:if test="${thread.newMessages == 0}">0</jstl:if>
+				<jstl:if test="${thread.newMessages > 0}">
+					<jstl:choose>
+						<jstl:when test="${thread.participantA.id == connectedUser.id && !thread.lastMessage.fromAtoB}">
+							${thread.newMessages}
+						</jstl:when>
+						<jstl:when test="${thread.participantB.id == connectedUser.id && thread.lastMessage.fromAtoB}">
+							${thread.newMessages}
+						</jstl:when>
+						<jstl:otherwise>0</jstl:otherwise>
+					</jstl:choose>
+				</jstl:if>
+				</strong>
 			</span>
 
 

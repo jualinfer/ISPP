@@ -17,7 +17,12 @@
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
 <div class="text-center active-routes">
-	<h3><spring:message code="messages" /></h3>
+	<jstl:if test="${!isReport}">
+		<h3><spring:message code="messages" /></h3>
+	</jstl:if>
+	<jstl:if test="${isReport}">
+		<h3><spring:message code="reports" /></h3>
+	</jstl:if>
 </div>
 
 <security:authorize access="hasAnyRole('DRIVER', 'PASSENGER', 'ADMIN')">

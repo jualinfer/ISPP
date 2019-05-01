@@ -22,6 +22,7 @@ import security.LoginService;
 import security.UserAccount;
 import services.ActorService;
 import services.CommentService;
+import services.MessagesThreadService;
 import services.ReservationService;
 import services.RouteService;
 import domain.Actor;
@@ -50,6 +51,9 @@ public class RouteController extends AbstractController {
 
 	@Autowired
 	private ActorService		actorService;
+	
+	@Autowired
+	private MessagesThreadService mtService;
 
 
 	// Constructors -----------------------------------------------------------
@@ -181,6 +185,8 @@ public class RouteController extends AbstractController {
 					canComment = false;
 			}
 
+		Actor connectedUser = actorService.findByPrincipal();
+		
 		result.addObject("route", route);
 		result.addObject("remainingSeats", route.getAvailableSeats() - occupiedSeats);
 		result.addObject("arrivalDate", sdf.format(arrivalDate));
@@ -191,9 +197,10 @@ public class RouteController extends AbstractController {
 		result.addObject("hasPassed10Minutes", hasPassed10Minutes);
 		result.addObject("arrivalPlus10Min", arrivalPlus10Min);
 		result.addObject("canComment", canComment);
+		result.addObject("canReport", mtService.canReport(connectedUser, route));
 		result.addObject("passengersToComment", passengersToComment);
 		result.addObject("commentForm", commentForm);
-		result.addObject("connectedUser", actorService.findByPrincipal());
+		result.addObject("connectedUser", connectedUser);
 
 		return result;
 	}

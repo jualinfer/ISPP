@@ -1327,6 +1327,17 @@
         <property name="enabled" value="true"/>
         <property name="banned" value="false"/>
     </bean>
+    <!-- ADMIN -->
+    <bean id="admin1" class="domain.Administrator">
+        <property name="name" value="Admin"/>
+        <property name="surname" value="(TROND Team)"/>
+        <property name="country" value="Spain"/>
+        <property name="city" value="Seville"/>
+        <property name="phone" value="650496245"/>
+        <property name="newMessages" value="0"/>
+        <property name="newAlerts" value="0"/>
+        <property name="userAccount" ref="userAccount0"/>
+    </bean>
     <!-- DRIVERS (30) -->
     <bean id="driver1" class="domain.Driver">
         <property name="name" value="Mía"/>

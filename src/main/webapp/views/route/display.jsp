@@ -161,6 +161,12 @@
 
 
 						</jstl:if>
+						<jstl:if test="${canReport}">
+							<security:authorize access="hasRole('PASSENGER')">
+								<spring:message code="thread.report" var="reportText" />
+								<a href="thread/report/create.do?userId=${route.driver.id}&routeId=${route.id}" class="btn btn-danger"><jstl:out value="${reportText}" /></a>
+							</security:authorize>
+						</jstl:if>
 					</div>
 
 					<div class="vehicle d-flex flex-row justify-content-center m-1">
@@ -352,6 +358,12 @@
 
 										</jstl:forEach>
 
+									</security:authorize>
+								</jstl:if>
+								<jstl:if test="${canReport}">
+									<security:authorize access="hasRole('DRIVER')">
+										<spring:message code="thread.report" var="reportText" />
+										<a href="thread/report/create.do?userId=${res.passenger.id}&routeId=${route.id}" class="btn btn-danger"><jstl:out value="${reportText}" /></a>
 									</security:authorize>
 								</jstl:if>
 
