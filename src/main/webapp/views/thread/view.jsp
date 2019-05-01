@@ -32,7 +32,14 @@
 			<i class="fas fa-arrow-right"></i> ${thread.route.destination}
 		</p></a>
 		<br>
+		<jstl:if test="${isReport}">
+			<spring:message code="reports.reporting" />: ${thread.participantA.name} ${thread.participantA.surname}
+			<br>
+			<spring:message code="reports.reported" />: ${thread.reportedUser.name} ${thread.reportedUser.surname}
+			<br>
+		</jstl:if>
 	</center>
+	
 	<jstl:forEach items="${thread.messages}" var="message">
 		<div class="jumbotron">
 
@@ -59,25 +66,52 @@
 		</div>
 
 	</jstl:forEach>
-	<center>
-		<form:form action="${requestURI}" modelAttribute="messageForm">
-			<form:hidden path="thread" />
-
-			<div class="form-group col-md-12">
-				<form:textarea path="content" class="form-control" />
-				<form:errors cssClass="error" path="content" />
-			</div>
-
-			<div class="form-group col-md-6 text-center">
-				<input type="submit" class="btn btn-success"
-					value="<spring:message code="thread.send" />" />
-
-				<spring:message code="thread.back" var="back" />
-				<a href="thread/message/list.do"
-					class="btn btn-danger"><jstl:out value="${back}" /></a>
-			</div>
-
-		</form:form>
-	</center>
-
+	<jstl:if test="${!isReport || !thread.closed}">
+		<center>
+			<form:form action="${requestURI}" modelAttribute="messageForm">
+				<form:hidden path="thread" />
+	
+				<div class="form-group col-md-12">
+					<form:textarea path="content" class="form-control" />
+					<form:errors cssClass="error" path="content" />
+				</div>
+	
+				<div class="form-group col-md-6 text-center">
+					<input type="submit" class="btn btn-success"
+						value="<spring:message code="thread.send" />" />
+	
+					<spring:message code="thread.back" var="back" />
+					<jstl:if test="${!isReport}">
+						<a href="thread/message/list.do"
+							class="btn btn-danger"><jstl:out value="${back}" /></a>
+					</jstl:if>
+					<jstl:if test="${isReport}">
+						<a href="thread/report/list.do"
+							class="btn btn-danger"><jstl:out value="${back}" /></a>
+					</jstl:if>
+				</div>
+	
+			</form:form>
+		</center>
+	</jstl:if>
+	<security:authorize access="hasRole('ADMIN')">
+	<jstl:if test="${isReport && thread.closed}">
+		<center>
+			<spring:message code="thread.back" var="back" />
+			<a href="thread/report/list.do"
+				class="btn btn-danger"><jstl:out value="${back}" /></a>
+		</center>
+	</jstl:if>
+	<jstl:if test="${isReport && !thread.closed}">
+		<center>
+			<spring:message code="reports.closeRefund" var="refundText" />
+			<a href="thread/report/close.do?threadId=${thread.id}&refund=true"
+				class="btn btn-danger"><jstl:out value="${refundText}" /></a>
+			<br><br>
+			<spring:message code="reports.closePay" var="payText" />
+			<a href="thread/report/close.do?threadId=${thread.id}&refund=false"
+				class="btn btn-danger"><jstl:out value="${payText}" /></a>
+		</center>
+	</jstl:if>
+	</security:authorize>
 </security:authorize>

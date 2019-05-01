@@ -19,6 +19,7 @@ import services.MessageService;
 import services.MessagesThreadService;
 import services.RouteService;
 import domain.Actor;
+import domain.Administrator;
 import domain.Message;
 import domain.MessagesThread;
 import domain.Route;
@@ -56,6 +57,7 @@ public class MessagesThreadController extends AbstractController {
 		ModelAndView result = new ModelAndView("thread/message/list");
 		result.addObject("threads", threads);
 		result.addObject("connectedUser", user);
+		result.addObject("isReport", false);
 		return result;
 	}
 	
@@ -158,6 +160,17 @@ public class MessagesThreadController extends AbstractController {
 	
 	// Reports ----------------------------------
 
+	@RequestMapping(value = "/report/list", method = RequestMethod.GET)
+	public ModelAndView reportThreadList() {
+		Actor user = actorService.findByPrincipal();
+		Collection<MessagesThread> threads = mtService.findReportsThreadFromParticipant(user.getId());
+		ModelAndView result = new ModelAndView("thread/report/list");
+		result.addObject("threads", threads);
+		result.addObject("connectedUser", user);
+		result.addObject("isReport", true);
+		return result;
+	}
+	
 	@RequestMapping(value = "/report/view", method = RequestMethod.GET)
 	public ModelAndView reportThreadView(@RequestParam final int threadId) {
 		Assert.notNull(threadId);
@@ -231,6 +244,59 @@ public class MessagesThreadController extends AbstractController {
 				// Error, redirigir a 403
 				result = new ModelAndView("redirect:/misc/403.do");
 			}
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/report/add", method = RequestMethod.POST)
+	public ModelAndView reportMessageAdd(@ModelAttribute(value = "messageForm") @Valid final MessageForm messageForm, BindingResult binding) {
+		ModelAndView result = null;
+		if (binding.hasErrors()) {
+			result = addMessageThreadModelAndView(messageForm, true);
+		}
+		else if (!messageForm.getThread().getClosed()) {
+			Actor sender = actorService.findByPrincipal();
+			try {
+				Message message = messageService.reconstruct(messageForm, sender);
+				message = messageService.save(message);
+				result = addMessageThreadModelAndView(messageService.construct(message.getThread()), true);
+			}
+			catch (Throwable oops) {
+				oops.printStackTrace();
+				// Error, redirigir a 403
+				result = new ModelAndView("redirect:/misc/403.do");
+			}
+		}
+		else {
+			// Error, redirigir a 403
+			result = new ModelAndView("redirect:/misc/403.do");
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/report/close", method = RequestMethod.GET)
+	public ModelAndView reportThreadView(@RequestParam final int threadId, @RequestParam final boolean refund) {
+		Assert.notNull(threadId);
+		Assert.notNull(refund);
+		
+		Actor admin = actorService.findByPrincipal();
+		ModelAndView result;
+		if (admin instanceof Administrator) {
+			MessagesThread thread = mtService.findOne(threadId);
+			if (thread != null && (thread.getParticipantB().getId() == admin.getId() ||
+				thread.getParticipantA().getId() == admin.getId()) && !thread.getClosed() &&
+				thread.getReportedUser() != null) {
+				thread = mtService.closeAndSaveReport(thread, refund);
+				result = addMessageThreadModelAndView(messageService.construct(thread), true);
+			}
+			else {
+				// Error, redirigir a 403
+				result = new ModelAndView("redirect:/misc/403.do");
+			}
+		}
+		else {
+			// Error, redirigir a 403
+			result = new ModelAndView("redirect:/misc/403.do");
 		}
 		return result;
 	}
