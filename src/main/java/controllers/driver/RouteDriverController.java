@@ -1,9 +1,11 @@
 
 package controllers.driver;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -28,6 +30,7 @@ import com.stripe.Stripe;
 import com.stripe.model.Refund;
 
 import controllers.AbstractController;
+import domain.ControlPoint;
 import domain.Driver;
 import domain.Reservation;
 import domain.Route;
@@ -100,10 +103,11 @@ public class RouteDriverController extends AbstractController {
 	public ModelAndView confirm(@ModelAttribute(value = "route") @Valid final RouteForm routeForm, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
+			System.out.println(binding.getAllErrors());
 			//			System.out.println("/route/driver/confirm.do bindingErrors: " + binding.getAllErrors());
 			result = this.createEditModelAndView(routeForm);
-		else
+		} else
 			try {
 				final Driver driver = (Driver) this.actorService.findByPrincipal();
 				final Route route = this.routeService.reconstruct(routeForm, driver, binding);
@@ -111,6 +115,7 @@ public class RouteDriverController extends AbstractController {
 					System.out.println(binding.getAllErrors());
 					result = this.createEditModelAndView(routeForm);
 				} else {
+					this.calculaDuracion(route);
 					result = new ModelAndView("route/driver/confirm");
 					result.addObject("route", route);
 					result.addObject("requestURISave", "route/driver/edit.do");
@@ -123,6 +128,51 @@ public class RouteDriverController extends AbstractController {
 		return result;
 	}
 
+	private void calculaDuracion(final Route route) {
+
+		final List<ControlPoint> cps = route.getControlPoints();
+		long acum = 0;
+
+		//--------Origen - Control Point ------
+		final Calendar date = Calendar.getInstance();
+		date.setTime(route.getDepartureDate());
+		final long departureDateMilis = date.getTimeInMillis();
+		final Date arrivalDate = new Date(departureDateMilis + this.routeService.getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000);
+
+		final ControlPoint cp = cps.get(0);
+		cp.setArrivalTime(arrivalDate);
+		cps.set(0, cp);
+		acum = acum + departureDateMilis + this.routeService.getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000;
+
+		//-------Control Points intermedios ---------
+
+		for (final ControlPoint c : cps) {
+			final Calendar date2 = Calendar.getInstance();
+			date2.setTime(c.getArrivalTime());
+			final long departureDateMilis2 = date2.getTimeInMillis();
+			if (cps.indexOf(c) < cps.size() - 1) {
+				final Date arrivalDate2 = new Date(departureDateMilis2 + this.routeService.getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000);
+				final ControlPoint b = cps.get(cps.indexOf(c) + 1);
+				b.setArrivalTime(arrivalDate2);
+				cps.set(cps.indexOf(c) + 1, b);
+				acum = acum + departureDateMilis2 + this.routeService.getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000;
+			} else
+				break;
+
+		}
+
+		//------Ultimo CP - Destino-------------
+		final Calendar date3 = Calendar.getInstance();
+		date3.setTime(cps.get(cps.size() - 1).getArrivalTime());
+		final long departureDateMilis3 = date.getTimeInMillis();
+
+		final int cosa = Math.toIntExact(acum / 60000);
+
+		route.setEstimatedDuration((int) (acum / 60000 + departureDateMilis3 / 60000 + this.routeService.getDurationMinutes(cps.get(cps.size() - 1).getLocation(), route.getDestination())));
+
+		route.setControlPoints(cps);
+
+	}
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@ModelAttribute(value = "route") final Route route, final BindingResult binding) {
 		ModelAndView result;
