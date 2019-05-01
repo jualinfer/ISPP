@@ -154,7 +154,11 @@ public class MessagesThreadService {
 		return mtRepository.findReportsThreadFromParticipantsAndRoute(routeId, reportingUserId, reportedUserId);
 	}
 	
-	public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
+	public Collection<MessagesThread> findReportsThreadFromParticipant(int participantId) {
+		return mtRepository.findReportsThreadFromParticipant(participantId);
+	}
+	
+	/*public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
 		boolean result = false;
 		if (reportingUser.getId() != reportedUser.getId()) {
 			MessagesThread reportThread = mtRepository.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
@@ -184,7 +188,7 @@ public class MessagesThreadService {
 			result = true;
 		}
 		return result;
-	}
+	}*/
 	
 	public boolean canReport(Actor user, Route route) {
 		boolean result = false;
@@ -217,6 +221,18 @@ public class MessagesThreadService {
 			}
 		}
 		return result;
+	}
+	
+	public MessagesThread closeAndSaveReport(MessagesThread thread, boolean refund) {
+		thread.setClosed(true);
+		if (refund) {
+			// TODO Hay que devolver el dinero al passenger
+		}
+		else {
+			// TODO Hay que hacerle la transferencia al driver
+		}
+		thread = mtRepository.saveAndFlush(thread);
+		return thread;
 	}
 	
 	// CONSTRUCT & RECONSTRUCT --------------------------------------------------------------
