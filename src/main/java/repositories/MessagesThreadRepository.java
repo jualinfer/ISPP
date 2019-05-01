@@ -30,4 +30,7 @@ public interface MessagesThreadRepository extends JpaRepository<MessagesThread, 
 	@Query("select mt from MessagesThread mt where mt.route.id = ?1 and ((mt.participantA.id = ?2 and mt.participantB.id = ?3) or (mt.participantA.id = ?3 and mt.participantB.id = ?2))")
 	MessagesThread findMessagesThreadFromParticipantsAndRoute(int routeId, int participant1Id, int participant2Id);
 
+	@Query("select mt from MessagesThread mt where mt.route.id = ?1 and mt.reportedUser.id = ?3 and (mt.participantA.id = ?2 or mt.participantB.id = ?2)")
+	MessagesThread findReportsThreadFromParticipantsAndRoute(int routeId, int reportingUserId, int reportedUserId);
+	
 }

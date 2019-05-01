@@ -91,6 +91,10 @@
 		<security:intercept-url pattern="/thread/message/add.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/thread/message/view.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/thread/message/list.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/thread/report/create.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/thread/report/add.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/thread/report/view.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/thread/report/list.do" access="isAuthenticated()" />
 		
 		<security:intercept-url pattern="/alert/**" access="isAuthenticated()" />
 		

@@ -31,4 +31,19 @@
 		<put-attribute name="body" value="/views/thread/list.jsp" />
 	</definition>
 	
+	<definition name="thread/report/create" extends="master.page">	
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/views/thread/create.jsp" />
+	</definition>
+	
+	<definition name="thread/report/view" extends="master.page">	
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/views/thread/view.jsp" />
+	</definition>
+	
+	<definition name="thread/report/list" extends="master.page">	
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/views/thread/list.jsp" />
+	</definition>
+	
 </tiles-definitions>
