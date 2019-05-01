@@ -225,11 +225,20 @@ public class MessagesThreadService {
 	
 	public MessagesThread closeAndSaveReport(MessagesThread thread, boolean refund) {
 		thread.setClosed(true);
+		Actor driver, passenger;
+		if (thread.getReportedUser().getId() == thread.getRoute().getDriver().getId()) {
+			driver = thread.getReportedUser();
+			passenger = thread.getParticipantA();
+		}
+		else {
+			driver = thread.getParticipantA();
+			passenger = thread.getReportedUser();
+		}
 		if (refund) {
 			// TODO Hay que devolver el dinero al passenger
 		}
 		else {
-			// TODO Hay que hacerle la transferencia al driver
+			// TODO Hay que hacerle la transferencia al driver 
 		}
 		thread = mtRepository.saveAndFlush(thread);
 		return thread;
