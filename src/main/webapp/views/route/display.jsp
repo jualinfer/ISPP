@@ -112,8 +112,8 @@
 							class="driver-name d-flex flex-row justify-content-center m-1">
 							<h5>${driverMsg}: &nbsp</h5>
 							<p>
-								<jstl:out value="${route.driver.name}" />
-								<jstl:out value="${route.driver.surname}" />
+								<a href="driver/display.do?driverId=${route.driver.id}"><jstl:out value="${route.driver.name}" />
+								<jstl:out value="${route.driver.surname}" /></a>
 								<jstl:if test="${route.driver.id != connectedUser.id}">
 									<a href="thread/message/create.do?userId=${route.driver.id}&routeId=${route.id}"><i class="far fa-envelope"></i></a>
 								</jstl:if>
@@ -301,8 +301,9 @@
 							</dd> --%>
 							<div class="passengers-- m-1 p-3">
 								<span><dd>
-									<jstl:out
-										value="${res.passenger.name} ${res.passenger.surname}" />
+										<a href="passenger/display.do?passengerId=${res.passenger.id}">
+											<jstl:out value="${res.passenger.name} ${res.passenger.surname}" />
+										</a>
 										<jstl:if test="${res.passenger.id != connectedUser.id}">
 											<a href="thread/message/create.do?userId=${res.passenger.id}&routeId=${route.id}"><i class="far fa-envelope"></i></a>
 										</jstl:if>

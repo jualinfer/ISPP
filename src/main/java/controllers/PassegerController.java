@@ -75,6 +75,7 @@ public class PassegerController extends AbstractController {
 		result = new ModelAndView("passenger/display");
 		result.addObject("passenger", passenger);
 		result.addObject("comments", comments);
+		result.addObject("isPrincipal", true);
 
 		return result;
 	}
@@ -99,7 +100,7 @@ public class PassegerController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors().toString());
 			result = this.createEditModelAndView(passenger, "passenger/create");
-		} else
+		} else {
 			try {
 				userAccount = super.hashSavePassword(passenger.getUserAccount());
 				passenger.setUserAccount(userAccount);
@@ -108,6 +109,7 @@ public class PassegerController extends AbstractController {
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(passenger, "passenger.commit.error");
 			}
+		}
 		return result;
 	}
 	// Edition -----------------------------------------------------------
@@ -135,13 +137,14 @@ public class PassegerController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors());
 			result = this.createEditModelAndView(passenger, "passenger/edit");
-		} else
+		} else {
 			try {
 				this.passengerService.save(passengerReconstruct);
 				result = new ModelAndView("redirect:/passenger/display.do?passengerId=" + passengerReconstruct.getId());
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(passenger, "passenger.commit.error");
 			}
+		}
 		return result;
 	}
 
@@ -164,11 +167,11 @@ public class PassegerController extends AbstractController {
 		ModelAndView res;
 		Passenger passenger;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "passenger.params.error");
-		else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword()))
+		} else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword())) {
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "passenger.commit.errorPassword");
-		else
+		} else {
 			try {
 				passenger = this.passengerService.reconstructCredential(credentialsfForm, binding);
 				this.passengerService.saveCredentials(passenger);
@@ -176,6 +179,7 @@ public class PassegerController extends AbstractController {
 			} catch (final Throwable oops) {
 				res = this.createEditModelAndViewEditCredentials(credentialsfForm, "passenger.commit.error");
 			}
+		}
 
 		return res;
 	}

@@ -19,6 +19,8 @@ import security.LoginService;
 import security.UserAccount;
 import security.UserAccountService;
 import domain.Actor;
+import domain.Driver;
+import domain.Passenger;
 
 @Service
 @Transactional
@@ -136,6 +138,17 @@ public class ActorService {
 			writer.newLine();
 			writer.write(String.format("average stars: %s", me.getMediumStars()));
 			writer.newLine();
+
+			if (me instanceof Driver) {
+				Driver driver = (Driver) me;
+				writer.write(String.format("bank account number: %s", driver.getBankAccountNumber()));
+				writer.newLine();
+			} else if (me instanceof Passenger) {
+				Passenger passenger = (Passenger) me;
+				writer.write(String.format("bank account number: %s", passenger.getBankAccountNumber()));
+				writer.newLine();
+			}
+
 			writer.close();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());

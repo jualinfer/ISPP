@@ -75,6 +75,7 @@ public class DriverController extends AbstractController {
 		result = new ModelAndView("driver/display");
 		result.addObject("driver", driver);
 		result.addObject("comments", comments);
+		result.addObject("isPrincipal", true);
 
 		return result;
 	}
@@ -99,7 +100,7 @@ public class DriverController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors().toString());
 			result = this.createEditModelAndView(driver, "driver/create");
-		} else
+		} else {
 			try {
 				userAccount = super.hashSavePassword(driver.getUserAccount());
 				driver.setUserAccount(userAccount);
@@ -108,6 +109,7 @@ public class DriverController extends AbstractController {
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(driver, "driver.commit.error");
 			}
+		}
 		return result;
 	}
 	// Edition -----------------------------------------------------------
@@ -135,13 +137,14 @@ public class DriverController extends AbstractController {
 		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors());
 			result = this.createEditModelAndView(driver, "driver/edit");
-		} else
+		} else {
 			try {
 				this.driverService.save(driverReconstruct);
 				result = new ModelAndView("redirect:/driver/display.do?driverId=" + driverReconstruct.getId());
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(driver, "driver.commit.error");
 			}
+		}
 		return result;
 	}
 
@@ -164,11 +167,11 @@ public class DriverController extends AbstractController {
 		ModelAndView res;
 		Driver driver;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "driver.params.error");
-		else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword()))
+		} else if (!credentialsfForm.getRepeatPassword().equals(credentialsfForm.getPassword())) {
 			res = this.createEditModelAndViewEditCredentials(credentialsfForm, "driver.commit.errorPassword");
-		else
+		} else {
 			try {
 				driver = this.driverService.reconstructCredential(credentialsfForm, binding);
 				this.driverService.saveCredentials(driver);
@@ -176,6 +179,7 @@ public class DriverController extends AbstractController {
 			} catch (final Throwable oops) {
 				res = this.createEditModelAndViewEditCredentials(credentialsfForm, "driver.commit.error");
 			}
+		}
 
 		return res;
 	}

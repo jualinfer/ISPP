@@ -96,7 +96,7 @@
 		
 		<security:intercept-url pattern="/comment/create.do" access="hasRole('PASSENGER') || hasRole('DRIVER')" />
 		
-		<security:intercept-url pattern="/profile/download.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/profile/download.do" access="hasRole('PASSENGER') || hasRole('DRIVER')" />
 		
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />
 		
