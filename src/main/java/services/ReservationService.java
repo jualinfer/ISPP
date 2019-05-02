@@ -72,6 +72,7 @@ public class ReservationService {
 		result.setStatus(ReservationStatus.PENDING);
 		result.setLuggageSize(LuggageSize.NOTHING);
 		result.setSeat(1);
+		result.setPaymentResolved(false);
 
 		return result;
 	}
@@ -203,8 +204,10 @@ public class ReservationService {
 		final Collection<Reservation> reservations = this.findReservationsByRouteAndStatusPendingOrAccepted(route.getId());
 
 		if (!reservations.isEmpty()) {
-			for (final Reservation r : reservations)
+			for (final Reservation r : reservations) {
 				r.setStatus(ReservationStatus.REJECTED);
+				r.setPaymentResolved(true);
+			}
 
 			this.reservationRepository.save(reservations);
 			this.reservationRepository.flush();
@@ -408,6 +411,7 @@ public class ReservationService {
 		Assert.isTrue(route.getDepartureDate().after(new Date()));
 
 		reservation.setStatus(ReservationStatus.REJECTED);
+		reservation.setPaymentResolved(true);
 
 		//We create an alert
 		final Alert alert = this.alertService.create();
@@ -427,6 +431,7 @@ public class ReservationService {
 		Assert.isTrue(route.getDepartureDate().after(new Date()));
 
 		reservation.setStatus(ReservationStatus.CANCELLED);
+		reservation.setPaymentResolved(true);
 
 		//We create an alert
 		final Alert alert = this.alertService.create();
@@ -546,6 +551,7 @@ public class ReservationService {
 			result.setStatus(ReservationStatus.PENDING);
 			result.setDriverPickedMe(false);
 			result.setDriverNoPickedMe(false);
+			result.setPaymentResolved(false);
 		}
 		return result;
 	}

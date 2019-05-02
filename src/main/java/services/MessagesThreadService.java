@@ -62,6 +62,9 @@ public class MessagesThreadService {
 
 	@Autowired
 	private RouteService				routeService;
+	
+	@Autowired
+	private ReservationService			reservationService;
 
 
 	/*
@@ -263,6 +266,8 @@ public class MessagesThreadService {
 					final Map<String, Object> params = new HashMap<>();
 					params.put("charge", currentReservation.getChargeId());
 					final Refund refund2 = Refund.create(params);
+					currentReservation.setPaymentResolved(true);
+					currentReservation = reservationService.save2(currentReservation);
 				} catch (final StripeException e) {
 					e.printStackTrace();
 				}
@@ -288,6 +293,8 @@ public class MessagesThreadService {
 				payoutParams.put("currency", StripeConfig.CURRENCY);
 				//			payoutParams.put("destination", bankAccount.getId());
 				Payout.create(payoutParams);
+				currentReservation.setPaymentResolved(true);
+				currentReservation = reservationService.save2(currentReservation);
 			} catch (final StripeException e) {
 				e.printStackTrace();
 			}
