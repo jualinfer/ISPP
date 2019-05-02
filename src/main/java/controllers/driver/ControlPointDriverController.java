@@ -28,12 +28,12 @@ public class ControlPointDriverController extends AbstractController {
 
 	// Services ---------------------------------------------------------------
 	@Autowired
-	private ActorService	actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private ControlPointService controlPointService;
+	private ControlPointService		controlPointService;
 	@Autowired
-	private RouteDriverController routeController;
+	private RouteDriverController	routeController;
 
 
 	// Constructors -----------------------------------------------------------
@@ -41,63 +41,58 @@ public class ControlPointDriverController extends AbstractController {
 		super();
 	}
 
-	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public ModelAndView add(@ModelAttribute(value="route") RouteForm routeForm, BindingResult binding) {
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public ModelAndView add(@ModelAttribute(value = "route") final RouteForm routeForm, final BindingResult binding) {
 		ModelAndView result;
-		if (binding.hasErrors()) {
-			System.out.println("Binding errors on 'controlpoint.add': "+binding.getAllErrors());
-		}
-		
-		if (routeForm.getControlpoints() == null) {
+		if (binding.hasErrors())
+			System.out.println("Binding errors on 'controlpoint.add': " + binding.getAllErrors());
+
+		if (routeForm.getControlpoints() == null)
 			routeForm.setControlpoints(new ArrayList<ControlPointFormCreate>());
-		}
-		
-		ControlPointFormCreate cp = controlPointService.constructCreate(controlPointService.create(), null);
-		cp.setArrivalOrder(routeForm.getControlpoints().size()+1);
-		cp.setEstimatedTime(1);
+
+		final ControlPointFormCreate cp = this.controlPointService.constructCreate(this.controlPointService.create(), null);
+		cp.setArrivalOrder(routeForm.getControlpoints().size() + 1);
+		//	cp.setEstimatedTime(1);
 		routeForm.getControlpoints().add(cp);
-		routeForm.getDestination().setArrivalOrder(routeForm.getControlpoints().size()+1);
-		
-		result = routeController.createEditModelAndView(routeForm, null);
-		
+		routeForm.getDestination().setArrivalOrder(routeForm.getControlpoints().size() + 1);
+
+		result = this.routeController.createEditModelAndView(routeForm, null);
+
 		return result;
 	}
-	
-	@RequestMapping(value="/remove", method=RequestMethod.POST)
-	public ModelAndView remove(@ModelAttribute(value="route") RouteForm routeForm, BindingResult binding,
-		@RequestParam Integer index) {
+
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public ModelAndView remove(@ModelAttribute(value = "route") final RouteForm routeForm, final BindingResult binding, @RequestParam final Integer index) {
 		ModelAndView result;
-		System.out.println("es index null?? "+index);
-		System.out.println("es cp null?? "+Boolean.toString(routeForm.getControlpoints() == null));
-		if (routeForm.getControlpoints() != null) {
-			System.out.println("size: "+routeForm.getControlpoints().size());
-		}
-		if (index != null && index > -1 && routeForm.getControlpoints() != null &&
-			routeForm.getControlpoints().size()-1 >= index) {
-			ControlPointFormCreate  cp;
+		System.out.println("es index null?? " + index);
+		System.out.println("es cp null?? " + Boolean.toString(routeForm.getControlpoints() == null));
+		if (routeForm.getControlpoints() != null)
+			System.out.println("size: " + routeForm.getControlpoints().size());
+		if (index != null && index > -1 && routeForm.getControlpoints() != null && routeForm.getControlpoints().size() - 1 >= index) {
+			ControlPointFormCreate cp;
 			for (int i = index; i < routeForm.getControlpoints().size() - 1; i++) {
-				System.out.println("index: "+i);
+				System.out.println("index: " + i);
 				cp = routeForm.getControlpoints().get(i);
-				System.out.println("index: "+i+" cp null?? "+Boolean.toString(cp == null));
+				System.out.println("index: " + i + " cp null?? " + Boolean.toString(cp == null));
 				cp.setArrivalOrder(cp.getArrivalOrder() - 1);
 			}
-			routeForm.getControlpoints().remove((int)index);
-			System.out.println("destination null?? "+Boolean.toString(routeForm.getDestination() == null));
+			routeForm.getControlpoints().remove((int) index);
+			System.out.println("destination null?? " + Boolean.toString(routeForm.getDestination() == null));
 			routeForm.getDestination().setArrivalOrder(routeForm.getDestination().getArrivalOrder() - 1);
 		}
-		
-		result = routeController.createEditModelAndView(routeForm, null);
-		
+
+		result = this.routeController.createEditModelAndView(routeForm, null);
+
 		return result;
 	}
-	
+
 	// Creation ---------------------------------------------------------------
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create(@RequestParam final int routeId) {
 		ModelAndView result;
 		ControlPoint controlpoint;
-		
-//		controlpoint = this.controlPointService.create(routeId);
+
+		//		controlpoint = this.controlPointService.create(routeId);
 		controlpoint = null;
 		//Assert.isTrue(controlpoint.getRoute().getReservations().isEmpty());
 
@@ -105,28 +100,24 @@ public class ControlPointDriverController extends AbstractController {
 
 		return result;
 	}
-	
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@Valid final ControlPoint controlpoint, final BindingResult binding) {
-		
+
 		Assert.isTrue(controlpoint.getRoute().getDriver().getId() == this.actorService.findByPrincipal().getId());
-		
-		
-		ModelAndView result;		
-		if (binding.hasErrors()){
+
+		ModelAndView result;
+		if (binding.hasErrors()) {
 			System.out.println(binding.getAllErrors());
 			result = this.createEditModelAndView(controlpoint);
-		}
-		else{
+		} else
 			try {
 				this.controlPointService.save(controlpoint);
-				result = new ModelAndView("redirect:/controlpoint/list.do?routeId="+ controlpoint.getRoute().getId());
+				result = new ModelAndView("redirect:/controlpoint/list.do?routeId=" + controlpoint.getRoute().getId());
 			} catch (final Throwable oops) {
 				oops.printStackTrace();
 				result = this.createEditModelAndView(controlpoint, "controlpoint.commit.error");
 			}
-		}
 		return result;
 	}
 
@@ -151,24 +142,5 @@ public class ControlPointDriverController extends AbstractController {
 
 		return result;
 	}
-	
-	
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

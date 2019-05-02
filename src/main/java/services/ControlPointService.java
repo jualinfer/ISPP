@@ -77,15 +77,15 @@ public class ControlPointService {
 
 		return this.controlPointRepository.findOne(id);
 	}
-	
+
 	public ControlPoint save2(final ControlPoint controlPoint) {
 		Assert.notNull(controlPoint);
-		final ControlPoint saved = controlPointRepository.saveAndFlush(controlPoint);
+		final ControlPoint saved = this.controlPointRepository.saveAndFlush(controlPoint);
 		return saved;
 	}
-	
+
 	public void flush() {
-		controlPointRepository.flush();
+		this.controlPointRepository.flush();
 	}
 
 	public ControlPoint save(final ControlPoint controlPoint) {
@@ -158,66 +158,60 @@ public class ControlPointService {
 
 	}
 
-	public ControlPointFormCreate constructCreate(final ControlPoint controlPoint, Route route) {
+	public ControlPointFormCreate constructCreate(final ControlPoint controlPoint, final Route route) {
 		final ControlPointFormCreate form = new ControlPointFormCreate();
 		form.setLocation(controlPoint.getLocation());
 		form.setArrivalOrder(controlPoint.getArrivalOrder());
 		if (route != null && route.getControlPoints() != null && route.getControlPoints().size() > 1) {
 			Date lastArrivalTime = null;
-			for (ControlPoint cp : route.getControlPoints()) {
+			for (final ControlPoint cp : route.getControlPoints())
 				if (cp.getArrivalOrder() == controlPoint.getArrivalOrder()) {
 					if (lastArrivalTime == null) {
 						form.setEstimatedTime(0);
 						break;
-					}
-					else {
-						Double estimatedTime = (cp.getArrivalTime().getTime() - lastArrivalTime.getTime()) / 60000d;
+					} else {
+						final Double estimatedTime = (cp.getArrivalTime().getTime() - lastArrivalTime.getTime()) / 60000d;
 						form.setEstimatedTime(estimatedTime.intValue());
 						break;
 					}
-				}
-				else {
+				} else
 					lastArrivalTime = cp.getArrivalTime();
-				}
-			}
-		}
-		else {
+		} else
 			form.setEstimatedTime(0);
-		}
-		/*if (controlPoint.getRoute() == null) {
-			form.setEstimatedTime(0);
-		}
-		else {
-			// TODO
-			form.setEstimatedTime(0);
-		}*/
+		/*
+		 * if (controlPoint.getRoute() == null) {
+		 * form.setEstimatedTime(0);
+		 * }
+		 * else {
+		 * // TODO
+		 * form.setEstimatedTime(0);
+		 * }
+		 */
 		form.setDistance(controlPoint.getDistance());
 		return form;
 	}
-	
-	public List<ControlPoint> reconstructCreate(Collection<ControlPointFormCreate> controlPoints, Date departureDate) {
-		TreeSet<ControlPoint> result = new TreeSet<ControlPoint>();
+
+	public List<ControlPoint> reconstructCreate(final Collection<ControlPointFormCreate> controlPoints, final Date departureDate) {
+		final TreeSet<ControlPoint> result = new TreeSet<ControlPoint>();
 		ControlPoint cp;
 		String lastLocation = null;
 		int order = 0;
 		int acumulatedTime = 0;
-		for (ControlPointFormCreate cpForm: controlPoints) {
+		for (final ControlPointFormCreate cpForm : controlPoints) {
 			Assert.isTrue(order == cpForm.getArrivalOrder());
-			Assert.isTrue((order == 0 && cpForm.getEstimatedTime() == 0) || (order != 0 && cpForm.getEstimatedTime() > 0));
-			cp = create();
+			Assert.isTrue((order == 0 /* && cpForm.getEstimatedTime() == 0 */) || (order != 0 /* && cpForm.getEstimatedTime() > 0 */));
+			cp = this.create();
 			cp.setArrivalOrder(order);
 			cp.setLocation(cpForm.getLocation());
-			if (lastLocation != null) {
-				cp.setDistance(routeService.getDistance(lastLocation, cpForm.getLocation()));
-			}
-			else {
+			if (lastLocation != null)
+				cp.setDistance(this.routeService.getDistance(lastLocation, cpForm.getLocation()));
+			else
 				cp.setDistance(0d);
-			}
 			lastLocation = cpForm.getLocation();
 			acumulatedTime += cpForm.getEstimatedTime();
 			cp.setArrivalTime(new Date(departureDate.getTime() + acumulatedTime * 60000));
 			order++;
-			
+
 			result.add(cp);
 		}
 		return new ArrayList<ControlPoint>(result);

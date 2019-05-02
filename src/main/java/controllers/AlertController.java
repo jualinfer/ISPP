@@ -34,11 +34,12 @@ public class AlertController extends AbstractController {
 	//Listing all actor alerts
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView list(@RequestParam(required = false) final int actorId) {
+	public ModelAndView list() {
 		final ModelAndView result;
 		final Collection<Alert> alerts;
-
+		int actorId= this.actorService.findByPrincipal().getId();
 		alerts = this.alertService.listByActor(actorId);
+	
 
 		result = new ModelAndView("alert/list");
 		result.addObject("alerts", alerts);
