@@ -154,6 +154,12 @@ public class MessagesThreadService {
 		return mtRepository.findReportsThreadFromParticipantsAndRoute(routeId, reportingUserId, reportedUserId);
 	}
 	
+	public Collection<MessagesThread> findReportsThreadFromRoute(int routeId) {
+		Collection<MessagesThread> res = new ArrayList<MessagesThread>();
+		res.addAll(mtRepository.findReportsThreadFromRoute(routeId));
+		return res;
+	}
+	
 	public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
 		boolean result = false;
 		if (reportingUser.getId() != reportedUser.getId()) {

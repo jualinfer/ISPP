@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.decimal4j.util.DoubleRounder;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +28,8 @@ import domain.ControlPoint;
 import domain.Driver;
 import domain.Finder;
 import domain.LuggageSize;
+import domain.MessagesThread;
+import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
 import domain.Route;
@@ -53,11 +56,18 @@ public class RouteService {
 
 	@Autowired
 	private ReservationService	reservationService;
+	
 	@Autowired
 	private DriverService		driverService;
 
 	@Autowired
 	private AlertService		alertService;
+	
+	@Autowired
+	private MessagesThreadService		messagesThreadService;
+	
+	@Autowired
+	private PassengerService		passengerService;
 
 
 	//Simple CRUD methods
@@ -548,6 +558,16 @@ public class RouteService {
 
 		return result;
 	}
+	
+	public Collection<Route> findFinalizedRoutes(final Date now) {
+		Assert.notNull(now);
+
+		Collection<Route> result;
+
+		result = this.routeRepository.findFinalizedRoutes(now);
+
+		return result;
+	}
 
 	// Construct
 
@@ -653,5 +673,56 @@ public class RouteService {
 
 		return result;
 	}
+	
+	public void cronCompleteRoutes(){
+		Date now = new Date();
+    	Long millisPerDay =  24 * 60 * 60 * 1000L;
+    	Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
+    	
+    	//Obtenemos las rutas completadas 
+    	Collection<Route> completedRoutes = findFinalizedRoutes(new Date());
+    	
+    	//De las rutas completadas sacamos las que ya hayan pasado 24h 
+    	for(Route route: completedRoutes){
+    		Date departureDate = route.getDepartureDate();
+    		Integer estimatedDuration = route.getEstimatedDuration();
+    		Date completedDate = DateUtils.addMinutes(departureDate, estimatedDuration);
+    		
+    		boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
+    		if(moreThanDay){
+    			completedAfterDayRoutes.add(route);
+    		}
+    	}
+    	
+    	for(Route route: completedAfterDayRoutes){
+    		Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
+    		
+    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
+    		
+    		//Comprobamos si los passengers han abierto algún report al driver
+    		for(Passenger passenger: passengersByRoute){
+    			boolean driverNoPickedMe = false;
+    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
+    			MessagesThread report = messagesThreadService.findReportsThreadFromParticipantsAndRoute(
+    					route.getId(), passenger.getId(), route.getDriver().getId());
+    			
+    			reservationOfPassenger.addAll(reservationService.findReservationsByRouteAndPassenger(
+    					route.getId(), passenger.getId()));
+    			
+    			if(!reservationOfPassenger.isEmpty()){
+    				driverNoPickedMe = reservationOfPassenger.get(0).isDriverNoPickedMe();
+    			}
 
+    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
+    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
+    			if(report == null){
+    				if(!driverNoPickedMe){
+    					//SE REALIZA EL PAGO AL DRIVER
+    				}else{
+    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER
+    				}
+        		}
+    		}
+    	}
+	}
 }
