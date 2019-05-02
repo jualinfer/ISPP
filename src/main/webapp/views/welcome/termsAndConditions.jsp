@@ -18,12 +18,26 @@
 
 <div class="card">
 <h4 class="text"><spring:message code="terms.and.conditions.1"/> <br/></h4>
+<p><spring:message code="terms.and.conditions.11"/></p>
+<p><spring:message code="terms.and.conditions.12"/></p>
+<p><spring:message code="terms.and.conditions.13"/></p>
+<p><spring:message code="terms.and.conditions.14"/></p>
+<p><spring:message code="terms.and.conditions.15"/></p>
+<p><spring:message code="terms.and.conditions.16"/></p>
+<p><spring:message code="terms.and.conditions.17"/></p>
+<p><spring:message code="terms.and.conditions.18"/></p>
 <br>
 <h4 class="text"><spring:message code="terms.and.conditions.2"/> <br/></h4>
+<p><spring:message code="terms.and.conditions.21"/></p>
  
 <h4 class="text"><spring:message code="terms.and.conditions.3"/> <br/></h4>
+<p><spring:message code="terms.and.conditions.31"/></p>
+<p><spring:message code="terms.and.conditions.32"/></p>
+<p><spring:message code="terms.and.conditions.33"/></p>
 
 <h4 class="text"><spring:message code="terms.and.conditions.4"/> <br/></h4>
+<p><spring:message code="terms.and.conditions.41"/></p>
+<p><spring:message code="terms.and.conditions.42"/></p>
+<p><spring:message code="terms.and.conditions.43"/></p>
 
-<h4 class="text">These conditions are ruled and interpreted according to the Spanish Law. For any claim, the courts and tribunals of Seville will be competent. All notifications, requirements, requests and other communications that the user wishes to make to Trond must be made in writing and it will be understood that they have been correctly made when they have been received at the following address: <span class="badge badge-success">contact@trond.com</span></h4>
 </div>

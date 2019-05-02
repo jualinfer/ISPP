@@ -6,7 +6,7 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
@@ -27,45 +27,38 @@
 <security:authorize access="hasAnyRole('DRIVER', 'PASSENGER', 'ADMIN')">
 	<center>
 		<jstl:forEach items="${threads}" var="thread">
+			<div style="padding-top: 10px">
+				<div class="card text-center" style="width: 70rem;">
+					<div class="card-header">
 
-			<a href="thread/message/view.do?threadId=${thread.id}">
-				${thread.route.origin} <i class="fas fa-arrow-right"></i> ${thread.route.destination}</a>
-			<span class="fa-stack"> <i class="fa fa-comment fa-stack-2x"
-				style="color: red"></i> <strong
-				class="fa-stack-1x fa-stack-text fa-inverse">
-				<jstl:if test="${thread.newMessages == 0}">0</jstl:if>
-				<jstl:if test="${thread.newMessages > 0}">
-					<jstl:choose>
-						<jstl:when test="${thread.participantA.id == connectedUser.id && !thread.lastMessage.fromAtoB}">
-							${thread.newMessages}
-						</jstl:when>
-						<jstl:when test="${thread.participantB.id == connectedUser.id && thread.lastMessage.fromAtoB}">
-							${thread.newMessages}
-						</jstl:when>
-						<jstl:otherwise>0</jstl:otherwise>
-					</jstl:choose>
-				</jstl:if>
-				</strong>
-			</span>
+						<a href="thread/message/view.do?threadId=${thread.id}">
+							${thread.route.origin} <i class="fas fa-arrow-right"></i>
+							${thread.route.destination}
+						</a> <span class="fa-stack"> <i
+							class="fa fa-comment fa-stack-2x" style="color: red"></i> <strong
+							class="fa-stack-1x fa-stack-text fa-inverse">${thread.newMessages}</strong>
+						</span> <br>
+					</div>
+					<div class="card-body">
 
+						<spring:message code="thread.participants" />
+						<br> <span class="badge badge-pill badge-primary">
+							${thread.participantA.name} ${thread.participantA.surname} </span> <br>
+						<div class="container2" style="padding-top: 5px">
+							<span class="badge badge-pill badge-primary">
+								${thread.participantB.name} ${thread.participantB.surname} </span>
+						</div>
+					</div>
+					<div class="card-footer text-muted">
 
-			<br>
-			<spring:message code="thread.participants" /><br>
-			<span class="badge badge-pill badge-primary">
-			${thread.participantA.name} ${thread.participantA.surname}
-			</span>
-			<br>
-			<div class="container2" style="padding-top:5px">
-			<span class="badge badge-pill badge-primary">
-			${thread.participantB.name} ${thread.participantB.surname}
-			</span>
+						<br> <i class="fa fa-calendar" aria-hidden="true"></i>
+						<fmt:formatDate value="${thread.lastMessage.issueDate}"
+							type="both" dateStyle="medium" timeStyle="short" />
+					</div>
+
+					<br> <br>
+				</div>
 			</div>
-			<br>
-			<i class="fa fa-calendar" aria-hidden="true"></i>
-			<fmt:formatDate value="${thread.lastMessage.issueDate}" type = "both" 
-         dateStyle = "medium" timeStyle = "short" />
-			<br>
-			<br>
 		</jstl:forEach>
 
 	</center>

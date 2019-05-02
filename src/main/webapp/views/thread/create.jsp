@@ -27,12 +27,20 @@
 
 <security:authorize access="hasAnyRole('DRIVER', 'PASSENGER', 'ADMIN')">
 	<center>
-		<i class="fa fa-envelope" aria-hidden="true"></i>
-		<spring:message code="messages.for" /><span class="badge badge-pill badge-primary" style="font-size: 22px">
-				${threadForm.user.name} ${threadForm.user.surname}</span>
-		<br>
 		<p style="font-size: 22px">${threadForm.route.origin}<i class="fas fa-arrow-right"></i>${threadForm.route.destination}</p>
 		<br>
+		<jstl:if test="${!isReport}">
+			<i class="fa fa-envelope" aria-hidden="true"></i>
+			<spring:message code="messages.for" /><span class="badge badge-pill badge-primary" style="font-size: 22px">
+					${threadForm.user.name} ${threadForm.user.surname}</span>
+			<br>
+		</jstl:if>
+		<jstl:if test="${isReport}">
+			<spring:message code="reports.reporting" />: ${thread.participantA.name} ${thread.participantA.surname}
+			<br>
+			<spring:message code="reports.reported" />: ${thread.reportedUser.name} ${thread.reportedUser.surname}
+			<br>
+		</jstl:if>
 		<form:form action="${requestURI}" modelAttribute="threadForm">
 			<form:hidden path="route" />
 			<form:hidden path="user" />

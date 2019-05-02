@@ -43,5 +43,9 @@
 		<put-attribute name="body" value="/views/driver/display.jsp"/>
 	</definition>
 	
+	<definition name="driver/unsubscribe" extends="master.page">
+		<put-attribute name="title" value=""/>
+		<put-attribute name="body" value="/views/driver/display.jsp"/>
+	</definition>
 	
 </tiles-definitions>
