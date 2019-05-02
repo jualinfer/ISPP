@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.decimal4j.util.DoubleRounder;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +23,10 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 
 import repositories.RouteRepository;
+import utilities.StripeConfig;
+
+import com.stripe.exception.StripeException;
+
 import domain.Alert;
 import domain.ControlPoint;
 import domain.Driver;
@@ -70,8 +73,9 @@ public class RouteService {
 	
 	@Autowired
 	private PassengerService		passengerService;
-
-
+	
+	private StripeConfig		stripeConfig;
+	
 	//Simple CRUD methods
 
 	public Route create() {
@@ -705,54 +709,67 @@ public class RouteService {
 	}
 	
 	public void cronCompleteRoutes(){
-		Date now = new Date();
-    	Long millisPerDay =  24 * 60 * 60 * 1000L;
-    	Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
-    	
-    	//Obtenemos las rutas completadas 
-    	Collection<Route> completedRoutes = findFinalizedRoutes(new Date());
-    	
-    	//De las rutas completadas sacamos las que ya hayan pasado 24h 
-    	for(Route route: completedRoutes){
-    		Date departureDate = route.getDepartureDate();
-    		Integer estimatedDuration = route.getEstimatedDuration();
-    		Date completedDate = DateUtils.addMinutes(departureDate, estimatedDuration);
-    		
-    		boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
-    		if(moreThanDay){
-    			completedAfterDayRoutes.add(route);
-    		}
-    	}
-    	
-    	for(Route route: completedAfterDayRoutes){
-    		Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
-    		
-    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
-    		
-    		//Comprobamos si los passengers han abierto algún report al driver
-    		for(Passenger passenger: passengersByRoute){
-    			boolean driverNoPickedMe = false;
-    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
-    			MessagesThread report = messagesThreadService.findReportsThreadFromParticipantsAndRoute(
-    					route.getId(), passenger.getId(), route.getDriver().getId());
-    			
-    			reservationOfPassenger.addAll(reservationService.findReservationsByRouteAndPassenger(
-    					route.getId(), passenger.getId()));
-    			
-    			if(!reservationOfPassenger.isEmpty()){
-    				driverNoPickedMe = reservationOfPassenger.get(0).isDriverNoPickedMe();
+		try {
+			Date now = new Date();
+			Reservation reservation = null;
+	    	Long millisPerDay =  24 * 60 * 60 * 1000L;
+	    	Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
+	    	
+	    	//Obtenemos las rutas completadas 
+	    	Collection<Route> completedRoutes = findFinalizedRoutes(new Date());
+	    	
+	    	//De las rutas completadas sacamos las que ya hayan pasado 24h 
+	    	for(Route route: completedRoutes){
+	    		Calendar departureDate = Calendar.getInstance();
+	    		departureDate.setTime(route.getDepartureDate());
+	    		Integer estimatedDuration = route.getEstimatedDuration();
+	    		
+	    		departureDate.add(Calendar.MINUTE, estimatedDuration);
+	    		Date completedDate = departureDate.getTime();
+	    		
+	    		boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
+	    		if(moreThanDay){
+	    			completedAfterDayRoutes.add(route);
+	    		}
+	    	}
+	    	
+	    	for(Route route: completedAfterDayRoutes){
+	    		Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
+	    		
+	    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
+	    		
+	    		//Comprobamos si los passengers han abierto algún report al driver
+	    		for(Passenger passenger: passengersByRoute){
+	    			boolean driverNoPickedMe = false;
+	    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
+	    			MessagesThread report = messagesThreadService.findReportsThreadFromParticipantsAndRoute(
+	    					route.getId(), passenger.getId(), route.getDriver().getId());
+	    			
+	    			reservationOfPassenger.addAll(reservationService.findReservationsByRoutePassengerAndNotPaymentResolved(
+	    					route.getId(), passenger.getId()));
+	    			
+	    			if(!reservationOfPassenger.isEmpty()){
+	    				reservation = reservationOfPassenger.get(0);
+	    				driverNoPickedMe = reservation.isDriverNoPickedMe();
+	    			}
+	
+	    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
+	    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
+	    			if(report == null){
+	    				if(!driverNoPickedMe){
+	    					//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
+	    					stripeConfig.payout(reservation);
+	    				}else{
+	    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
+	    					stripeConfig.refound(reservation);
+	    				}
+	    				reservation.setPaymentResolved(true);
+	    				reservationService.saveCron(reservation);
+	        		}
     			}
-
-    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
-    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
-    			if(report == null){
-    				if(!driverNoPickedMe){
-    					//SE REALIZA EL PAGO AL DRIVER
-    				}else{
-    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER
-    				}
-        		}
-    		}
-    	}
+			}
+		}catch (StripeException e) {
+			e.printStackTrace();
+		}
 	}
 }

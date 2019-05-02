@@ -34,17 +34,18 @@ class Scheduller{
 	private ReservationService		reservationService;
 	
 	
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "0 0,30 * * * *")
     public void cronCompleteRoutes(){
     	System.out.println("Entrando en cronCompleteRoutes");
     	routeService.cronCompleteRoutes();
     }
     
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "0 0,30 * * * *")
     @Transactional
     public void cronRejectedRequest(){
     	System.out.println("Entrando en cronRejectedRequest");
     	reservationService.cronRejectedRequest();
     }
+    
 
 }

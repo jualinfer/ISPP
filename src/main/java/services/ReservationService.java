@@ -292,6 +292,17 @@ public class ReservationService {
 
 		return result;
 	}
+	
+	public Collection<Reservation> findReservationsByRoutePassengerAndNotPaymentResolved(final int routeId, final int passengerId) {
+		Assert.isTrue(routeId != 0);
+		Assert.isTrue(passengerId != 0);
+
+		Collection<Reservation> result;
+
+		result = this.reservationRepository.findReservationsByRoutePassengerAndNotPaymentResolved(routeId, passengerId);
+
+		return result;
+	}
 
 	public Collection<Reservation> findReservationsByRouteAndStatusPendingOrAccepted(final int routeId) {
 		Assert.isTrue(routeId != 0);
