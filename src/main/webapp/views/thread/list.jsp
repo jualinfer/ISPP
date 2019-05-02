@@ -51,6 +51,13 @@
 							<span class="badge badge-pill badge-primary">
 								${thread.participantB.name} ${thread.participantB.surname} </span>
 						</div>
+						<div>
+							<security:authorize access="hasRole('ADMIN')">
+								<jstl:if test="${isReport && !thread.reportedUser.userAccount.banned}">
+										<a href="administrator/ban.do?userId=${thread.reportedUser.id}" > <spring:message code="administrator.ban"/></a>
+								</jstl:if>
+							</security:authorize>					
+						</div>
 					</div>
 					<div class="card-footer text-muted">
 
