@@ -1,6 +1,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -9,11 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import repositories.MessagesThreadRepository;
+import security.UserAccount;
 import security.UserAccountService;
 import domain.Actor;
-import domain.Administrator;
 import domain.Message;
 import domain.MessagesThread;
+import domain.Reservation;
+import domain.ReservationStatus;
 import domain.Route;
 import forms.ThreadForm;
 
@@ -46,6 +49,34 @@ public class MessagesThreadService {
 	@Autowired
 	private UserAccountService uaService;
 	
+	@Autowired
+	private RouteService routeService;
+	
+	/*public boolean validMessageData(Actor sendingUser, Actor receivingUser, Route route) {
+		boolean result = false;
+		if (sendingUser.getId() != receivingUser.getId()) {
+			MessagesThread reportThread = mtRepository.findMessagesThreadFromParticipantsAndRoute(route.getId(), sendingUser.getId(), receivingUser.getId());
+			if (reportThread == null) {
+				if (route.getDepartureDate().before(new Date())) {
+					// La ruta ya comenzó
+				}
+				else {
+					// La ruta aún no ha empezado
+					if (receivingUser.getId() == route.getDriver().getId()) {
+						result = true;
+					}
+					else {
+						
+					}
+				}
+			}
+		}
+		else {
+			result = true;
+		}
+		return result;
+	}*/
+	
 	public MessagesThread saveNew(MessagesThread thread, String messageContent) {
 		MessagesThread result = mtRepository.saveAndFlush(thread);
 		Message message = new Message();
@@ -54,9 +85,6 @@ public class MessagesThreadService {
 		message.setContent(messageContent);
 		message.setIssueDate(new Date());
 		message = messageService.save(message);
-//		Collection<Message> messages = new ArrayList<Message>();
-//		messages.add(message);
-//		result.setMessages(messages);
 		return result;
 	}
 	
@@ -76,15 +104,6 @@ public class MessagesThreadService {
 			user.setNewMessages(0);
 		}
 		user.setNewMessages(user.getNewMessages() + 1);
-		/*if (user instanceof Passenger) {
-			user = passengerService.saveUpdateNotifications((Passenger)user);
-		}
-		else if (user instanceof Driver) {
-			user = driverService.saveUpdateNotifications((Driver)user);
-		}
-		else if (user instanceof Administrator) {
-			user = administratorService.saveUpdateNotifications((Administrator)user);
-		}*/
 		user = actorService.save(user);
 		if (thread.getMessages() == null) {
 			Collection<Message> messages = new ArrayList<Message>();
@@ -112,15 +131,6 @@ public class MessagesThreadService {
 			user.setNewMessages(0);
 		}
 		user.setNewMessages(user.getNewMessages() - thread.getNewMessages());
-		/*if (user instanceof Passenger) {
-			user = passengerService.saveUpdateNotifications((Passenger)user);
-		}
-		else if (user instanceof Driver) {
-			user = driverService.saveUpdateNotifications((Driver)user);
-		}
-		else if (user instanceof Administrator) {
-			user = administratorService.saveUpdateNotifications((Administrator)user);
-		}*/
 		user = actorService.save(user);
 		thread.setNewMessages(0);
 		return mtRepository.saveAndFlush(thread);
@@ -138,6 +148,104 @@ public class MessagesThreadService {
 		return mtRepository.findMessagesThreadFromParticipant(participantId);
 	}
 	
+	// REPORTS ----------------------------------------------------------------------------------
+	
+	public MessagesThread findReportsThreadFromParticipantsAndRoute(int routeId, int reportingUserId, int reportedUserId) {
+		return mtRepository.findReportsThreadFromParticipantsAndRoute(routeId, reportingUserId, reportedUserId);
+	}
+	
+	public Collection<MessagesThread> findReportsThreadFromParticipant(int participantId) {
+		return mtRepository.findReportsThreadFromParticipant(participantId);
+	}
+	
+	/*public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
+		boolean result = false;
+		if (reportingUser.getId() != reportedUser.getId()) {
+			MessagesThread reportThread = mtRepository.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
+			if (reportThread == null) {
+				Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
+				if (finishDate.before(new Date())) {
+					if (reportingUser.getId() == route.getDriver().getId()) {
+						for (Reservation reservation : route.getReservations()) {
+							if (reservation.getPassenger().getId() == reportedUser.getId()) {
+								result = true;
+								break;
+							}
+						}
+					}
+					else if (reportedUser.getId() == route.getDriver().getId()) {
+						for (Reservation reservation : route.getReservations()) {
+							if (reservation.getPassenger().getId() == reportingUser.getId()) {
+								result = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		else {
+			result = true;
+		}
+		return result;
+	}*/
+	
+	public boolean canReport(Actor user, Route route) {
+		boolean result = false;
+//		Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
+//		Date maxDate = new Date(finishDate.getTime());
+		
+		Calendar now = Calendar.getInstance();
+		now.setTime(new Date());
+		
+		Calendar finishDate = Calendar.getInstance();
+		finishDate.setTime(route.getDepartureDate());
+		finishDate.add(Calendar.MINUTE, route.getEstimatedDuration());
+		
+		Calendar maxDate = Calendar.getInstance();
+		maxDate.setTime(route.getDepartureDate());
+		maxDate.add(Calendar.MINUTE, route.getEstimatedDuration());
+		maxDate.add(Calendar.HOUR, 24);
+		
+		if (now.after(finishDate) && now.before(maxDate)) {
+			if (user.getId() == route.getDriver().getId()) {
+				result = true;
+			}
+			else {
+				for (Reservation r : route.getReservations()) {
+					if (r.getStatus() == ReservationStatus.ACCEPTED && r.getPassenger().getId() == user.getId()) {
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	public MessagesThread closeAndSaveReport(MessagesThread thread, boolean refund) {
+		thread.setClosed(true);
+		Actor driver, passenger;
+		if (thread.getReportedUser().getId() == thread.getRoute().getDriver().getId()) {
+			driver = thread.getReportedUser();
+			passenger = thread.getParticipantA();
+		}
+		else {
+			driver = thread.getParticipantA();
+			passenger = thread.getReportedUser();
+		}
+		if (refund) {
+			// TODO Hay que devolver el dinero al passenger
+		}
+		else {
+			// TODO Hay que hacerle la transferencia al driver 
+		}
+		thread = mtRepository.saveAndFlush(thread);
+		return thread;
+	}
+	
+	// CONSTRUCT & RECONSTRUCT --------------------------------------------------------------
+	
 	public ThreadForm construct(Route route, Actor user) {
 		ThreadForm result = new ThreadForm();
 		result.setRoute(route);
@@ -150,12 +258,16 @@ public class MessagesThreadService {
 		result.setRoute(form.getRoute());
 		result.setParticipantA(participantA);
 		if (isReport) {
-			Collection<Administrator> admins = administratorService.findAll();
-			if (!admins.isEmpty()) {
-				for (Administrator admin : admins) {
+			UserAccount adminAccount = uaService.findByUsername("admin@gmail.com");
+			if (adminAccount != null) {
+				Actor admin = actorService.findByUserAccount(adminAccount);
+				if (admin != null) {
 					result.setParticipantB(admin);
+					result.setReportedUser(form.getUser());
 				}
-				result.setReportedUser(form.getUser());
+				else {
+					throw new IllegalStateException("There is an admin account but not an admin actor");
+				}
 			}
 			else {
 				throw new IllegalStateException("There is no admin account");

@@ -362,6 +362,23 @@
 
 </div>
 
+<jstl:if test="${isPrincipal}">
+
+	<div class="text-center">
+		<br/>
+		<a class="btn btn-primary" href="profile/download.do"><spring:message code="profile.download"/></a>
+	</div>
+
+</jstl:if>
+
+<security:authorize access="hasRole('PASSENGER')">
+	<br/>
+	<div class="text-center">
+		<jstl:if test="${(passenger.id == passengerConnected.id) eq true}">
+			<a class="btn btn-primary" href="passenger/unsubscribe.do"><spring:message code="passenger.unsubscribe"/></a>
+		</jstl:if>
+	</div>
+</security:authorize>
 
 <div class="endList">
 	<div class="circle background_pink"></div>

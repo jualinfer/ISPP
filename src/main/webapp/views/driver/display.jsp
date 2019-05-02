@@ -26,6 +26,8 @@
 <spring:message code="comment.date" var="vehDate" />
 <spring:message code="comment.star" var="vehStar" />
 <spring:message code="alert.list" var="alert" />
+<spring:message code="driver.confirm.delete" var="confirm" />
+<spring:message code="driver.delete" var="delete" />
 
 
 <spring:message code="route.formatDate" var="formatDate" />
@@ -180,7 +182,6 @@
 		</h2>
 	</div>
 </div>
-
 
 <!-- Comments -->
 
@@ -372,6 +373,24 @@
 	</div>
 
 </div>
+
+<jstl:if test="${isPrincipal}">
+
+	<div class="text-center">
+		<br/>
+		<a class="btn btn-primary" href="profile/download.do"><spring:message code="profile.download"/></a>
+	</div>
+
+</jstl:if>
+
+<security:authorize access="hasRole('DRIVER')">
+	<br/>
+	<div class="text-center">
+		<jstl:if test="${(driver.id == driverConnected.id) eq true}">
+			<a class="btn btn-primary" href="driver/unsubscribe.do" onclick="return confirm('${confirm}')"><spring:message code="driver.unsubscribe"/></a>
+		</jstl:if>
+	</div>
+</security:authorize>
 
 
 <div class="endList">
