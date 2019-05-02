@@ -9282,7 +9282,7 @@
 		</property>
 	</bean>
 	
-	<bean id="message01" class="domain.Message">
+	<bean id="message02" class="domain.Message">
 		<property name="issueDate" value="1/1/2019 1:04" />
 		<property name="fromAtoB" value="true" />
 		<property name="content" value="Este pasajero ha sido muy mal educado y desagradecido" />
