@@ -34,8 +34,19 @@
 <link rel="stylesheet"
 	href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
+<script>
 
-<form:form id="form" action="${requestURI}" modelAttribute="passenger">
+  function checkForm(form)
+  {
+    if(!form.terms.checked) {
+      alert("<spring:message code="passenger.accept.terms"/>");
+      form.terms.focus();
+      return false;
+    }
+    return true;
+  }
+</script>
+<form:form id="form" action="${requestURI}" modelAttribute="passenger" onsubmit="return checkForm(this)">
 	<form:hidden path="id" />
 	<form:hidden path="version" />
 	<form:hidden path="comments" />
@@ -144,9 +155,10 @@
 		</div>
 
 
-
-			
-			
+	<div>
+		<input type="checkbox" name="terms"><a href="welcome/termsAndConditions.do"><spring:message code="passenger.terms"/></a>
+	</div>
+		
 		<input type="submit" class="btn btn-success" name="save"
 			value="<spring:message code="passenger.register"/>" /> <input
 			type="button" class="btn btn-danger" name="cancel"
