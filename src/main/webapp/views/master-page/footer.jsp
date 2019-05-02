@@ -88,13 +88,7 @@
 
           </div>
           
-          <div class="row">
-		<div class="col-auto mr-auto text-left">
-		</div>
-		<div class="col-auto text-right">
-			<a href="?language=en"><spring:message code="english" /></a>  |  <a href="?language=es"><spring:message code="spanish" /></a>    
-		</div>
-	</div>
+          
           <!-- Grid column -->
 
       </div>
