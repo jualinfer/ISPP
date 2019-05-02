@@ -111,7 +111,7 @@
 						</security:authorize>
 
 						<li class="nav-item active ">
-							<a href="#" class="nav-link border-right"> 
+							<a href="thread/message/list.do" class="nav-link border-right"> 
 								<i class="far fa-envelope"></i>
 							</a>
 						</li>
@@ -141,7 +141,10 @@
 									<a class="dropdown-item" href="passenger/editCredentials.do">
 										<spring:message code="master.page.editCredentials" /></a>
 								</security:authorize>
-
+								
+								<a class="dropdown-item" href="thread/report/list.do">
+										<spring:message code="master.page.report" /></a>
+										
 								<security:authorize access="hasAnyRole('DRIVER', 'PASSENGER')">
 									<div class="dropdown-divider"></div>
 								</security:authorize>
@@ -163,10 +166,11 @@
 			<div class="row-full">
 
 				<a href="route/driver/create.do"
-					class="btn btn-light btn-rounded btn-lg" role="button"><b>Publicar
-						ruta </b></br> <font size="3"> Ahorra en gasolina</font></a>
+					class="btn btn-light btn-rounded btn-lg" role="button"><b><spring:message
+										code="master.page.publicarRuta" /> </b></br> <font size="3"> <spring:message
+										code="master.page.ahorra" /></font></a>
 				<div class="imgdriver">
-					<img src="images/headerparadriver.png" height="600" width="600" />
+					<img src="images/headerparadriver.png" height="400" width="400" />
 				</div>
 			</div>
 		</div>
@@ -177,11 +181,12 @@
 
 			<div class="row-full">
 
-				<a href="route/driver/create.do"
-					class="btn btn-light btn-rounded btn-lg" role="button">Buscar
-					viaje barato</a>
+				<a href="route/search.do"
+					class="btn btn-light btn-rounded btn-lg" role="button"><spring:message
+										code="master.page.buscarViaje" /> </b></br> <font size="3"> <spring:message
+										code="master.page.mejorPrecio" /></font></a>
 				<div class="imgpassenger">
-					<img src="images/headerparapassenger.png" height="300" width="300" />
+					<img src="images/headerparapassenger.png" height="180" width="300" />
 				</div>
 			</div>
 		</div>
