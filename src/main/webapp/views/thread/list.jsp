@@ -16,9 +16,12 @@
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <div class="text-center active-routes">
-	<h3>
-		<spring:message code="messages" />
-	</h3>
+	<jstl:if test="${!isReport}">
+		<h3><spring:message code="messages" /></h3>
+	</jstl:if>
+	<jstl:if test="${isReport}">
+		<h3><spring:message code="reports" /></h3>
+	</jstl:if>
 </div>
 <spring:url value="/styles/messages.css" var="messages" />
 <link href="${messages}" rel="stylesheet" />
@@ -55,8 +58,9 @@
 						<fmt:formatDate value="${thread.lastMessage.issueDate}"
 							type="both" dateStyle="medium" timeStyle="short" />
 					</div>
-
-					<br> <br>
+					<br>
+					<jstl:if test="${thread.closed}">[<spring:message code="thread.closed" />]</jstl:if>
+					<br><br>
 				</div>
 			</div>
 		</jstl:forEach>
