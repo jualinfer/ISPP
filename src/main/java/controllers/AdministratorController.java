@@ -1,8 +1,8 @@
 /*
  * AdministratorController.java
- * 
+ *
  * Copyright (C) 2019 Universidad de Sevilla
- * 
+ *
  * The use of this project is hereby constrained to the conditions of the
  * TDG Licence, a copy of which you may download from
  * http://www.tdg-seville.info/License.html
@@ -10,29 +10,68 @@
 
 package controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import security.UserAccount;
+import services.ActorService;
+import domain.Actor;
+import domain.Administrator;
 
 @Controller
 @RequestMapping("/administrator")
 public class AdministratorController extends AbstractController {
+
+	@Autowired
+	private ActorService	actorService;
+
 
 	// Constructors -----------------------------------------------------------
 
 	public AdministratorController() {
 		super();
 	}
-	
+
 	@RequestMapping(value = "/controlPanel", method = RequestMethod.GET)
 	public ModelAndView controlPanel() {
-		ModelAndView result = new ModelAndView("administrator/controlPanel");
-		
+		final ModelAndView result = new ModelAndView("administrator/controlPanel");
+
 		return result;
 	}
 
-	// Action-1 ---------------------------------------------------------------		
+	//Ban users
+
+	@RequestMapping(value = "/ban", method = RequestMethod.GET)
+	public ModelAndView ban(@RequestParam final int userId) {
+
+		ModelAndView result;
+		Actor actor;
+
+		actor = this.actorService.findOne(userId);
+		if (!(actor instanceof Administrator)) {
+
+			final UserAccount ua = actor.getUserAccount();
+
+			try {
+				ua.setBanned(true);
+				actor.setUserAccount(ua);
+				this.actorService.save(actor);
+
+				result = new ModelAndView("redirect:/administrator/listPassengers.do");
+			} catch (final Throwable e) {
+				e.printStackTrace();
+				result = new ModelAndView("redirect:/administrator/controlPanel.do");
+			}
+		} else
+			result = new ModelAndView("redirect:/administrator/controlPanel.do");
+		return result;
+	}
+
+	// Action-1 ---------------------------------------------------------------
 
 	@RequestMapping("/action-1")
 	public ModelAndView action1() {
