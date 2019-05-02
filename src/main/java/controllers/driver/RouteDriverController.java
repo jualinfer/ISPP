@@ -33,6 +33,7 @@ import controllers.AbstractController;
 import domain.ControlPoint;
 import domain.Driver;
 import domain.Reservation;
+import domain.ReservationStatus;
 import domain.Route;
 import forms.RouteForm;
 
@@ -203,7 +204,7 @@ public class RouteDriverController extends AbstractController {
 		try {
 			if (!route.getReservations().isEmpty())
 				for (final Reservation res : route.getReservations())
-					if (res.getChargeId() != null) {
+					if (res.getChargeId() != null && ((res.getStatus().equals(ReservationStatus.ACCEPTED) || (res.getStatus().equals(ReservationStatus.PENDING))))) {
 						Stripe.apiKey = StripeConfig.SECRET_KEY;
 						final Map<String, Object> params = new HashMap<>();
 						params.put("charge", res.getChargeId());
