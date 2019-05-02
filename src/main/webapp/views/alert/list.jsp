@@ -39,6 +39,10 @@
 	<spring:url var="deleteUrl" value="alert/delete.do">
 		<spring:param name="varId" value="${alert.id}" />
 	</spring:url>
+	
+ <spring:url var="editUrl" value="alert/edit.do">
+		<%-- <spring:param name="varId" value="${alert.id}" /> --%>
+	</spring:url> 
 
 	<center>
 
@@ -87,4 +91,7 @@
 		<br> <br> <br>
 	</center>
 </jstl:forEach>
+<security:authorize access="hasRole('ADMIN')">
+ <a href="alert/edit.do" class="btn btn-success btn-lg p-1 text-white"><spring:message code="alert.create" /> </a>
+</security:authorize>
 
