@@ -550,7 +550,10 @@ public class ReservationService {
 	}
 	
 	public void cronRejectedRequest(){
+		//Obtenemos todas las rutas finalizadas
     	Collection<Route> completedRoutes = routeService.findFinalizedRoutes(new Date());
+    	
+    	//Obtenemos todas las reservas para cada ruta finalizda. Si la ruta está en estado "PENDING" la actualizamos a "REJECTED"
     	for(Route route: completedRoutes){
     		int reservationUptades = 0;
     		Collection<Reservation> reservations = new ArrayList<Reservation>();
