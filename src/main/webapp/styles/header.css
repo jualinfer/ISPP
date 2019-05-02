@@ -3,14 +3,18 @@
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
 
+.pinkheader{
+	height: 300px;
+}
+
 .row-full{
- width: 100vw;
+ /* width: 100vw;
  position: relative;
  margin-left: -50vw;
  height: 400px;
  margin-top: 0px;
  background-color: #ff6b9b;
- left: 50%;
+ left: 50%; */
 }
 
 .add_search{
@@ -44,36 +48,31 @@
 	position: relative;
  	vertical-align: right;
 }
-.imgdriver{
-position: relative;
- vertical-align: middle;
- padding-top: -10px;
- padding-bottom: 0px;
- margin-left: -50vw;
- margin-top: 0px;
- left: 85%;
- top: -100px;	
+.imgdriver, .imgpassenger{
+	margin-left: 10%;
+	
 }
 
 .imgpassenger{
-position: relative;
+	margin-top: 3%;
+/* position: relative;
  vertical-align: middle;
  padding-top: -10px;
  padding-bottom: 0px;
  margin-left: -50vw;
  margin-top: 0px;
  left: 90%;
- top: -30px;	
+ top: -30px; */	
 }
 
-.container .row-full .btn-light  {
+.pinkheader .btn-light  {
  position: relative;
- vertical-align: middle;
- padding-top: 20px;
+ /* vertical-align: middle; */
+ /* padding-top: 20px;
  padding-bottom: 20px;
  padding-right: 60px;
  top: 160px;
- margin-left: 10vw;
+ margin-left: 10vw; */
  background-color: #fff;
  color: #0086ff;
 	
@@ -218,11 +217,11 @@ position: relative;
 }
 
 .logo img{
-	width: 120px;
-	height: 75px;
+	width: 166px;
+	height: auto;
 	position: relative;
 	/* left: -75px; */
-	margin: 10px;
+	/* margin: 10px; */
 }
 
 
