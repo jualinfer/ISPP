@@ -72,7 +72,7 @@
 						<span class="input-group-text" id="seats2"><spring:message code="reservation.seats" /></span>
 					</div>
 					<form:select path="requestedSeats" id="seats" class="form-control" required="true" onchange="calculatePrice()">
-						<jstl:forEach var="x" begin="1" end="${reservation.availableSeats}">
+						<jstl:forEach var="x" begin="1" end="${remainingSeats}">
 							<form:option label="${x}" value="${x}"></form:option>
 						</jstl:forEach>
 					</form:select>
@@ -91,9 +91,15 @@
 				<spring:message code="reserv.luggage.big"  var = "bigMsg"/>
 					<form:select path="luggageSize" class="form-control" required="true" id="luggage">
 						<form:option value="NOTHING" label="${noneMsg}"/>
+						<jstl:if test="${!LugNothing }">
 						<form:option value="SMALL" label="${smallMsg}"/>
+						</jstl:if>
+						<jstl:if test="${(LugMedium eq true) or (LugBig eq true)}">
 						<form:option value="MEDIUM" label="${mediumMsg}"/>
+						</jstl:if>
+						<jstl:if test="${LugBig eq true }">
 						<form:option value="BIG" label="${bigMsg}"/>
+						</jstl:if>
 					</form:select>
 				</div>
 				<form:errors cssClass="error" path="luggageSize" />

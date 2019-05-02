@@ -38,26 +38,53 @@
 			</p>
 		</a> <br>
 		<jstl:if test="${isReport}">
-			<spring:message code="reports.reporting" />: ${thread.participantA.name} ${thread.participantA.surname}
+			<spring:message code="reports.reporting" />: <span class="badge badge-pill badge-warning" style="font-size: 18px">${thread.participantA.name} ${thread.participantA.surname}</span>
 			<br>
-			<spring:message code="reports.reported" />: ${thread.reportedUser.name} ${thread.reportedUser.surname}
+			<div style="padding-top:5px;">
+			<spring:message code="reports.reported" />: <span class="badge badge-pill badge-danger" style="font-size: 18px">${thread.reportedUser.name} ${thread.reportedUser.surname}</span>
+			<jstl:if test="${fn:contains(threadForm.user.userAccount.authorities, 'DRIVER')}">
+			<i class="fas fa-car"></i>
+			</jstl:if>
+			<jstl:if test="${fn:contains(threadForm.user.userAccount.authorities, 'PASSENGER')}">
+			<i class="fas fa-briefcase"></i>
+			</jstl:if>
+			</div>
 			<br>
 		</jstl:if>
 	</center>
 
 	<jstl:forEach items="${thread.messages}" var="message">
 		<div style="padding-top: 20px">
+
 			<div class="card">
 				<div class="card-header">
 					<jstl:if test="${message.fromAtoB == true}">
-						<span class="badge badge-pill badge-primary"
-							style="font-size: 22px"> ${thread.participantA.name}
-							${thread.participantA.surname}</span>
+						<jstl:if
+							test="${!fn:contains(thread.participantA.userAccount.authorities, 'ADMIN')}">
+							<span class="badge badge-pill badge-primary"
+								style="font-size: 22px"> ${thread.participantA.name}
+								${thread.participantA.surname}</span>
+						</jstl:if>
+						<jstl:if
+							test="${fn:contains(thread.participantA.userAccount.authorities, 'ADMIN')}">
+							<span class="badge badge-pill badge-success"
+								style="font-size: 22px"> ${thread.participantA.name}
+								${thread.participantA.surname}</span>
+						</jstl:if>
 					</jstl:if>
 					<jstl:if test="${message.fromAtoB == false}">
-						<span class="badge badge-pill badge-primary"
-							style="font-size: 22px"> ${thread.participantB.name}
-							${thread.participantB.surname}</span>
+						<jstl:if
+							test="${!fn:contains(thread.participantB.userAccount.authorities, 'ADMIN')}">
+							<span class="badge badge-pill badge-primary"
+								style="font-size: 22px"> ${thread.participantB.name}
+								${thread.participantB.surname}</span>
+						</jstl:if>
+						<jstl:if
+							test="${fn:contains(thread.participantB.userAccount.authorities, 'ADMIN')}">
+							<span class="badge badge-pill badge-success"
+								style="font-size: 22px"> ${thread.participantB.name}
+								${thread.participantB.surname}</span>
+						</jstl:if>
 
 
 					</jstl:if>
