@@ -217,7 +217,7 @@ public class PassegerController extends AbstractController {
 				for (final Route r : this.routeService.findActiveRoutesByPassenger(passenger.getId()))
 					for (final Reservation re : this.reservationService.findReservationsByRouteAndPassenger(r.getId(), passenger.getId())) {
 						re.setStatus(ReservationStatus.CANCELLED);
-						this.reservationService.save(re);
+						this.reservationService.save2(re);
 					}
 
 				ua.setEnabled(false);

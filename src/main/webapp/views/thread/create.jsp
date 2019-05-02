@@ -36,9 +36,17 @@
 			<br>
 		</jstl:if>
 		<jstl:if test="${isReport}">
-			<spring:message code="reports.reporting" />: ${connectedUser.name} ${connectedUser.surname}
+			<spring:message code="reports.reporting" />: <span class="badge badge-pill badge-warning" style="font-size: 18px">${connectedUser.name} ${connectedUser.surname}</span>
 			<br>
-			<spring:message code="reports.reported" />: ${threadForm.user.name} ${threadForm.user.surname}
+			<div style="padding-top:5px;">
+			<spring:message code="reports.reported" />: <span class="badge badge-pill badge-danger" style="font-size: 18px">${threadForm.user.name} ${threadForm.user.surname}</span>
+			<jstl:if test="${fn:contains(threadForm.user.userAccount.authorities, 'DRIVER')}">
+			<i class="fas fa-car"></i>
+			</jstl:if>
+			<jstl:if test="${fn:contains(threadForm.user.userAccount.authorities, 'PASSENGER')}">
+			<i class="fas fa-briefcase"></i>
+			</jstl:if>
+			</div>
 			<br>
 		</jstl:if>
 		<form:form action="${requestURI}" modelAttribute="threadForm">
