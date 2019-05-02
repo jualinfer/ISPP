@@ -107,7 +107,7 @@
 					<form:label path="description">
 						<spring:message code="vehicle.description" />
 					</form:label>
-					<form:textarea path="description" class="form-control" />
+					<form:textarea path="description" class="form-control" maxlength = "50"/>
 					<form:errors cssClass="error" path="description" />
 				</div>
 			</div>
