@@ -20,7 +20,20 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<form:form id="form" action="${requestURI}" modelAttribute="driver">
+<script>
+
+  function checkForm(form)
+  {
+    if(!form.terms.checked) {
+      alert("<spring:message code="driver.accept.terms"/>");
+      form.terms.focus();
+      return false;
+    }
+    return true;
+  }
+</script>
+
+<form:form id="form" action="${requestURI}" modelAttribute="driver" onsubmit="return checkForm(this)">
 	<form:hidden path="id" />
 	<form:hidden path="version" />
 	<form:hidden path="routes" />
@@ -155,7 +168,10 @@
 			</div>
 
 	</div>
-
+	
+	<div>
+		<input type="checkbox" name="terms"><a href="welcome/termsAndConditions.do"><spring:message code="driver.terms"/></a>
+	</div>
 		<input type="submit" class="btn btn-success" name="save"
 			value="<spring:message code="driver.register"/>" /> <input
 			type="button" class="btn btn-danger" name="cancel"

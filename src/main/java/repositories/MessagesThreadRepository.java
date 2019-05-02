@@ -35,5 +35,8 @@ public interface MessagesThreadRepository extends JpaRepository<MessagesThread, 
 	
 	@Query("select mt from MessagesThread mt where mt.route.id = ?1 and mt.reportedUser != null")
 	Collection<MessagesThread> findReportsThreadFromRoute(int routeId);
+
+	@Query("select mt from MessagesThread mt where mt.reportedUser is not null and (mt.participantA.id = ?1 or mt.participantB.id = ?1) order by mt.lastMessage.issueDate desc")
+	Collection<MessagesThread> findReportsThreadFromParticipant(int participantId);
 	
 }

@@ -87,7 +87,7 @@
 						<form:hidden path="origin.arrivalOrder" />
 						<form:hidden path="origin.distance" />
 					</div>
-					<div class="col-3">
+					<div class="col-3" hidden="true">
 						<div class="input-group">
 							<form:input type="number" path="origin.estimatedTime"
 								class="form-control" value="0" disabled="true"
@@ -130,11 +130,11 @@
 									<form:hidden path="controlpoints[${status.index}].arrivalOrder" />
 									<form:hidden path="controlpoints[${status.index}].distance" />
 								</div>
-								<div class="col-3">
+								<div class="col-3" hidden="true">
 									<div class="input-group">
 										<form:input type="number"
 											path="controlpoints[${status.index}].estimatedTime"
-											class="form-control" min="1"
+											class="form-control" min="0"
 											aria-describedy="controlpointTime${status.index}" />
 										<div class="input-group-prepend">
 											<span class="input-group-text"
@@ -180,7 +180,7 @@
 						<form:hidden path="destination.arrivalOrder" />
 						<form:hidden path="destination.distance" />
 					</div>
-					<div class="col-3">
+					<div class="col-3" hidden="true">
 						<div class="input-group">
 							<form:input type="number" path="destination.estimatedTime"
 								class="form-control" min="1" aria-describedy="destinationTime" />

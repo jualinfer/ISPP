@@ -141,6 +141,7 @@ public class ReservationService {
 
 	public Reservation save2(final Reservation reservation) {
 		Assert.notNull(reservation);
+
 		if (reservation.getId() == 0) {
 			//		We create an alert
 			final Alert alert = this.alertService.create();

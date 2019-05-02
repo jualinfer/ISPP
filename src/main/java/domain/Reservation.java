@@ -25,6 +25,7 @@ public class Reservation extends DomainEntity {
 	private ReservationStatus	status;
 	private boolean				driverPickedMe;
 	private boolean				driverNoPickedMe;
+	private String				chargeId;
 
 	//Relationships
 
@@ -90,6 +91,10 @@ public class Reservation extends DomainEntity {
 		return this.driverNoPickedMe;
 	}
 
+	public String getChargeId() {
+		return this.chargeId;
+	}
+
 	//Setters
 
 	public void setLuggageSize(final LuggageSize luggageSize) {
@@ -130,6 +135,10 @@ public class Reservation extends DomainEntity {
 
 	public void setDriverNoPickedMe(final boolean driverNoPickedMe) {
 		this.driverNoPickedMe = driverNoPickedMe;
+	}
+
+	public void setChargeId(final String chargeId) {
+		this.chargeId = chargeId;
 	}
 
 }
