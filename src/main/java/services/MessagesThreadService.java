@@ -156,19 +156,13 @@ public class MessagesThreadService {
 	}
 
 	// REPORTS ----------------------------------------------------------------------------------
-<<<<<<< HEAD
-	
-	public MessagesThread findReportsThreadFromParticipantsAndRoute(int routeId, int reportingUserId, int reportedUserId) {
-		return mtRepository.findReportsThreadFromParticipantsAndRoute(routeId, reportingUserId, reportedUserId);
-	}
 	
 	public Collection<MessagesThread> findReportsThreadFromParticipant(int participantId) {
 		return mtRepository.findReportsThreadFromParticipant(participantId);
-=======
+	}
 
 	public MessagesThread findReportsThreadFromParticipantsAndRoute(final int routeId, final int reportingUserId, final int reportedUserId) {
 		return this.mtRepository.findReportsThreadFromParticipantsAndRoute(routeId, reportingUserId, reportedUserId);
->>>>>>> development2
 	}
 	
 	public Collection<MessagesThread> findReportsThreadFromRoute(int routeId) {
@@ -177,81 +171,39 @@ public class MessagesThreadService {
 		return res;
 	}
 	
-<<<<<<< HEAD
 	/*public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
-		boolean result = false;
-		if (reportingUser.getId() != reportedUser.getId()) {
-			MessagesThread reportThread = mtRepository.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
-			if (reportThread == null) {
-				Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
-				if (finishDate.before(new Date())) {
-					if (reportingUser.getId() == route.getDriver().getId()) {
-						for (Reservation reservation : route.getReservations()) {
-							if (reservation.getPassenger().getId() == reportedUser.getId()) {
-								result = true;
-								break;
-							}
+	boolean result = false;
+	if (reportingUser.getId() != reportedUser.getId()) {
+		MessagesThread reportThread = mtRepository.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
+		if (reportThread == null) {
+			Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
+			if (finishDate.before(new Date())) {
+				if (reportingUser.getId() == route.getDriver().getId()) {
+					for (Reservation reservation : route.getReservations()) {
+						if (reservation.getPassenger().getId() == reportedUser.getId()) {
+							result = true;
+							break;
 						}
 					}
-					else if (reportedUser.getId() == route.getDriver().getId()) {
-						for (Reservation reservation : route.getReservations()) {
-							if (reservation.getPassenger().getId() == reportingUser.getId()) {
-								result = true;
-								break;
-							}
+				}
+				else if (reportedUser.getId() == route.getDriver().getId()) {
+					for (Reservation reservation : route.getReservations()) {
+						if (reservation.getPassenger().getId() == reportingUser.getId()) {
+							result = true;
+							break;
 						}
 					}
 				}
 			}
 		}
-		else {
-			result = true;
-		}
-		return result;
-	}*/
-	
-	public boolean canReport(Actor user, Route route) {
-=======
-	public Collection<MessagesThread> findReportsThreadFromParticipant(final int participantId) {
-		return this.mtRepository.findReportsThreadFromParticipant(participantId);
 	}
-
-	/*
-	 * public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
-	 * boolean result = false;
-	 * if (reportingUser.getId() != reportedUser.getId()) {
-	 * MessagesThread reportThread = mtRepository.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
-	 * if (reportThread == null) {
-	 * Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
-	 * if (finishDate.before(new Date())) {
-	 * if (reportingUser.getId() == route.getDriver().getId()) {
-	 * for (Reservation reservation : route.getReservations()) {
-	 * if (reservation.getPassenger().getId() == reportedUser.getId()) {
-	 * result = true;
-	 * break;
-	 * }
-	 * }
-	 * }
-	 * else if (reportedUser.getId() == route.getDriver().getId()) {
-	 * for (Reservation reservation : route.getReservations()) {
-	 * if (reservation.getPassenger().getId() == reportingUser.getId()) {
-	 * result = true;
-	 * break;
-	 * }
-	 * }
-	 * }
-	 * }
-	 * }
-	 * }
-	 * else {
-	 * result = true;
-	 * }
-	 * return result;
-	 * }
-	 */
+	else {
+		result = true;
+	}
+	return result;
+}*/
 
 	public boolean canReport(final Actor user, final Route route) {
->>>>>>> development2
 		boolean result = false;
 		//		Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
 		//		Date maxDate = new Date(finishDate.getTime());
