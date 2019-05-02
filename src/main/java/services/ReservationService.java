@@ -187,6 +187,11 @@ public class ReservationService {
 
 		return result;
 	}
+	
+	public void saveCron(final Reservation r) {
+		Assert.notNull(r);
+		this.reservationRepository.save(r);
+	}
 
 	// Esta función solo se debe llamar desde RouteService.cancel(route), ya que las
 	// comprobaciones se hacen en el cancel y las condiciones del autoReject no son
@@ -543,5 +548,25 @@ public class ReservationService {
 		}
 		return result;
 	}
+	
+	public void cronRejectedRequest(){
+    	Collection<Route> completedRoutes = routeService.findFinalizedRoutes(new Date());
+    	for(Route route: completedRoutes){
+    		int reservationUptades = 0;
+    		Collection<Reservation> reservations = new ArrayList<Reservation>();
+    		reservations.addAll(route.getReservations());
+    		for(Reservation reservation: reservations){
+    			if(reservation.getStatus().equals(ReservationStatus.PENDING)){
+    				reservation.setStatus(ReservationStatus.REJECTED);
+    				saveCron(reservation);
+    				reservationUptades = reservationUptades + 1;
+    			}
+    		}
+    		if(reservationUptades != 0){
+    			System.out.println("Se han actualizado " + reservationUptades + " reservas para la ruta con origen: " + route.getOrigin() + 
+        				"y con destino: " + route.getDestination());
+    		}
+    	}
+    }
 
 }
