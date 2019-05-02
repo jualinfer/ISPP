@@ -36,9 +36,9 @@
 			<br>
 		</jstl:if>
 		<jstl:if test="${isReport}">
-			<spring:message code="reports.reporting" />: ${thread.participantA.name} ${thread.participantA.surname}
+			<spring:message code="reports.reporting" />: ${connectedUser.name} ${connectedUser.surname}
 			<br>
-			<spring:message code="reports.reported" />: ${thread.reportedUser.name} ${thread.reportedUser.surname}
+			<spring:message code="reports.reported" />: ${threadForm.user.name} ${threadForm.user.surname}
 			<br>
 		</jstl:if>
 		<form:form action="${requestURI}" modelAttribute="threadForm">
