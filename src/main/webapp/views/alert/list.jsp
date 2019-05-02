@@ -31,41 +31,60 @@
 <spring:message code="alert.confirm.delete" var="confirm" />
 
 
-<%-- Listing grid --%>
-
-<display:table pagesize="5" class="displaytag" keepStatus="false"
-	name="alerts" requestURI="${requestURI}" id="row">
-
-	<%-- Attributes --%>
-	
-	<display:column property="relatedRoute.origin" title="${routeOrig}" sortable="true" />
-	<display:column property="relatedRoute.destination" title="${routeDest}" sortable="true" />
-
-	<display:column property="typeAlert" title="${alertType}" sortable="true" />
-	
-
-	<%-- Links towards display, apply, edit and cancel views --%>
-	
-		<spring:url var="seenUrl"
-		value="alert/alertSeen.do">
-		<spring:param name="varId" value="${row.id}" />
+<jstl:forEach items="${alerts}" var="alert">
+	<spring:url var="seenUrl" value="alert/alertSeen.do">
+		<spring:param name="varId" value="${alert.id}" />
 	</spring:url>
-	
-	<display:column title="${seen}">
-		<a href="${seenUrl}"><jstl:out value="${seen}" /></a>
-	</display:column>
 
+	<spring:url var="deleteUrl" value="alert/delete.do">
+		<spring:param name="varId" value="${alert.id}" />
+	</spring:url>
 
+	<center>
+
+		${alert.relatedRoute.origin} <i class="fas fa-arrow-right"></i>
+		${alert.relatedRoute.destination} <span class="fa-stack"> 
+		<jstl:if test="${alert.isRead == false}">
 		
-		<spring:url var="deleteUrl" value="alert/delete.do">
-			<spring:param name="varId" value="${row.id}" />
-		</spring:url>
+		<i
+			class="fa fa-comment fa-stack-2x" style="color: red"></i> <strong
+			class="fa-stack-1x fa-stack-text fa-inverse"> <jstl:if
+					test="${alert.isRead == false}">!</jstl:if>
+		</strong>
+		</jstl:if>
+		</span> <br>
 
-		<display:column title="${delete}">
-			<a href="${deleteUrl}" onclick="return confirm('${confirm}')" ><jstl:out value="${delete}" /></a>
-		</display:column>
-	
-</display:table>
+		<spring:message code="alert.alertType" />
+		<br> <span class="badge badge-pill badge-primary">
+			${alert.typeAlert} ${alert.alertBody} </span> <br>
+
+		<spring:message code="alert.sender" />
+		<br> <span class="badge badge-pill badge-primary">
+			${alert.sender.name} ${alert.sender.surname} </span> <br> <br>
+
+		<div class="add_search" style="margin-right: 24em !important;">
 
 
+			<a href="${deleteUrl}" class="btn btn-success btn-lg p-1 text-white"
+				onclick="return confirm('${confirm}')"> <spring:message
+					code="alert.delete" />
+			</a>
+
+		</div>
 		
+		<jstl:if
+					test="${alert.isRead == false}">
+
+		<div class="add_search" style="margin-right: 3em !important;">
+
+			<a href="${seenUrl}" class="btn btn-success btn-lg p-1 text-white">
+
+				<spring:message code="alert.seen" />
+			</a>
+
+		</div>
+		</jstl:if>
+		<br> <br> <br>
+	</center>
+</jstl:forEach>
+

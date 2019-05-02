@@ -415,7 +415,7 @@
             </list>
         </property>
         <property name="enabled" value="true"/>
-        <property name="banned" value="false"/>
+        <property name="banned" value="true"/>
     </bean>
     <bean id="userAccount31" class="security.UserAccount">
         <property name="username" value="passenger31@gmail.com"/>
@@ -1325,7 +1325,7 @@
             </list>
         </property>
         <property name="enabled" value="true"/>
-        <property name="banned" value="false"/>
+        <property name="banned" value="true"/>
     </bean>
     <!-- ADMIN -->
     <bean id="admin1" class="domain.Administrator">
