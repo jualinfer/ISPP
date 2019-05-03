@@ -24,7 +24,6 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
 <spring:url value="/styles/route.css" var="routecss" />
-<link rel="stylesheet" href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
 
 <div class="title-principal">

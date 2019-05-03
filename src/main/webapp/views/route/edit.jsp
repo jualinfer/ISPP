@@ -21,8 +21,6 @@
 
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
-<link rel="stylesheet"
-	href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 <div class="text-center active-routes">
 	<h3><spring:message code="createRoute" /></h3>
 </div>

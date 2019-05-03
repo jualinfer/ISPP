@@ -31,8 +31,6 @@
 <spring:url value="/styles/profile.css" var="profilecss" />
 <link href="${profilecss}" rel="stylesheet" />
 <script src="${profilecss}"></script>
-<link rel="stylesheet"
-	href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
 <script>
 
