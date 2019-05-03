@@ -84,6 +84,11 @@ public class VehicleService {
 		Assert.isTrue(!vehicle.getPlate().isEmpty());
 		Assert.notNull(vehicle.getDriver());
 
+		if (vehicle.getType().equals(VehicleType.BIKE))
+			Assert.isTrue(vehicle.getSeatsCapacity() <= 3, "seats mal");
+		else
+			Assert.isTrue(vehicle.getSeatsCapacity() <= 8, "seats mal");
+
 		Vehicle result;
 		Actor principal;
 

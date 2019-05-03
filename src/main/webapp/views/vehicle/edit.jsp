@@ -116,9 +116,9 @@
 					<input type="submit" name="save" class="btn btn-success"
 						value="<spring:message code="vehicle.save" />" />
 						
-					<input type="button" name="cancel" class="btn btn-danger"
-						value="<spring:message code="vehicle.cancel" />"
-						onclick="javascript: relativeRedir('vehicle/driver/list.do');" />
+								<spring:message code="vehicle.cancel" var="cancel" />
+								<a href="vehicle/driver/list.do" class="btn btn-danger"><jstl:out
+									value="${cancel}" /></a>
 				</div>
 			</div>
 			</form:form>
