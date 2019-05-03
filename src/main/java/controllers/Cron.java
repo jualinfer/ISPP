@@ -1,3 +1,4 @@
+
 package controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,36 +17,34 @@ import services.RouteService;
 @ComponentScan("com.lynas")
 @EnableScheduling
 public class Cron {
-	
+
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-        new AnnotationConfigApplicationContext(Cron.class).getBean(Cron.class);
-    }
+		new AnnotationConfigApplicationContext(Cron.class).getBean(Cron.class);
+	}
 }
 
-
 @Component
-class Scheduller{
+class Scheduller {
 
 	@Autowired
 	private RouteService		routeService;
-	
+
 	@Autowired
-	private ReservationService		reservationService;
-	
-	
-    @Scheduled(cron = "0/10 * * * * *")
-    public void cronCompleteRoutes(){
-    	System.out.println("Entrando en cronCompleteRoutes");
-    	routeService.cronCompleteRoutes();
-    }
-    
-    @Scheduled(cron = "0/10 * * * * *")
-    @Transactional
-    public void cronRejectedRequest(){
-    	System.out.println("Entrando en cronRejectedRequest");
-    	reservationService.cronRejectedRequest();
-    }
-    
+	private ReservationService	reservationService;
+
+
+	@Scheduled(cron = "0 0/30 * * * *")
+	public void cronCompleteRoutes() {
+		System.out.println("Entrando en cronCompleteRoutes");
+		this.routeService.cronCompleteRoutes();
+	}
+
+	@Scheduled(cron = "0 0/30 * * * *")
+	@Transactional
+	public void cronRejectedRequest() {
+		System.out.println("Entrando en cronRejectedRequest");
+		this.reservationService.cronRejectedRequest();
+	}
 
 }

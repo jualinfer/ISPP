@@ -49,5 +49,11 @@
 <p><spring:message code="terms.and.conditions.43"/></p>
 </div>
 </div>
-
 </div>
+
+<security:authorize access="!isAuthenticated()">
+			<spring:message code="terms.back" var="cancel" />
+			<center>
+			<a href="security/login.do" class="btn btn-success"><jstl:out
+					value="${cancel}" /></a></center>
+</security:authorize>

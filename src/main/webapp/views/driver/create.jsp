@@ -176,10 +176,11 @@
 		<input type="checkbox" name="terms"><a href="welcome/termsAndConditions.do"><spring:message code="driver.terms"/></a>
 	</div>
 		<input type="submit" class="btn btn-success" name="save"
-			value="<spring:message code="driver.register"/>" /> <input
-			type="button" class="btn btn-danger" name="cancel"
-			value="<spring:message code="driver.cancel" />"
-			onclick="javascript: relativeRedir('security/login.do');" />
+			value="<spring:message code="driver.register"/>" /> 
+			
+			<spring:message code="driver.cancel" var="cancel" />
+			<a href="security/login.do" class="btn btn-danger"><jstl:out
+					value="${cancel}" /></a>
 
 	</div>
 
