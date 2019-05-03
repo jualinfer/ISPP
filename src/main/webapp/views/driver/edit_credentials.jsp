@@ -53,7 +53,7 @@
 				<span><p><form:label path="password">
 					<spring:message code="driver.password"/>: 
 				</form:label></p></span>
-				<div><form:password id="password" path="password"/>
+				<div><form:password id="password" path="password" class="form-control"/>
 				<form:errors cssClass="error" path="password"/></div>
 			</div>
 			
@@ -61,7 +61,7 @@
 				<span><p><form:label path="repeatPassword">
 					<spring:message code="driver.repeat.password"/>: 
 				</form:label></p></span>
-				<div><form:password id="repeatPassword" path="repeatPassword"/>
+				<div><form:password id="repeatPassword" path="repeatPassword" class="form-control"/>
 				<form:errors cssClass="error" path="repeatPassword"/></div>
 			</div>
 		</div>

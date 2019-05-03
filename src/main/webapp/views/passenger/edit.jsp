@@ -62,7 +62,7 @@
 				<span><p><form:label path="image">
 					<spring:message code="passenger.image" />: 
 				</form:label></p></span>
-				<div><form:input path="image" />
+				<div><form:input path="image" class="form-control"/>
 				<form:errors cssClass="error" path="image" /></div>
 			</div>
 			
@@ -70,7 +70,7 @@
 				<span><p><form:label path="name">
 					<spring:message code="passenger.name" />: 
 				</form:label></p></span>
-				<div><form:input path="name" />
+				<div><form:input path="name" class="form-control" />
 				<form:errors cssClass="error" path="name" /></div>
 			</div>
 	
@@ -78,7 +78,7 @@
 				<span><p><form:label path="surname">
 					<spring:message code="passenger.surname" />: 
 				</form:label></p></span>
-				<div><form:input path="surname" />
+				<div><form:input path="surname" class="form-control"/>
 				<form:errors cssClass="error" path="surname" /></div>
 			</div>
 	
@@ -86,7 +86,7 @@
 				<span><p><form:label path="country">
 					<spring:message code="passenger.country" />: 
 				</form:label></p></span>
-				<div><form:input path="country" />
+				<div><form:input path="country" class="form-control"/>
 				<form:errors cssClass="error" path="country" /></div>
 			</div>
 	
@@ -94,7 +94,7 @@
 				<span><p><form:label path="city">
 					<spring:message code="passenger.city" />: 
 				</form:label></p></span>
-				<div><form:input path="city" />
+				<div><form:input path="city"  class="form-control"/>
 				<form:errors cssClass="error" path="city" /></div>
 			</div>
 	
@@ -102,7 +102,7 @@
 				<span><p><form:label path="phone">
 					<spring:message code="passenger.phone" />: 
 				</form:label></p></span>
-				<div><form:input id="phone" path="phone" />
+				<div><form:input id="phone" class="form-control" path="phone" />
 				<form:errors cssClass="error" path="phone" /></div>
 			</div>
 			
@@ -110,7 +110,7 @@
 				<span><p><form:label path="bankAccountNumber">
 					<spring:message code="passenger.bankAccountNumber" />: 
 				</form:label></p></span>
-				<div><form:input path="bankAccountNumber" />
+				<div><form:input path="bankAccountNumber" class="form-control"/>
 				<form:errors cssClass="error" path="bankAccountNumber" /></div>
 			</div>
 		</div>
