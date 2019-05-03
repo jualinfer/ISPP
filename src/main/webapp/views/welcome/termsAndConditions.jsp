@@ -15,8 +15,16 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
+<spring:url value="/styles/route.css" var="routecss" />
+<link href="${routecss}" rel="stylesheet" />
+<script src="${routecss}"></script>
 
+<div class="text-center active-routes">
+	<h3><spring:message code="terms.and.conditions.title"/></h3>
+</div>
+<div style="padding:25px">
 <div class="card">
+<div class="card-body">
 <h4 class="text"><spring:message code="terms.and.conditions.1"/> <br/></h4>
 <p><spring:message code="terms.and.conditions.11"/></p>
 <p><spring:message code="terms.and.conditions.12"/></p>
@@ -39,5 +47,7 @@
 <p><spring:message code="terms.and.conditions.41"/></p>
 <p><spring:message code="terms.and.conditions.42"/></p>
 <p><spring:message code="terms.and.conditions.43"/></p>
+</div>
+</div>
 
 </div>
