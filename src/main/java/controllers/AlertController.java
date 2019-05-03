@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ActorService;
 import services.AlertService;
+import domain.Actor;
 import domain.Alert;
 
 @Controller
@@ -37,9 +38,8 @@ public class AlertController extends AbstractController {
 	public ModelAndView list() {
 		final ModelAndView result;
 		final Collection<Alert> alerts;
-		int actorId= this.actorService.findByPrincipal().getId();
+		final int actorId = this.actorService.findByPrincipal().getId();
 		alerts = this.alertService.listByActor(actorId);
-	
 
 		result = new ModelAndView("alert/list");
 		result.addObject("alerts", alerts);
@@ -71,11 +71,11 @@ public class AlertController extends AbstractController {
 	// Edit -------------------------------------
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam final int alertId) {
+	public ModelAndView edit() {
 		ModelAndView result;
 		Alert alert;
 
-		alert = this.alertService.findOne(alertId);
+		alert = this.alertService.createAdmin();
 
 		result = this.createEditModelAndView(alert);
 
@@ -87,7 +87,6 @@ public class AlertController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@Valid final Alert alert, final BindingResult binding) {
 		ModelAndView result;
-		Alert saved;
 
 		for (final ObjectError asd : binding.getAllErrors())
 			System.out.println(asd);
@@ -96,7 +95,12 @@ public class AlertController extends AbstractController {
 			result = this.createEditModelAndView(alert);
 		else
 			try {
-				saved = this.alertService.save(alert);
+				final Collection<Actor> receivers = this.actorService.findAll();
+				for (final Actor a : receivers) {
+					alert.setReceiver(a);
+
+					this.alertService.save(alert);
+				}
 				result = new ModelAndView("redirect:/alert/driver/list.do");
 			} catch (final Throwable oops) {
 				oops.printStackTrace();
