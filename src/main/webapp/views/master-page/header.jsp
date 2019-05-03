@@ -20,25 +20,35 @@
 <script src="${headercss}"></script>
 
 	<security:authorize access="isAuthenticated()">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light p-1">
+		<nav class="navbar navbar-expand-lg navbar-dark p-1" style="background-color:#fa3274;">
 			<div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
 				<ul class="navbar-nav mr-auto">
 					<security:authorize access="hasRole('DRIVER')">
 						<li class="nav-item active">
 							<a class="botonnavbar d-flex align-items-center" href="driver/displayPrincipal.do">
-								<i class="fa fa-smile-o" style="font-size:16px;"></i><spring:message code="master.page.myProfile" /> 
+								<i class="fa fa-smile-o mr-1" style="font-size:16px;"></i><spring:message code="master.page.myProfile" /> 
 							</a>
 						</li>
 						<li class="nav-item active">
 							<a class="botonnavbar d-flex align-items-center" href="vehicle/driver/list.do">
-								<i class="fa fa-automobile" style="font-size:16px;"></i><spring:message code="master.page.myVehicles" />
+								<i class="fa fa-automobile mr-1" style="font-size:16px;"></i><spring:message code="master.page.myVehicles" />
+							</a>
+						</li>
+						<li class="nav-item active">
+							<a class="d-flex align-items-center ml-1" href="route/driver/create.do">
+								<img src="images/headerparadriver.png" height="45" width="75" />
 							</a>
 						</li>
 					</security:authorize>
 					<security:authorize access="hasRole('PASSENGER')">
 						<li class="nav-item active">
 							<a class="botonnavbar d-flex align-items-center" href="passenger/displayPrincipal.do">
-								<i class="fa fa-smile-o" style="font-size:16px;"></i><spring:message code="master.page.myProfile" />
+								<i class="fa fa-smile-o mr-1" style="font-size:16px;"></i>  <spring:message code="master.page.myProfile" />
+							</a>
+						</li>
+						<li class="nav-item active">
+							<a class="d-flex align-items-center" href="route/search.do">
+								<img src="images/headerparapassenger.png" height="45" width="90" />
 							</a>
 						</li>
 					</security:authorize>
@@ -46,13 +56,13 @@
 			</div>
 			<div class="mx-auto order-0">
 				<security:authorize access="hasRole('DRIVER')">
-					<a class="navbar-brand mx-auto" href="route/driver/listActive.do"><img src="images/trondicon-original-ajustado.png" width="82px" height="42px" /></a>
+					<a class="navbar-brand mx-auto" href="route/driver/listActive.do"><img src="images/trondicon-header-white.png" width="82px" height="42px" /></a>
 				</security:authorize>
 				<security:authorize access="hasRole('PASSENGER')">
-					<a class="navbar-brand mx-auto" href="route/passenger/listActive.do"><img src="images/trondicon-original-ajustado.png" width="82px" height="42px" /></a>
+					<a class="navbar-brand mx-auto" href="route/passenger/listActive.do"><img src="images/trondicon-header-white.png" width="82px" height="42px" /></a>
 				</security:authorize>
 				<security:authorize access="hasRole('ADMIN')">
-					<a class="navbar-brand mx-auto" href="thread/report/listActive.do"><img src="images/trondicon-original-ajustado.png" width="82px" height="42px" /></a>
+					<a class="navbar-brand mx-auto" href="thread/report/list.do"><img src="images/trondicon-header-white.png" width="82px" height="42px" /></a>
 				</security:authorize>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
 					<span class="navbar-toggler-icon"></span>
@@ -60,14 +70,16 @@
 			</div>
 			<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active ">
-						<a href="alert/list.do" class="nav-link"> 
-							<i class="fa fa-bell-o" style="font-size: 24px;"></i>
-						</a>
-					</li>
+					<security:authorize access="hasAnyRole('DRIVER', 'PASSENGER')">
+						<li class="nav-item active ">
+							<a href="alert/list.do" class="nav-link"> 
+								<i class="fa fa-bell" style="font-size: 24px;"></i>
+							</a>
+						</li>
+					</security:authorize>
 					<li class="nav-item active ">
 						<a href="thread/message/list.do" class="nav-link"> 
-							<i class="fa fa-envelope-o" style="font-size: 24px;"></i>
+							<i class="fa fa-envelope" style="font-size: 24px;"></i>
 						</a>
 					</li>
 					<li class="nav-item dropdown active">
@@ -110,36 +122,7 @@
 			</div>
 		</nav>
 			
+		<div style="background-color: #ff6b9b; padding: 24px"></div>
 		
-		<div class="pinkheader background_pink d-flex justify-content-center align-items-baseline">
-			<security:authorize access="hasRole('DRIVER')">		
-				<div class="button-white ">
-					<h5>
-						<a href="route/driver/create.do" class="btn btn-light btn-rounded btn-lg" role="button">
-							<b><spring:message code="master.page.publicarRuta" /> </b>
-						</a>
-					</h5>
-					<p class="text-white text-right"><spring:message code="master.page.ahorra" /></p>
-				</div>
-				<div class="imgdriver">
-					<img src="images/headerparadriver.png" height="300" width="300" />
-				</div>
-			</security:authorize>
-			
-			<security:authorize access="hasRole('PASSENGER')">
-				<div class="button-white ">
-					<h5>
-						<a href="route/search.do" class="btn btn-light btn-rounded btn-lg" role="button">
-							<b><spring:message code="master.page.buscarViaje" /> </b>
-						</a>
-					</h5>
-					<p class="text-white text-right"><spring:message code="master.page.mejorPrecio"/></p>
-				</div>
-				<div class="imgpassenger">
-					<img src="images/headerparapassenger.png" height="200" width="300" />
-				</div>
-			</security:authorize>
-			
-		</div>
 	</security:authorize>
 	
