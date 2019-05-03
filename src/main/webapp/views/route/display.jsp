@@ -59,8 +59,7 @@
 					</h2>
 				</div>
 			</div>
-			<div id="collapseOne" class="collapse show"
-				aria-labelledby="headingOne" data-parent="#accordion">
+			<div id="collapseOne" class="collapse show">
 				<div class="card-body d-flex flex-column">
 
 					<jstl:forEach var="point" items="${route.controlPoints}">
@@ -96,8 +95,7 @@
 
 			<!-- Details -->
 
-			<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-				data-parent="#accordion">
+			<div id="collapseTwo" class="collapse">
 				<div class="card-body d-flex flex-column">
 
 					<div class="card text-center">
@@ -300,9 +298,7 @@
 					</h2>
 				</div>
 			</div>
-			<div id="collapseThree" class="collapse"
-				aria-labelledby="headingThree" data-parent="#accordion">
-				<div class="card-body d-flex flex-column">
+			<div id="collapseThree" class="collapse">
 
 					<div class="num-seats price text-center">
 						<p>
@@ -675,7 +671,7 @@
 
 
 	</div>
-
+</div>
 	<!-- ************************************************************************************************************************* -->
 
 	<%-- 
