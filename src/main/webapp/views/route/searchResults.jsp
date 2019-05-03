@@ -20,15 +20,8 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<%-- <display:table name="routes" id="row" pagesize="4" class="displaytag" requestURI="${requestURI}">
 
-	<spring:message code="route.origin" var = "auMomentCreated" />
-	<display:column property="origin" title="${auMomentCreated}" sortable="true"/>
-	
-	<spring:message code="route.destination" var = "auTitle" />
-	<display:column property="destination" title="${auTitle}" sortable="true"/>
-
-</display:table> --%>
+<spring:message code="route.formatDate" var="formatDate" />
 
 <spring:url value="/styles/route.css" var="routecss" />
 	<link href="${routecss}" rel="stylesheet" />
@@ -51,7 +44,8 @@
 			</div>
 		</a>
 		<div class="date-route">
-			<jstl:out value="${route.departureDate}"></jstl:out>
+		<fmt:formatDate value="${route.departureDate}"
+							pattern="${formatDate}" />
 		</div>
 		<div class="available-seats d-flex">
 			<jstl:set var="remainingSeats" value="${route.availableSeats}"/>
