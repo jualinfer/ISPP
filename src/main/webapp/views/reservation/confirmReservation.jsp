@@ -71,9 +71,13 @@
 		<div class="col-sm-6 text-center" style="padding-top: 20px;">
 		<input type="submit" class="btn btn btn-success" value="${confirm}" />
 		
-		<input type="button" name="cancel" class="btn btn-warning"
+				<input type="button" name="cancel" class="btn btn-warning"
 				value="<spring:message code="reservation.cancel" />"
 				onclick="javascript: relativeRedir('reservation/passenger/create.do?routeId=${route.id}');" />
+				
+		<spring:message code="reservation.cancel" var="cancel" />
+		<a href="reservation/passenger/create.do?routeId=${reservation.route.id}')" class="btn btn-danger"><jstl:out
+					value="${cancel}" /></a>
 		
 		
 	</div>

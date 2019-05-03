@@ -111,10 +111,9 @@
 			<script src="https://checkout.stripe.com/checkout.js"></script>
 			<input type="submit" id="stripeButton" name="request" class="btn btn-success" value="<spring:message code="reservation.request" />" />
 			
-			<input type="button" name="cancel" class="btn btn-danger"
-				value="<spring:message code="route.cancel" />"
-				onclick="javascript: relativeRedir('route/display.do?routeId=${reservation.route.id}');" />
-			<br />
+			<spring:message code="reservation.cancel" var="cancel" />
+			<a href="route/display.do?routeId=${reservation.route.id}" class="btn btn-danger"><jstl:out
+					value="${cancel}" /></a>
 			
 		</form:form>
 		
