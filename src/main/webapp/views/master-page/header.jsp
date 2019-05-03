@@ -11,6 +11,8 @@
 <%@page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+<%@taglib prefix="jstl" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
@@ -20,15 +22,24 @@
 <script src="${headercss}"></script>
 
 	<security:authorize access="isAuthenticated()">
+		<security:authentication property="principal.banned" var="banned" />
 		<nav class="navbar navbar-expand-lg navbar-dark p-1" style="background-color:#fa3274;">
 			<div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
 				<ul class="navbar-nav mr-auto">
+					<jstl:if test="${banned}">
+						<li class="nav-item active">
+							<span class="navbar-text d-flex align-items-center ml-1">
+								<spring:message code="master.page.banned" />
+							</span>
+						</li>
+					</jstl:if>
 					<security:authorize access="hasRole('DRIVER')">
 						<li class="nav-item active">
 							<a class="botonnavbar d-flex align-items-center" href="driver/displayPrincipal.do">
 								<i class="fa fa-smile-o mr-1" style="font-size:16px;"></i><spring:message code="master.page.myProfile" /> 
 							</a>
 						</li>
+						<jstl:if test="${!banned}">
 						<li class="nav-item active">
 							<a class="botonnavbar d-flex align-items-center" href="vehicle/driver/list.do">
 								<i class="fa fa-automobile mr-1" style="font-size:16px;"></i><spring:message code="master.page.myVehicles" />
@@ -44,6 +55,7 @@
 								<spring:message code="master.page.publicarRuta" />
 							</a>
 						</li>
+						</jstl:if>
 					</security:authorize>
 					<security:authorize access="hasRole('PASSENGER')">
 						<li class="nav-item active">
@@ -51,6 +63,7 @@
 								<i class="fa fa-smile-o mr-1" style="font-size:16px;"></i>  <spring:message code="master.page.myProfile" />
 							</a>
 						</li>
+						<jstl:if test="${!banned}">
 						<li class="nav-item active">
 							<a class="d-flex align-items-center" href="route/search.do">
 								<img src="images/headerparapassenger.png" height="45" width="90" />
@@ -59,6 +72,14 @@
 						<li class="nav-item active">
 							<a class="nav-link d-flex align-items-center ml-1" href="route/search.do">
 								<spring:message code="master.page.buscarViaje" />
+							</a>
+						</li>
+						</jstl:if>
+					</security:authorize>
+					<security:authorize access="hasRole('ADMIN')">
+						<li class="nav-item active">
+							<a class="botonnavbar d-flex align-items-center" href="alert/edit.do">
+								<i class="fa fa-bell mr-1" style="font-size:16px;"></i>  <spring:message code="master.page.sendAlert" />
 							</a>
 						</li>
 					</security:authorize>
@@ -80,6 +101,7 @@
 			</div>
 			<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
 				<ul class="navbar-nav ml-auto">
+					<jstl:if test="${!banned}">
 					<security:authorize access="hasAnyRole('DRIVER', 'PASSENGER')">
 						<li class="nav-item active ">
 							<a href="alert/list.do" class="nav-link"> 
@@ -92,6 +114,7 @@
 							<i class="fa fa-envelope" style="font-size: 24px;"></i>
 						</a>
 					</li>
+					</jstl:if>
 					<li class="nav-item dropdown active">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 							role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -99,6 +122,7 @@
 							<security:authentication property="principal.username" />
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<jstl:if test="${!banned}">
 							<security:authorize access="hasRole('DRIVER')">
 								<a class="dropdown-item" href="driver/edit.do">
 									<spring:message code="master.page.editProfile" />
@@ -122,7 +146,7 @@
 							</a>
 									
 							<div class="dropdown-divider"></div>
-							
+							</jstl:if>
 							<a class="dropdown-item" href="j_spring_security_logout">
 								<spring:message code="master.page.logout" />
 							</a>

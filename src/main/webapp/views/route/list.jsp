@@ -26,14 +26,17 @@
 <spring:url value="/styles/route.css" var="routecss" />
 	<link href="${routecss}" rel="stylesheet" />
 	<script src="${routecss}"></script>
+<security:authentication property="principal.banned" var="banned" />
 <div class="text-center active-routes">
-	<h3><spring:message code="activeRoutes" /></h3>
+	<h3><jstl:if test="${!banned}"><spring:message code="activeRoutes" /></jstl:if></h3>
 </div>
 
 <div class="content-principal">
 	<%-- <div class="text-center active-routes">
 		<h3><spring:message code="activeRoutes" /></h3>
 	</div> --%>
+	
+	<jstl:if test="${!banned}">
 	<jstl:forEach var="route" items="${routes }">
 		<div class="title listRoute"></div>
 		<a class="text-body" href="route/display.do?routeId=${route.id }">
@@ -101,6 +104,10 @@
 		<div class="circle background_blue"></div>
 		<div class="circle background_green"></div>
 	</div>
+	</jstl:if>
+	<jstl:if test="${banned}">
+		<center><spring:message code="user.ban" /></center>
+	</jstl:if>
 </div>
 
 
