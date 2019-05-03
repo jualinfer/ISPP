@@ -33,7 +33,7 @@
 	</div> --%>
 	<jstl:forEach var="route" items="${routes }">
 		<div class="title listRoute"></div>
-		<a class="stretched-link text-body" href="route/display.do?routeId=${route.id }">
+		<a class="text-body" href="route/display.do?routeId=${route.id }">
 			<div class="route d-flex flex-column">
 
 				<div class="date text-center text-secondary mt-2">
