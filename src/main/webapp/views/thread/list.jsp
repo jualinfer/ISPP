@@ -80,6 +80,9 @@
 								<jstl:if test="${isReport && !thread.reportedUser.userAccount.banned}">
 										<a href="administrator/ban.do?userId=${thread.reportedUser.id}" > <spring:message code="administrator.ban"/></a>
 								</jstl:if>
+								<jstl:if test="${isReport && thread.reportedUser.userAccount.banned}">
+										<spring:message code="report.bannedUser" />
+								</jstl:if>
 							</security:authorize>					
 						</div>
 

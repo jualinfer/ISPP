@@ -66,7 +66,7 @@
 					value="<spring:message code="alert.save" />" />
 
 				<spring:message code="alert.cancel" var="cancel" />
-				<a href="welcome/index.do" class="btn btn-danger"><jstl:out
+				<a href="thread/report/list.do" class="btn btn-danger"><jstl:out
 						value="${cancel}" /></a>
 			</div>
 		

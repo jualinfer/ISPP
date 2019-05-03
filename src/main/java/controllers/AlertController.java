@@ -101,7 +101,7 @@ public class AlertController extends AbstractController {
 
 					this.alertService.save(alert);
 				}
-				result = new ModelAndView("redirect:/alert/list.do");
+				result = new ModelAndView("redirect:/thread/report/list.do");
 			} catch (final Throwable oops) {
 				oops.printStackTrace();
 				result = this.createEditModelAndView(alert, "alert.commit.error");
