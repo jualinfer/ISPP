@@ -64,7 +64,7 @@ public class Actor extends DomainEntity {    //Attributes
 	}
 
 	@NotBlank
-	@Pattern(regexp = "[6-7]{1}[0-9]{8}", message = "Invalid Phone Number")
+	@Pattern(regexp = "[6|7|9]{1}[0-9]{8}", message = "Invalid Phone Number")
 	public String getPhone() {
 		return this.phone;
 	}

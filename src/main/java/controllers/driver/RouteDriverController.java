@@ -366,6 +366,7 @@ public class RouteDriverController extends AbstractController {
 		result.addObject("vehicles", driver.getVehicles());
 		result.addObject("message", message);
 		result.addObject("requestURI", requestURI);
+		result.addObject("noVehicles", driver.getVehicles() == null || driver.getVehicles().isEmpty());
 
 		return result;
 	}

@@ -11,6 +11,8 @@
 <%@page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+<%@taglib prefix="jstl" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
@@ -19,59 +21,65 @@
 <link href="${headercss}" rel="stylesheet" />
 <script src="${headercss}"></script>
 
-<head>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css"
-	href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<script>
-	window.addEventListener("load", function() {
-		window.cookieconsent.initialise({
-			"palette" : {
-				"popup" : {
-					"background" : "#b143dd"
-				},
-				"button" : {
-					"background" : "#ffa513"
-				}
-			},
-			"theme" : "edgeless",
-			"position" : "bottom-right",
-			"content" : {
-				"href" : "welcome/termsAndConditions.do"
-			}
-		})
-	});
-</script>
-</head>
-<body>
 	<security:authorize access="isAuthenticated()">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light p-1">
+		<security:authentication property="principal.banned" var="banned" />
+		<nav class="navbar navbar-expand-lg navbar-dark p-1" style="background-color:#fa3274;">
 			<div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
 				<ul class="navbar-nav mr-auto">
+					<jstl:if test="${banned}">
+						<li class="nav-item active">
+							<span class="navbar-text d-flex align-items-center ml-1">
+								<spring:message code="master.page.banned" />
+							</span>
+						</li>
+					</jstl:if>
 					<security:authorize access="hasRole('DRIVER')">
 						<li class="nav-item active">
 							<a class="botonnavbar d-flex align-items-center" href="driver/displayPrincipal.do">
-								<i class="fa fa-smile-o" style="font-size:16px;"></i><spring:message code="master.page.myProfile" /> 
+								<i class="fa fa-smile-o mr-1" style="font-size:16px;"></i><spring:message code="master.page.myProfile" /> 
+							</a>
+						</li>
+						<jstl:if test="${!banned}">
+						<li class="nav-item active">
+							<a class="botonnavbar d-flex align-items-center" href="vehicle/driver/list.do">
+								<i class="fa fa-automobile mr-1" style="font-size:16px;"></i><spring:message code="master.page.myVehicles" />
 							</a>
 						</li>
 						<li class="nav-item active">
-							<a class="botonnavbar d-flex align-items-center" href="vehicle/driver/list.do">
-								<i class="fa fa-automobile" style="font-size:16px;"></i><spring:message code="master.page.myVehicles" />
+							<a class="d-flex align-items-center ml-1" href="route/driver/create.do">
+								<img src="images/headerparadriver.png" height="45" width="75" />
 							</a>
 						</li>
+						<li class="nav-item active">
+							<a class="nav-link d-flex align-items-center ml-1" href="route/driver/create.do">
+								<spring:message code="master.page.publicarRuta" />
+							</a>
+						</li>
+						</jstl:if>
 					</security:authorize>
 					<security:authorize access="hasRole('PASSENGER')">
 						<li class="nav-item active">
 							<a class="botonnavbar d-flex align-items-center" href="passenger/displayPrincipal.do">
-								<i class="fa fa-smile-o" style="font-size:16px;"></i><spring:message code="master.page.myProfile" />
+								<i class="fa fa-smile-o mr-1" style="font-size:16px;"></i>  <spring:message code="master.page.myProfile" />
+							</a>
+						</li>
+						<jstl:if test="${!banned}">
+						<li class="nav-item active">
+							<a class="d-flex align-items-center" href="route/search.do">
+								<img src="images/headerparapassenger.png" height="45" width="90" />
+							</a>
+						</li>
+						<li class="nav-item active">
+							<a class="nav-link d-flex align-items-center ml-1" href="route/search.do">
+								<spring:message code="master.page.buscarViaje" />
+							</a>
+						</li>
+						</jstl:if>
+					</security:authorize>
+					<security:authorize access="hasRole('ADMIN')">
+						<li class="nav-item active">
+							<a class="botonnavbar d-flex align-items-center" href="alert/edit.do">
+								<i class="fa fa-bell mr-1" style="font-size:16px;"></i>  <spring:message code="master.page.sendAlert" />
 							</a>
 						</li>
 					</security:authorize>
@@ -79,13 +87,13 @@
 			</div>
 			<div class="mx-auto order-0">
 				<security:authorize access="hasRole('DRIVER')">
-					<a class="navbar-brand mx-auto" href="route/driver/listActive.do"><img src="images/trondicon-original-ajustado.png" width="82px" height="42px" /></a>
+					<a class="navbar-brand mx-auto" href="route/driver/listActive.do"><img src="images/trondicon-header-white.png" width="82px" height="42px" /></a>
 				</security:authorize>
 				<security:authorize access="hasRole('PASSENGER')">
-					<a class="navbar-brand mx-auto" href="route/passenger/listActive.do"><img src="images/trondicon-original-ajustado.png" width="82px" height="42px" /></a>
+					<a class="navbar-brand mx-auto" href="route/passenger/listActive.do"><img src="images/trondicon-header-white.png" width="82px" height="42px" /></a>
 				</security:authorize>
 				<security:authorize access="hasRole('ADMIN')">
-					<a class="navbar-brand mx-auto" href="thread/report/listActive.do"><img src="images/trondicon-original-ajustado.png" width="82px" height="42px" /></a>
+					<a class="navbar-brand mx-auto" href="thread/report/list.do"><img src="images/trondicon-header-white.png" width="82px" height="42px" /></a>
 				</security:authorize>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
 					<span class="navbar-toggler-icon"></span>
@@ -93,16 +101,20 @@
 			</div>
 			<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active ">
-						<a href="alert/list.do" class="nav-link"> 
-							<i class="fa fa-bell-o" style="font-size: 24px;"></i>
-						</a>
-					</li>
+					<jstl:if test="${!banned}">
+					<security:authorize access="hasAnyRole('DRIVER', 'PASSENGER')">
+						<li class="nav-item active ">
+							<a href="alert/list.do" class="nav-link"> 
+								<i class="fa fa-bell" style="font-size: 24px;"></i>
+							</a>
+						</li>
+					</security:authorize>
 					<li class="nav-item active ">
 						<a href="thread/message/list.do" class="nav-link"> 
-							<i class="fa fa-envelope-o" style="font-size: 24px;"></i>
+							<i class="fa fa-envelope" style="font-size: 24px;"></i>
 						</a>
 					</li>
+					</jstl:if>
 					<li class="nav-item dropdown active">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 							role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -110,6 +122,7 @@
 							<security:authentication property="principal.username" />
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<jstl:if test="${!banned}">
 							<security:authorize access="hasRole('DRIVER')">
 								<a class="dropdown-item" href="driver/edit.do">
 									<spring:message code="master.page.editProfile" />
@@ -133,7 +146,7 @@
 							</a>
 									
 							<div class="dropdown-divider"></div>
-							
+							</jstl:if>
 							<a class="dropdown-item" href="j_spring_security_logout">
 								<spring:message code="master.page.logout" />
 							</a>
@@ -143,44 +156,7 @@
 			</div>
 		</nav>
 			
+		<div style="background-color: #ff6b9b; padding: 24px"></div>
 		
-		<div class="pinkheader background_pink d-flex justify-content-center align-items-baseline">
-			<security:authorize access="hasRole('DRIVER')">		
-				<div class="button-white ">
-					<h5>
-						<a href="route/driver/create.do" class="btn btn-light btn-rounded btn-lg" role="button">
-							<b><spring:message code="master.page.publicarRuta" /> </b>
-						</a>
-					</h5>
-					<p class="text-white text-right"><spring:message code="master.page.ahorra" /></p>
-				</div>
-				<div class="imgdriver">
-					<img src="images/headerparadriver.png" height="300" width="300" />
-				</div>
-			</security:authorize>
-			
-			<security:authorize access="hasRole('PASSENGER')">
-				<div class="button-white ">
-					<h5>
-						<a href="route/search.do" class="btn btn-light btn-rounded btn-lg" role="button">
-							<b><spring:message code="master.page.buscarViaje" /> </b>
-						</a>
-					</h5>
-					<p class="text-white text-right"><spring:message code="master.page.mejorPrecio"/></p>
-				</div>
-				<div class="imgpassenger">
-					<img src="images/headerparapassenger.png" height="200" width="300" />
-				</div>
-			</security:authorize>
-			
-		</div>
 	</security:authorize>
 	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
-		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
-		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
-		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	
-</body>

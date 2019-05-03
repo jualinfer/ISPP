@@ -52,7 +52,7 @@
 		<security:intercept-url pattern="/route/display.do" access="isAuthenticated() and !principal.banned" /> 
 		<security:intercept-url pattern="/route/search.do" access="isAuthenticated() and !principal.banned" />
 		
-		<security:intercept-url pattern="/route/driver/listActive.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		<security:intercept-url pattern="/route/driver/listActive.do" access="hasRole('DRIVER')" /> 
 		<security:intercept-url pattern="/route/driver/create.do" access="hasRole('DRIVER') and !principal.banned" /> 
 		<security:intercept-url pattern="/route/driver/confirm.do" access="hasRole('DRIVER') and !principal.banned" />
 		<security:intercept-url pattern="/route/driver/edit.do" access="hasRole('DRIVER') and !principal.banned" /> 
@@ -63,7 +63,7 @@
 		<security:intercept-url pattern="/controlpoint/driver/add.do" access="hasRole('DRIVER') and !principal.banned" />
 		<security:intercept-url pattern="/controlpoint/driver/remove.do" access="hasRole('DRIVER') and !principal.banned" />		
 		
-		<security:intercept-url pattern="/reservation/passenger/create.do" access="hasRole('PASSENGER') and principal.banned == false" /> 
+		<security:intercept-url pattern="/reservation/passenger/create.do" access="hasRole('PASSENGER') and !principal.banned" /> 
 		<security:intercept-url pattern="/reservation/passenger/save.do" access="hasRole('PASSENGER') and !principal.banned" />
 		<security:intercept-url pattern="/reservation/passenger/cancelReservation.do" access="hasRole('PASSENGER') and !principal.banned" />
 		<security:intercept-url pattern="/reservation/passenger/driverPickUp.do" access="hasRole('PASSENGER') and !principal.banned" /> 
@@ -93,8 +93,8 @@
 		
 		<security:intercept-url pattern="/thread/message/create.do" access="isAuthenticated() and !principal.banned" />
 		<security:intercept-url pattern="/thread/message/add.do" access="isAuthenticated() and !principal.banned" />
-		<security:intercept-url pattern="/thread/message/view.do" access="isAuthenticated()" />
-		<security:intercept-url pattern="/thread/message/list.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/thread/message/view.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/message/list.do" access="isAuthenticated() and !principal.banned" />
 		<security:intercept-url pattern="/thread/report/create.do" access="isAuthenticated() and !principal.banned" />
 		<security:intercept-url pattern="/thread/report/add.do" access="isAuthenticated() and !principal.banned" />
 		<security:intercept-url pattern="/thread/report/view.do" access="isAuthenticated() and !principal.banned" />

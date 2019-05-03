@@ -11,9 +11,6 @@
 <%@page language="java" contentType="text/html; charset=ISO-8859-1"	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <jsp:useBean id="date" class="java.util.Date" />
 
 <spring:url value="/styles/footer.css" var="footercss" />
@@ -57,14 +54,11 @@
         <div class="col-md-3 mb-md-0 mb-3">
 
             <!-- Links -->
-            <h5 class="text-uppercase">Links</h5>
+            <h5 class="text-uppercase"><spring:message code="enlaces.legal"/></h5>
 
             <ul class="list-unstyled">
               <li>
-                <a href="#!" class="links" >Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="links">Link 2</a>
+                <a href="welcome/termsAndConditions.do" class="links" ><spring:message code="termsAndConditions"/></a>
               </li>
             </ul>
 
@@ -75,14 +69,11 @@
           <div class="col-md-3 mb-md-0 mb-3">
 
             <!-- Links -->
-            <h5 class="text-uppercase">Links</h5>
+            <h5 class="text-uppercase"><spring:message code="enlaces.contacto"/></h5>
 
             <ul class="list-unstyled">
               <li>
-                <a href="#!" class="links">Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="links">Link 2</a>
+                <a href="mailto:ispp.grupo1819@gmail.com" class="links">ispp.grupo1819@gmail.com</a>
               </li>
             </ul>
 

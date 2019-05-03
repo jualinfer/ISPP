@@ -31,8 +31,6 @@
 <spring:url value="/styles/profile.css" var="profilecss" />
 <link href="${profilecss}" rel="stylesheet" />
 <script src="${profilecss}"></script>
-<link rel="stylesheet"
-	href="/path/to/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
 <script>
 
@@ -52,8 +50,11 @@
 	<form:hidden path="comments" />
 	<form:hidden path="reservations" />
 	<form:hidden path="cash" />
+	<form:hidden path="newAlerts" />
+	<form:hidden path="newMessages" />
 	<form:hidden path="userAccount.id" />
 	<form:hidden path="userAccount.enabled" />
+	<form:hidden path="userAccount.banned" />
 	<form:hidden path="userAccount.version" />
 	<form:hidden path="userAccount.authorities" />
 
