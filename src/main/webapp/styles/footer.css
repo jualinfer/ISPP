@@ -13,7 +13,8 @@
  
  .page-footer{
  background-color: #2295ff;
- height: 110px;
+ height: 150px;
+ 
 
  }
  
@@ -28,7 +29,7 @@
  .footer-copyright{
  position:relative;
  background-color: #1a80de;
- top: -35px;
+
 
  }
  

@@ -11,6 +11,9 @@
 <%@page language="java" contentType="text/html; charset=ISO-8859-1"	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="security"
+	uri="http://www.springframework.org/security/tags"%>
+
 <jsp:useBean id="date" class="java.util.Date" />
 
 <spring:url value="/styles/footer.css" var="footercss" />
@@ -27,9 +30,9 @@
 		</div>
 	</div>
 </div>
-<security:authorize access="isAutenticated()">
+<security:authorize access="isAuthenticated()">
 <!-- Footer -->
-<footer class="page-footer font-small blue pt-4">
+<footer class="page-footer font-small blue pt-4 sticky-bottom">
 
     <!-- Footer Links -->
     <div class="container-fluid text-center text-md-left">
