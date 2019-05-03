@@ -29,6 +29,7 @@
 <spring:message code="route.cancel" var="cancel" />
 <security:authorize access="hasRole('DRIVER')">
 	<center>
+		<jstl:if test="${!noVehicles}">
 		<form:form action="${requestURI}" modelAttribute="route">
 			<form:hidden path="id" />
 			<form:hidden path="pricePerPassenger" />
@@ -64,8 +65,6 @@
 
 
 			<div class="form-group col-md-6">
-				<small id="timeHelp" class="form-text text-muted"><spring:message
-						code="aclaration" /></small>
 				<div class="form-row align-items-center">
 					<div class="col-auto">
 						<button name="icon1" disabled
@@ -73,7 +72,7 @@
 							<img src="images/marcador.png" width="35px" height="40px" />
 						</button>
 					</div>
-					<div class="col-7">
+					<div class="col-10">
 						<spring:message code="route.origin" var="routeOrigin" />
 						<form:input type="text" path="origin.location"
 							class="form-control" placeholder="${routeOrigin}"
@@ -118,7 +117,7 @@
 											height="40px" />
 									</button>
 								</div>
-								<div class="col-7">
+								<div class="col-10">
 									<spring:message code="route.stop" var="routeStop" />
 									<form:input type="text"
 										path="controlpoints[${status.index}].location"
@@ -168,7 +167,7 @@
 							<img src="images/marcador-ok.png" width="35px" height="40px" />
 						</button>
 					</div>
-					<div class="col-7">
+					<div class="col-10">
 						<spring:message code="route.destination" var="routeDestination" />
 						<div id="locationField">
 							<form:input type="text" path="destination.location"
@@ -264,6 +263,14 @@
 			</div>
 
 		</form:form>
+		</jstl:if>
+		<jstl:if test="${noVehicles}">
+			<spring:message code="route.noVehicles" /><br><br>
+			<spring:message code="route.createVehicle" var="createVehicle" />
+			<a href="vehicle/driver/create.do" class="btn btn-success">
+				<jstl:out value="${createVehicle}" />
+			</a>
+		</jstl:if>
 	</center>
 </security:authorize>
 
