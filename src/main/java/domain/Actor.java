@@ -32,6 +32,7 @@ public class Actor extends DomainEntity {    //Attributes
 	private UserAccount	userAccount;
 
 
+	@NotBlank
 	public String getName() {
 
 		return this.name;
