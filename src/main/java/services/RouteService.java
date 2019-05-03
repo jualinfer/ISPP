@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.decimal4j.util.DoubleRounder;
 import org.json.JSONArray;
@@ -25,7 +27,10 @@ import org.springframework.validation.BindingResult;
 import repositories.RouteRepository;
 import utilities.StripeConfig;
 
+import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Payout;
+import com.stripe.model.Refund;
 
 import domain.Alert;
 import domain.ControlPoint;
@@ -709,7 +714,7 @@ public class RouteService {
 	}
 	
 	public void cronCompleteRoutes(){
-		try {
+//		try {
 			Date now = new Date();
 			Reservation reservation = null;
 	    	Long millisPerDay =  24 * 60 * 60 * 1000L;
@@ -738,7 +743,7 @@ public class RouteService {
 	    		
 	    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
 	    		
-	    		//Comprobamos si los passengers han abierto algún report al driver
+	    		//Comprobamos si los passengers han abierto algún report al driver y obtenemos las reservas que no se han pagado todavía
 	    		for(Passenger passenger: passengersByRoute){
 	    			boolean driverNoPickedMe = false;
 	    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
@@ -755,21 +760,29 @@ public class RouteService {
 	
 	    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
 	    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
-	    			if(report == null){
-	    				if(!driverNoPickedMe){
-	    					//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
-	    					stripeConfig.payout(reservation);
-	    				}else{
-	    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
-	    					stripeConfig.refound(reservation);
-	    				}
-	    				reservation.setPaymentResolved(true);
-	    				reservationService.saveCron(reservation);
+	    			if(report == null && reservation != null){
+//	    				Stripe.apiKey = StripeConfig.SECRET_KEY;
+//	    				if(!driverNoPickedMe){
+//	    					//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
+//	    					final Map<String, Object> payoutParams = new HashMap<String, Object>();
+//	    					final Double reservPrice = reservation.getPrice() * 100;
+//	    					payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+//	    					payoutParams.put("currency", StripeConfig.CURRENCY);
+//
+//	    					Payout.create(payoutParams);
+//	    				}else{
+//	    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
+//	    					final Map<String, Object> params = new HashMap<>();
+//	    					params.put("charge", reservation.getChargeId());
+//	    					final Refund refund2 = Refund.create(params);
+//	    				}
+//	    				reservation.setPaymentResolved(true);
+//	    				reservationService.saveCron(reservation);
 	        		}
     			}
 			}
-		}catch (StripeException e) {
-			e.printStackTrace();
-		}
+//		}catch (StripeException e) {
+//			e.printStackTrace();
+//		}
 	}
 }
