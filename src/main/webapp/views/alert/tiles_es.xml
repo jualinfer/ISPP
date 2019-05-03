@@ -18,7 +18,7 @@
 
 	
 	<definition name="alert/list" extends="master.page">	
-		<put-attribute name="title" value="Lista de alertas" />
+		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="/views/alert/list.jsp" />
 	</definition>
 	
