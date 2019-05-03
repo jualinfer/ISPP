@@ -46,7 +46,8 @@
 	<div
 		class="resume fotousuario d-flex flex-column justify-content-center align-items-center">
 	
-		<img src="images/passenger.png" />
+		<img src="${driver.image}" />
+		<!-- <img src="images/passenger.png" /> -->
 	
 	</div>
 	

@@ -34,7 +34,8 @@
 	<div
 		class="resume fotousuario d-flex flex-column justify-content-center align-items-center">
 	
-		<img src="images/iconotronf.png" />
+		<img src="${passenger.image}" />
+		<!-- <img src="images/iconotronf.png" /> -->
 	
 	</div>
 	

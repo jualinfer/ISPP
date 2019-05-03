@@ -9,7 +9,10 @@
 }
 
 .fotousuario img{
-	width: 150px;
+	height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    border: 12px solid #00ACE2;
 }
 
 .card-header_{

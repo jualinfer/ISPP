@@ -88,8 +88,10 @@
 					</jstl:forEach>
 				</div>
 				
-				<div class="driver-route-i d-flex justify-content-end mr-4">
-					<div class="circle background_blue m-1"></div>
+				<div class="driver-route-i d-flex align-items-baseline justify-content-end mr-4">
+					<div class="fotodriver m-1">
+						<img src="${route.driver.image}" />
+					</div>
 					<h5>
 						<jstl:out value="${route.driver.name}" />
 						<jstl:out value="${route.driver.surname}" />

@@ -1,5 +1,12 @@
 @CHARSET "ISO-8859-1";
 
+.fotodriver img{
+	height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    border: 3px solid #00ACE2;
+}
+
 .newVehicle{
 	top: -29px;
     position: relative;
