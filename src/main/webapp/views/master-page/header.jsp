@@ -39,6 +39,11 @@
 								<img src="images/headerparadriver.png" height="45" width="75" />
 							</a>
 						</li>
+						<li class="nav-item active">
+							<a class="nav-link d-flex align-items-center ml-1" href="route/driver/create.do">
+								<spring:message code="master.page.publicarRuta" />
+							</a>
+						</li>
 					</security:authorize>
 					<security:authorize access="hasRole('PASSENGER')">
 						<li class="nav-item active">
@@ -49,6 +54,11 @@
 						<li class="nav-item active">
 							<a class="d-flex align-items-center" href="route/search.do">
 								<img src="images/headerparapassenger.png" height="45" width="90" />
+							</a>
+						</li>
+						<li class="nav-item active">
+							<a class="nav-link d-flex align-items-center ml-1" href="route/search.do">
+								<spring:message code="master.page.buscarViaje" />
 							</a>
 						</li>
 					</security:authorize>
