@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import security.UserAccount;
+import security.UserAccountService;
 import services.ActorService;
 import services.CommentService;
 import services.DriverService;
@@ -34,16 +35,19 @@ public class DriverController extends AbstractController {
 
 	// Services ---------------------------------
 	@Autowired
-	private DriverService	driverService;
+	private DriverService		driverService;
 
 	@Autowired
-	private ActorService	actorService;
+	private ActorService		actorService;
 
 	@Autowired
-	private CommentService	commentService;
+	private UserAccountService	userAccountService;
 
 	@Autowired
-	private RouteService	routeService;
+	private CommentService		commentService;
+
+	@Autowired
+	private RouteService		routeService;
 
 
 	// Constructor ------------------------------

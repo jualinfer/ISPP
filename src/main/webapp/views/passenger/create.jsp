@@ -52,8 +52,11 @@
 	<form:hidden path="comments" />
 	<form:hidden path="reservations" />
 	<form:hidden path="cash" />
+	<form:hidden path="newAlerts" />
+	<form:hidden path="newMessages" />
 	<form:hidden path="userAccount.id" />
 	<form:hidden path="userAccount.enabled" />
+	<form:hidden path="userAccount.banned" />
 	<form:hidden path="userAccount.version" />
 	<form:hidden path="userAccount.authorities" />
 
