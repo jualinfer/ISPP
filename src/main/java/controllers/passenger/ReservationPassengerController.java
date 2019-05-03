@@ -40,6 +40,8 @@ import utilities.StripeConfig;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import com.stripe.model.Payout;
+import com.stripe.model.Refund;
 
 import controllers.AbstractController;
 import domain.Actor;
@@ -108,16 +110,18 @@ public class ReservationPassengerController extends AbstractController {
 					chargeParams.put("source", reservationForm.getStripeToken());
 					final Charge charge = Charge.create(chargeParams);
 
+					reservation.setChargeId(charge.getId());
 					reservation = this.reservationService.save2(reservation);
 					result = new ModelAndView("redirect:/route/display.do?routeId=" + reservation.getRoute().getId());
 				}
 			} catch (final StripeException e) {
-			e.printStackTrace();
-			result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
-		} catch (final Throwable oops) {
-			oops.printStackTrace();
-			result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
-		}
+
+				e.printStackTrace();
+				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
+			} catch (final Throwable oops) {
+				oops.printStackTrace();
+				result = this.createEditModelAndView(reservationForm, "reservation.commit.error");
+			}
 		return result;
 	}
 	private ModelAndView createEditModelAndView(final ReservationForm reservation) {
@@ -125,12 +129,49 @@ public class ReservationPassengerController extends AbstractController {
 	}
 
 	private ModelAndView createEditModelAndView(final ReservationForm reservation, final String message) {
+		Route route;
+		Collection<Reservation> routeAcceptedReservations;
+		Integer remainingSeats;
+		boolean routeLugNothing = false;
+		boolean routeLugMedium = false;
+		boolean routeLugBig = false;
+
+		route = reservation.getRoute();
+
+		switch (route.getMaxLuggage()) {
+		case NOTHING:
+			routeLugNothing = true;
+			break;
+		case MEDIUM:
+			routeLugMedium = true;
+			break;
+		case BIG:
+			routeLugBig = true;
+			break;
+		case SMALL:
+			break;
+		default:
+			break;
+		}
+		//------------Asientos restantes--------------------
+		routeAcceptedReservations = this.reservationService.findAcceptedReservationsByRoute(route.getId());
+		remainingSeats = route.getAvailableSeats();
+		for (final Reservation res : routeAcceptedReservations)
+			remainingSeats = remainingSeats - res.getSeat();
+
+		//Comprobamos que haya asientos disponibles
+		Assert.isTrue(remainingSeats > 0);
+
 		final ModelAndView result = new ModelAndView("reservation/passenger/create");
 		result.addObject("reservation", reservation);
 		result.addObject("requestURI", "reservation/passenger/save.do");
 		result.addObject("message", message);
 		result.addObject("stripePublicKey", StripeConfig.PUBLIC_KEY);
 		result.addObject("currency", StripeConfig.CURRENCY);
+		result.addObject("remainingSeats", remainingSeats);
+		result.addObject("LugNothing", routeLugNothing);
+		result.addObject("LugMedium", routeLugMedium);
+		result.addObject("LugBig", routeLugBig);
 
 		return result;
 	}
@@ -348,7 +389,6 @@ public class ReservationPassengerController extends AbstractController {
 	public ModelAndView driverPickUp(final int reservationId) {
 		ModelAndView result;
 
-		this.reservationService.driverPickedMe(reservationId);
 		result = new ModelAndView("reservation/passenger/driverPickUp");
 
 		//TENGO QUE PASARLE OTRA VEZ TODA LA INFO QUE HAY EN EL DISPLAY DE ROUTE
@@ -371,8 +411,26 @@ public class ReservationPassengerController extends AbstractController {
 		reservation = this.reservationService.create();
 		reservation.setRoute(route);
 
+		//		try {
+		//			Stripe.apiKey = StripeConfig.SECRET_KEY;
+		//
+		//			//payout
+		//
+		//			final Map<String, Object> payoutParams = new HashMap<String, Object>();
+		//			final Double reservPrice = currentReservation.getPrice() * 100;
+		//			payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+		//			payoutParams.put("currency", StripeConfig.CURRENCY);
+		//			//			payoutParams.put("destination", bankAccount.getId());
+		//			Payout.create(payoutParams);
+		//
+		//			this.reservationService.driverPickedMe(reservationId);
+		//		} catch (final StripeException e) {
+		//			e.printStackTrace();
+		//
+		//		}
+
 		reservations = route.getReservations();
-		System.out.println(reservations);
+
 		displayableReservations = new ArrayList<Reservation>();
 		occupiedSeats = 0;
 		ua = LoginService.getPrincipal();
@@ -524,8 +582,20 @@ public class ReservationPassengerController extends AbstractController {
 
 		//----proceso para conseguir la fecha de salida + 10 minutos---
 		final Date tenMinutesAfterDeparture = new Date(departureDateMilis + 600000);
-		if (new Date().after(tenMinutesAfterDeparture))
+		if (new Date().after(tenMinutesAfterDeparture)) {
 			hasPassed10Minutes = true;
+
+			try {
+				if (currentReservation.getChargeId() != null) {
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					final Map<String, Object> params = new HashMap<>();
+					params.put("charge", currentReservation.getChargeId());
+					final Refund refund = Refund.create(params);
+				}
+			} catch (final StripeException e) {
+				e.printStackTrace();
+			}
+		}
 		//----proceso para conseguir la fecha de salida + 20 minutos---
 		final Date twentyMinutesAfterDeparture = new Date(departureDateMilis + (600000 * 2));
 		if (new Date().after(twentyMinutesAfterDeparture))
@@ -553,10 +623,35 @@ public class ReservationPassengerController extends AbstractController {
 		final Route route = this.routeService.findOne(reservation.getRoute().getId());
 
 		try {
+			if (reservation.getChargeId() != null) {
+				final Calendar date = Calendar.getInstance();
+				date.setTime(route.getDepartureDate());
+				final long departureDateMilis = date.getTimeInMillis();
+				final Date fifteenMinutesBeforeDeparture = new Date(departureDateMilis - 900000);
+
+				if ((fifteenMinutesBeforeDeparture.after(new Date())) || (!fifteenMinutesBeforeDeparture.after(new Date()) && reservation.getStatus().equals(ReservationStatus.PENDING))) {
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					final Map<String, Object> params = new HashMap<>();
+					params.put("charge", reservation.getChargeId());
+					final Refund refund = Refund.create(params);
+				} else if (!fifteenMinutesBeforeDeparture.after(new Date()) && reservation.getStatus().equals(ReservationStatus.ACCEPTED)) {
+
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+
+					//payout
+					final Map<String, Object> payoutParams = new HashMap<String, Object>();
+					final Double reservPrice = reservation.getPrice() * 100;
+					payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+					payoutParams.put("currency", StripeConfig.CURRENCY);
+
+					Payout.create(payoutParams);
+				}
+			}
 			this.reservationService.cancelReservation(reservationId);
 			res = new ModelAndView("redirect:/route/display.do?routeId=" + route.getId());
 
 		} catch (final Exception e) {
+			e.printStackTrace();
 			res = new ModelAndView("redirect:/route/display.do?routeId=" + route.getId());
 		}
 
@@ -579,7 +674,9 @@ public class ReservationPassengerController extends AbstractController {
 		//		Collection<String> places;
 		Collection<Reservation> routeAcceptedReservations;
 		Integer remainingSeats;
-
+		boolean routeLugNothing = false;
+		boolean routeLugMedium = false;
+		boolean routeLugBig = false;
 		route = reservation.getRoute();
 
 		//---Lista de strings de lugares por donde pasa la ruta---
@@ -591,10 +688,27 @@ public class ReservationPassengerController extends AbstractController {
 		//		places.add(c.getLocation());
 		//		places.add(route.getDestination());
 		//-----------------------------------------------------
-
+		switch (route.getMaxLuggage()) {
+		case NOTHING:
+			routeLugNothing = true;
+			break;
+		case MEDIUM:
+			routeLugMedium = true;
+			break;
+		case BIG:
+			routeLugBig = true;
+			break;
+		case SMALL:
+			break;
+		default:
+			break;
+		}
 		//------------Asientos restantes--------------------
 		routeAcceptedReservations = this.reservationService.findAcceptedReservationsByRoute(route.getId());
-		remainingSeats = route.getAvailableSeats() - routeAcceptedReservations.size();
+		remainingSeats = route.getAvailableSeats();
+		for (final Reservation res : route.getReservations())
+			if (res.getStatus().equals(ReservationStatus.ACCEPTED))
+				remainingSeats = remainingSeats - res.getSeat();
 
 		//Comprobamos que haya asientos disponibles
 		Assert.isTrue(remainingSeats > 0);
@@ -606,15 +720,11 @@ public class ReservationPassengerController extends AbstractController {
 		//		result.addObject("places", places);
 		result.addObject("remainingSeats", remainingSeats);
 		result.addObject("message", message);
+		result.addObject("LugNothing", routeLugNothing);
+		result.addObject("LugMedium", routeLugMedium);
+		result.addObject("LugBig", routeLugBig);
 
 		return result;
-	}
-
-	// Action-2 ---------------------------------------------------------------
-
-	@RequestMapping("/driverPickMe")
-	public ModelAndView action3() {
-		throw new RuntimeException("Oops! An *expected* exception was thrown. This is normal behaviour.");
 	}
 
 }

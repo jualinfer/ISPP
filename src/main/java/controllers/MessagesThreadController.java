@@ -320,6 +320,7 @@ public class MessagesThreadController extends AbstractController {
 		result.addObject("threadForm", form);
 		result.addObject("isReport", isReport);
 		result.addObject("message", message);
+		result.addObject("connectedUser", actorService.findByPrincipal());
 		
 		return result;
 	}

@@ -49,6 +49,8 @@
 	</div>
 </center>
 
+	
+
 <center>
 	<div class="col-sm-6 text-center" style="padding-top: 20px;">
 		<h4><jstl:out value="${msgPrice}" />:</h4>

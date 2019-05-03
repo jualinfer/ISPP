@@ -14,6 +14,7 @@ import repositories.AlertRepository;
 import security.UserAccountService;
 import domain.Actor;
 import domain.Alert;
+import domain.TypeAlert;
 
 @Service
 @Transactional
@@ -55,11 +56,25 @@ public class AlertService {
 		return alert;
 	}
 
+	public Alert createAdmin() {
+		
+			final Alert alert = new Alert();
+			final Actor sender = this.actorService.findByPrincipal();
+			alert.setSender(sender);
+			alert.setIsRead(false);
+			alert.setDate(new Date(System.currentTimeMillis() - 1));
+
+			alert.setTypeAlert(TypeAlert.SYSTEM_NEWS);
+			return alert;
+		}
+	
+	
+
 	public Alert save(final Alert alert) {
 		Assert.notNull(alert);
 		Assert.notNull(alert.getReceiver());
 		Assert.notNull(alert.getSender());
-		Assert.notNull(alert.getRelatedRoute());
+		//Assert.notNull(alert.getRelatedRoute());
 
 		Alert result;
 		result = this.alertRepository.save(alert);
