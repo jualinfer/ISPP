@@ -129,12 +129,49 @@ public class ReservationPassengerController extends AbstractController {
 	}
 
 	private ModelAndView createEditModelAndView(final ReservationForm reservation, final String message) {
+		Route route;
+		Collection<Reservation> routeAcceptedReservations;
+		Integer remainingSeats;
+		boolean routeLugNothing = false;
+		boolean routeLugMedium = false;
+		boolean routeLugBig = false;
+
+		route = reservation.getRoute();
+
+		switch (route.getMaxLuggage()) {
+		case NOTHING:
+			routeLugNothing = true;
+			break;
+		case MEDIUM:
+			routeLugMedium = true;
+			break;
+		case BIG:
+			routeLugBig = true;
+			break;
+		case SMALL:
+			break;
+		default:
+			break;
+		}
+		//------------Asientos restantes--------------------
+		routeAcceptedReservations = this.reservationService.findAcceptedReservationsByRoute(route.getId());
+		remainingSeats = route.getAvailableSeats();
+		for (final Reservation res : routeAcceptedReservations)
+			remainingSeats = remainingSeats - res.getSeat();
+
+		//Comprobamos que haya asientos disponibles
+		Assert.isTrue(remainingSeats > 0);
+
 		final ModelAndView result = new ModelAndView("reservation/passenger/create");
 		result.addObject("reservation", reservation);
 		result.addObject("requestURI", "reservation/passenger/save.do");
 		result.addObject("message", message);
 		result.addObject("stripePublicKey", StripeConfig.PUBLIC_KEY);
 		result.addObject("currency", StripeConfig.CURRENCY);
+		result.addObject("remainingSeats", remainingSeats);
+		result.addObject("LugNothing", routeLugNothing);
+		result.addObject("LugMedium", routeLugMedium);
+		result.addObject("LugBig", routeLugBig);
 
 		return result;
 	}
@@ -637,7 +674,9 @@ public class ReservationPassengerController extends AbstractController {
 		//		Collection<String> places;
 		Collection<Reservation> routeAcceptedReservations;
 		Integer remainingSeats;
-
+		boolean routeLugNothing = false;
+		boolean routeLugMedium = false;
+		boolean routeLugBig = false;
 		route = reservation.getRoute();
 
 		//---Lista de strings de lugares por donde pasa la ruta---
@@ -649,10 +688,27 @@ public class ReservationPassengerController extends AbstractController {
 		//		places.add(c.getLocation());
 		//		places.add(route.getDestination());
 		//-----------------------------------------------------
-
+		switch (route.getMaxLuggage()) {
+		case NOTHING:
+			routeLugNothing = true;
+			break;
+		case MEDIUM:
+			routeLugMedium = true;
+			break;
+		case BIG:
+			routeLugBig = true;
+			break;
+		case SMALL:
+			break;
+		default:
+			break;
+		}
 		//------------Asientos restantes--------------------
 		routeAcceptedReservations = this.reservationService.findAcceptedReservationsByRoute(route.getId());
-		remainingSeats = route.getAvailableSeats() - routeAcceptedReservations.size();
+		remainingSeats = route.getAvailableSeats();
+		for (final Reservation res : route.getReservations())
+			if (res.getStatus().equals(ReservationStatus.ACCEPTED))
+				remainingSeats = remainingSeats - res.getSeat();
 
 		//Comprobamos que haya asientos disponibles
 		Assert.isTrue(remainingSeats > 0);
@@ -664,6 +720,9 @@ public class ReservationPassengerController extends AbstractController {
 		//		result.addObject("places", places);
 		result.addObject("remainingSeats", remainingSeats);
 		result.addObject("message", message);
+		result.addObject("LugNothing", routeLugNothing);
+		result.addObject("LugMedium", routeLugMedium);
+		result.addObject("LugBig", routeLugBig);
 
 		return result;
 	}
