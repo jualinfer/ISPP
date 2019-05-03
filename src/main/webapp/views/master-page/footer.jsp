@@ -54,14 +54,11 @@
         <div class="col-md-3 mb-md-0 mb-3">
 
             <!-- Links -->
-            <h5 class="text-uppercase">Links</h5>
+            <h5 class="text-uppercase"><spring:message code="enlaces.legal"/></h5>
 
             <ul class="list-unstyled">
               <li>
-                <a href="#!" class="links" >Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="links">Link 2</a>
+                <a href="welcome/termsAndConditions.do" class="links" ><spring:message code="termsAndConditions"/></a>
               </li>
             </ul>
 
@@ -72,14 +69,11 @@
           <div class="col-md-3 mb-md-0 mb-3">
 
             <!-- Links -->
-            <h5 class="text-uppercase">Links</h5>
+            <h5 class="text-uppercase"><spring:message code="enlaces.contacto"/></h5>
 
             <ul class="list-unstyled">
               <li>
-                <a href="#!" class="links">Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="links">Link 2</a>
+                <a href="mailto:ispp.grupo1819@gmail.com" class="links">ispp.grupo1819@gmail.com</a>
               </li>
             </ul>
 
