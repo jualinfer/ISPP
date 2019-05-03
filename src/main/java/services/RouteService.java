@@ -79,8 +79,6 @@ public class RouteService {
 	@Autowired
 	private PassengerService		passengerService;
 	
-	private StripeConfig		stripeConfig;
-	
 	//Simple CRUD methods
 
 	public Route create() {
@@ -572,12 +570,10 @@ public class RouteService {
 		return result;
 	}
 	
-	public Collection<Route> findFinalizedRoutes(final Date now) {
-		Assert.notNull(now);
-
+	public Collection<Route> findStartedRoutes() {
 		Collection<Route> result;
 
-		result = this.routeRepository.findFinalizedRoutes(now);
+		result = this.routeRepository.findStartedRoutes();
 
 		return result;
 	}
@@ -688,75 +684,83 @@ public class RouteService {
 	}
 	
 	public void cronCompleteRoutes(){
-//		try {
-			Date now = new Date();
-			Reservation reservation = null;
-	    	Long millisPerDay =  24 * 60 * 60 * 1000L;
-	    	Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
-	    	
-	    	//Obtenemos las rutas completadas 
-	    	Collection<Route> completedRoutes = findFinalizedRoutes(new Date());
-	    	
-	    	//De las rutas completadas sacamos las que ya hayan pasado 24h 
-	    	for(Route route: completedRoutes){
-	    		Calendar departureDate = Calendar.getInstance();
-	    		departureDate.setTime(route.getDepartureDate());
-	    		Integer estimatedDuration = route.getEstimatedDuration();
-	    		
-	    		departureDate.add(Calendar.MINUTE, estimatedDuration);
-	    		Date completedDate = departureDate.getTime();
-	    		
-	    		boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
-	    		if(moreThanDay){
-	    			completedAfterDayRoutes.add(route);
-	    		}
-	    	}
-	    	
-	    	for(Route route: completedAfterDayRoutes){
-	    		Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
-	    		
-	    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
-	    		
-	    		//Comprobamos si los passengers han abierto algún report al driver y obtenemos las reservas que no se han pagado todavía
-	    		for(Passenger passenger: passengersByRoute){
-	    			boolean driverNoPickedMe = false;
-	    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
-	    			MessagesThread report = messagesThreadService.findReportsThreadFromParticipantsAndRoute(
-	    					route.getId(), passenger.getId(), route.getDriver().getId());
-	    			
-	    			reservationOfPassenger.addAll(reservationService.findReservationsByRoutePassengerAndNotPaymentResolved(
-	    					route.getId(), passenger.getId()));
-	    			
-	    			if(!reservationOfPassenger.isEmpty()){
-	    				reservation = reservationOfPassenger.get(0);
-	    				driverNoPickedMe = reservation.isDriverNoPickedMe();
-	    			}
-	
-	    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
-	    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
-	    			if(report == null && reservation != null){
-//	    				Stripe.apiKey = StripeConfig.SECRET_KEY;
-//	    				if(!driverNoPickedMe){
-//	    					//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
-//	    					final Map<String, Object> payoutParams = new HashMap<String, Object>();
-//	    					final Double reservPrice = reservation.getPrice() * 100;
-//	    					payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
-//	    					payoutParams.put("currency", StripeConfig.CURRENCY);
-//
-//	    					Payout.create(payoutParams);
-//	    				}else{
-//	    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
-//	    					final Map<String, Object> params = new HashMap<>();
-//	    					params.put("charge", reservation.getChargeId());
-//	    					final Refund refund2 = Refund.create(params);
-//	    				}
-//	    				reservation.setPaymentResolved(true);
-//	    				reservationService.saveCron(reservation);
-	        		}
+		Date now = new Date();
+		Reservation reservation = null;
+    	Long millisPerDay =  24 * 60 * 60 * 1000L;
+    	Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
+    	
+    	//Obtenemos las rutas que ya comenzaron 
+    	Collection<Route> startedRoutes = findStartedRoutes();
+    	
+    	//De las rutas comenzadas sacamos las que ya hayan pasado 24h desde 
+    	//la fecha y hora de finalización
+    	for(Route route: startedRoutes){
+    		Calendar departureDate = Calendar.getInstance();
+    		departureDate.setTime(route.getDepartureDate());
+    		Integer estimatedDuration = route.getEstimatedDuration();
+    		
+    		departureDate.add(Calendar.MINUTE, estimatedDuration);
+    		Date completedDate = departureDate.getTime();
+    		
+    		boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
+    		if(moreThanDay){
+    			completedAfterDayRoutes.add(route);
+    		}
+    	}
+    	
+    	for(Route route: completedAfterDayRoutes){
+    		Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
+    		
+    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
+    		
+    		//Comprobamos si los passengers han abierto algún report al driver y obtenemos las reservas que no se han pagado todavía
+    		for(Passenger passenger: passengersByRoute){
+    			boolean driverNoPickedMe = false;
+    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
+    			MessagesThread report = messagesThreadService.findReportsThreadFromParticipantsAndRoute(
+    					route.getId(), passenger.getId(), route.getDriver().getId());
+    			
+    			reservationOfPassenger.addAll(reservationService.findReservationsByRoutePassengerAndNotPaymentResolved(
+    					route.getId(), passenger.getId()));
+    			
+    			if(!reservationOfPassenger.isEmpty()){
+    				reservation = reservationOfPassenger.get(0);
+    				driverNoPickedMe = reservation.isDriverNoPickedMe();
     			}
+
+    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
+    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
+    			if(report == null && reservation != null && reservation.getChargeId() != null && !reservation.getChargeId().isEmpty()){
+    				Stripe.apiKey = StripeConfig.SECRET_KEY;
+    				if(!driverNoPickedMe){
+    					//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
+    					try {
+	    					final Map<String, Object> payoutParams = new HashMap<String, Object>();
+	    					final Double reservPrice = reservation.getPrice() * 100;
+	    					payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+	    					payoutParams.put("currency", StripeConfig.CURRENCY);
+
+	    					Payout.create(payoutParams);
+    					}
+    					catch (StripeException e) {
+    						e.printStackTrace();
+    					}
+    				}else{
+    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
+    					try {
+	    					final Map<String, Object> params = new HashMap<>();
+	    					params.put("charge", reservation.getChargeId());
+	    					final Refund refund2 = Refund.create(params);
+    					}
+    					catch (StripeException e) {
+    						e.printStackTrace();
+    					}
+    				}
+
+        			reservation.setPaymentResolved(true);
+    				reservationService.saveCron(reservation);
+        		}
 			}
-//		}catch (StripeException e) {
-//			e.printStackTrace();
-//		}
+		}
 	}
 }

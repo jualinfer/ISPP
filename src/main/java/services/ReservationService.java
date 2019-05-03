@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -16,6 +18,12 @@ import org.springframework.validation.BindingResult;
 import repositories.ReservationRepository;
 import security.LoginService;
 import security.UserAccount;
+import utilities.StripeConfig;
+
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Refund;
+
 import domain.Actor;
 import domain.Alert;
 import domain.ControlPoint;
@@ -568,19 +576,30 @@ public class ReservationService {
 	}
 	
 	public void cronRejectedRequest(){
-		//Obtenemos todas las rutas finalizadas
-    	Collection<Route> completedRoutes = routeService.findFinalizedRoutes(new Date());
+		//Obtenemos todas las rutas iniciadas
+    	Collection<Route> startedRoutes = routeService.findStartedRoutes();
     	
-    	//Obtenemos todas las reservas para cada ruta finalizda. Si la ruta está en estado "PENDING" la actualizamos a "REJECTED"
-    	for(Route route: completedRoutes){
+    	//Obtenemos todas las reservas para cada ruta iniciada. Si la reserva está en estado "PENDING" la actualizamos a "REJECTED"
+    	for(Route route: startedRoutes){
     		int reservationUptades = 0;
-    		Collection<Reservation> reservations = new ArrayList<Reservation>();
-    		reservations.addAll(route.getReservations());
-    		for(Reservation reservation: reservations){
+//    		Collection<Reservation> reservations = new ArrayList<Reservation>();
+//    		reservations.addAll(route.getReservations());
+    		for(Reservation reservation: route.getReservations()){
     			if(reservation.getStatus().equals(ReservationStatus.PENDING)){
     				reservation.setStatus(ReservationStatus.REJECTED);
     				saveCron(reservation);
     				reservationUptades = reservationUptades + 1;
+    				if (reservation.getChargeId() != null && !reservation.getChargeId().isEmpty()) {
+    					try {
+	    					Stripe.apiKey = StripeConfig.SECRET_KEY;
+							final Map<String, Object> params = new HashMap<>();
+							params.put("charge", reservation.getChargeId());
+							final Refund refund = Refund.create(params);
+						}
+    					catch (StripeException e) {
+							e.printStackTrace();
+						}
+    				}
     			}
     		}
     		if(reservationUptades != 0){

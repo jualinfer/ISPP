@@ -26,7 +26,7 @@ public interface RouteRepository extends JpaRepository<Route, Integer> {
 	@Query("select distinct r from Route r join r.controlPoints cp where r.isCancelled = false and r.departureDate > CURRENT_TIMESTAMP and lower(cp.location) like %?1% and cp.arrivalOrder != 0 and r.availableSeats >= ?2")
 	Collection<Route> search(String destination, int availableSeats);
 	
-	@Query("select r from Route r where r.departureDate<?1 and r.isCancelled = FALSE")
-	Collection<Route> findFinalizedRoutes(Date now);
+	@Query("select r from Route r where r.departureDate < CURRENT_TIMESTAMP and r.isCancelled = false")
+	Collection<Route> findStartedRoutes();
 
 }
