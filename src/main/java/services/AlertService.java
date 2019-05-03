@@ -57,12 +57,13 @@ public class AlertService {
 	}
 
 	public Alert createAdmin() {
-		
+			final Actor receiver= this.actorService.findByPrincipal();
 			final Alert alert = new Alert();
 			final Actor sender = this.actorService.findByPrincipal();
 			alert.setSender(sender);
 			alert.setIsRead(false);
 			alert.setDate(new Date(System.currentTimeMillis() - 1));
+			alert.setReceiver(receiver);
 
 			alert.setTypeAlert(TypeAlert.SYSTEM_NEWS);
 			return alert;
