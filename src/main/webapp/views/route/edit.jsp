@@ -218,7 +218,7 @@
 					</div>
 					<form:input type="number" path="availableSeats"
 						class="form-control" aria-describedby="routeAvailableSeats"
-						min="1" max="10" />
+						min="1" max="8" />
 				</div>
 				<form:errors path="availableSeats" cssClass="error" />
 			</div>

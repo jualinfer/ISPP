@@ -90,7 +90,7 @@
 					<form:label path="seatsCapacity">
 						<spring:message code="vehicle.capacity" />
 					</form:label>
-					<form:input path="seatsCapacity" class="form-control" type="number" min="2" max="15"/>
+					<form:input path="seatsCapacity" class="form-control" type="number" min="2" max="8"/>
 					<form:errors cssClass="error" path="seatsCapacity" />
 				</div>
 	
