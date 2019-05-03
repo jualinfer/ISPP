@@ -18,6 +18,7 @@
 <spring:message code="comment.date" var="vehDate" />
 <spring:message code="comment.star" var="vehStar" />
 <spring:message code="alert.list" var="alert" />
+<spring:message code="passenger.confirm.delete" var="confirm" />
 
 
 <spring:message code="route.formatDate" var="formatDate" />
@@ -380,7 +381,7 @@
 		<br/>
 		<div class="text-center">
 			<jstl:if test="${(passenger.id == passengerConnected.id) eq true}">
-				<a class="btn btn-primary" href="passenger/unsubscribe.do"><spring:message code="passenger.unsubscribe"/></a>
+				<a class="btn btn-primary" href="passenger/unsubscribe.do" onclick="return confirm('${confirm}')"><spring:message code="passenger.unsubscribe"/></a>
 			</jstl:if>
 		</div>
 	</security:authorize>

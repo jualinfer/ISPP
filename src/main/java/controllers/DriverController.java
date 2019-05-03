@@ -254,7 +254,6 @@ public class DriverController extends AbstractController {
 			result = new ModelAndView("redirect:/driver/displayPrincipal.do");
 		return result;
 	}
-
 	// Ancilliary methods -----------------------------------------------------------
 	private ModelAndView createEditModelAndView(final Driver driver, final String model) {
 		ModelAndView result;
