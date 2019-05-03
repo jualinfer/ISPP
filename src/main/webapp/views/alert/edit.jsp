@@ -20,18 +20,17 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<spring:url value="/styles/profileManagement.css"
-	var="profileManagementcss" />
-<link href="${profileManagementcss}" rel="stylesheet" />
-<script src="${profileManagementcss}"></script>
+<div class="text-center active-routes">
 
-
-
-<div class="title-principal">
 	<h3>
-		<spring:message code="alert.title.create" />
+		<spring:message code="alerts.edit" />
 	</h3>
+
 </div>
+<spring:url value="/styles/messages.css" var="messages" />
+<link href="${messages}" rel="stylesheet" />
+<script src="${messages}"></script>
+
 
 
 
@@ -41,35 +40,30 @@
 	<form:hidden path="receiver" />
 	<form:hidden path="typeAlert" />
 	<form:hidden path="isRead" />
+	<center>
+		<div class="content-principal">
 
-	<div class="content-principal">
 
 
-		<div
-			class="profile-management d-flex flex-column justify-content-center">
-			<div
-				class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p>
-						<form:label path="alertBody">
-							<spring:message code="alert.alertBody" />: 
+
+			<form:label path="alertBody">
+				<spring:message code="alert.alertBody" />: 
 				</form:label>
-					</p></span>
-				<div>
-					<form:input path="alertBody" />
-					<form:errors cssClass="error" path="alertBody" />
-				</div>
+			<div style="padding-left: 25px">
+				<form:input path="alertBody" class="form-control" />
+				<form:errors cssClass="error" path="alertBody" />
 			</div>
 		</div>
-		
-		<div class="form-group col-md-6 text-center">
-				<input type="submit" name="save" class="btn btn-success"
-					value="<spring:message code="alert.save" />" />
 
-				<spring:message code="alert.cancel" var="cancel" />
-				<a href="thread/report/list.do" class="btn btn-danger"><jstl:out
-						value="${cancel}" /></a>
-			</div>
-		
-	</div>
+
+		<div class="form-group col-md-6 text-center" style="padding:10px">
+			<input type="submit" name="save" class="btn btn-success"
+				value="<spring:message code="alert.save" />" />
+
+			<spring:message code="alert.cancel" var="cancel" />
+			<a href="thread/report/list.do" class="btn btn-danger"><jstl:out
+					value="${cancel}" /></a>
+		</div>
+	</center>
 
 </form:form>

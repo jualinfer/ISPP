@@ -23,7 +23,7 @@
 	</definition>
 	
 	<definition name="alert/edit" extends="master.page">	
-		<put-attribute name="title" value="Creacion alertas" />
+		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="/views/alert/edit.jsp" />
 	</definition>
 
