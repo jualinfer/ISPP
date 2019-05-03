@@ -26,6 +26,9 @@
 <spring:url value="/styles/route.css" var="routecss" />
 	<link href="${routecss}" rel="stylesheet" />
 	<script src="${routecss}"></script>
+<div class="text-center active-routes">
+	<h3><spring:message code="activeRoutes" /></h3>
+</div>
 
 <div class="content-principal">
 	<%-- <div class="text-center active-routes">

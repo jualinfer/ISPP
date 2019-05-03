@@ -1,12 +1,3 @@
-<%--
- * layout.jsp
- *
- * Copyright (C) 2019 Universidad de Sevilla
- * 
- * The use of this project is hereby constrained to the conditions of the 
- * TDG Licence, a copy of which you may download from 
- * http://www.tdg-seville.info/License.html
- --%>
 
 <%@page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
@@ -31,62 +22,31 @@
 	integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css"
 	href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
-<link rel="shortcut icon" href="/favicon.ico"/> 
+<link rel="shortcut icon" href="/favicon.ico"/>
 
 <link rel="stylesheet" href="styles/common.css" type="text/css">
 <link rel="stylesheet" href="styles/jmenu.css" media="screen" type="text/css" />
 <link rel="stylesheet" href="styles/displaytag.css" type="text/css">
+
+
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/jquery-ui.js"></script>
+<script type="text/javascript" src="scripts/jmenu.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
+	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <script
 	src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-<script type="text/javascript" src="scripts/jquery.js"></script>
-<script type="text/javascript" src="scripts/jquery-ui.js"></script>
-<script type="text/javascript" src="scripts/jmenu.js"></script>
-
 
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#jMenu").jMenu();
-	});
-
-	function askSubmission(msg, form) {
-		if (confirm(msg))
-			form.submit();
-	}
-	
-	function relativeRedir(loc) {	
-		var b = document.getElementsByTagName('base');
-		if (b && b[0] && b[0].href) {
-  			if (b[0].href.substr(b[0].href.length - 1) == '/' && loc.charAt(0) == '/')
-    		loc = loc.substr(1);
-  			loc = b[0].href + loc;
-		}
-		window.location.replace(loc);
-	}
-	
-	window.addEventListener("load", function() {
-		window.cookieconsent.initialise({
-			"palette" : {
-				"popup" : {
-					"background" : "#b143dd"
-				},
-				"button" : {
-					"background" : "#ffa513"
-				}
-			},
-			"theme" : "edgeless",
-			"position" : "bottom-right",
-			"content" : {
-				"href" : "welcome/termsAndConditions.do"
-			}
-		})
-	});
-</script>
 
 </head>
 
@@ -108,13 +68,6 @@
 	<div>
 		<tiles:insertAttribute name="footer" />
 	</div>
-	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
-		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
-		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
-		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 </body>
 </html>

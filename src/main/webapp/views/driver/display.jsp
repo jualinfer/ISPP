@@ -34,6 +34,12 @@
 <spring:url value="/styles/profile.css" var="profilecss" />
 <link href="${profilecss}" rel="stylesheet" />
 <script src="${profilecss}"></script>
+<spring:url value="/styles/route.css" var="routecss" />
+<link href="${routecss}" rel="stylesheet" />
+<script src="${routecss}"></script>
+<div class="text-center active-routes">
+	<h3><spring:message code="driver.nav.profile" /></h3>
+</div>
 
 <div
 	class="resume d-flex flex-column justify-content-center align-items-center">
