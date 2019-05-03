@@ -55,6 +55,8 @@ public class DriverService {
 		Integer numberOfTrips;
 		Double averageStars, cash;
 		Boolean pets, smoke, music, children;
+		Integer newAlerts;
+		Integer newMessages;
 
 		Collection<Vehicle> vehicles;
 		Collection<Route> routes;
@@ -91,6 +93,8 @@ public class DriverService {
 		music = false;
 		children = false;
 		bankAccountNumber = "";
+		newAlerts = 0;
+		newMessages = 0;
 
 		result = new Driver();
 		result.setUserAccount(userAccount);
@@ -107,6 +111,8 @@ public class DriverService {
 		result.setMusic(music);
 		result.setChilds(children);
 		result.setBankAccountNumber(bankAccountNumber);
+		result.setNewAlerts(newAlerts);
+		result.setNewMessages(newMessages);
 
 		result.setVehicles(vehicles);
 		result.setRoutes(routes);
@@ -140,9 +146,9 @@ public class DriverService {
 
 		return result;
 	}
-	
-	public Driver saveUpdateNotifications(Driver driver) {
-		return (Driver) actorService.save(driver);
+
+	public Driver saveUpdateNotifications(final Driver driver) {
+		return (Driver) this.actorService.save(driver);
 	}
 
 	public void delete(final Driver driver) {

@@ -72,6 +72,7 @@ public class ReservationService {
 		result.setStatus(ReservationStatus.PENDING);
 		result.setLuggageSize(LuggageSize.NOTHING);
 		result.setSeat(1);
+		result.setPaymentResolved(false);
 
 		return result;
 	}
@@ -188,6 +189,11 @@ public class ReservationService {
 
 		return result;
 	}
+	
+	public void saveCron(final Reservation r) {
+		Assert.notNull(r);
+		this.reservationRepository.save(r);
+	}
 
 	// Esta función solo se debe llamar desde RouteService.cancel(route), ya que las
 	// comprobaciones se hacen en el cancel y las condiciones del autoReject no son
@@ -198,8 +204,10 @@ public class ReservationService {
 		final Collection<Reservation> reservations = this.findReservationsByRouteAndStatusPendingOrAccepted(route.getId());
 
 		if (!reservations.isEmpty()) {
-			for (final Reservation r : reservations)
+			for (final Reservation r : reservations) {
 				r.setStatus(ReservationStatus.REJECTED);
+				r.setPaymentResolved(true);
+			}
 
 			this.reservationRepository.save(reservations);
 			this.reservationRepository.flush();
@@ -281,6 +289,17 @@ public class ReservationService {
 		Collection<Reservation> result;
 
 		result = this.reservationRepository.findReservationsByRouteAndPassenger(routeId, passengerId);
+
+		return result;
+	}
+	
+	public Collection<Reservation> findReservationsByRoutePassengerAndNotPaymentResolved(final int routeId, final int passengerId) {
+		Assert.isTrue(routeId != 0);
+		Assert.isTrue(passengerId != 0);
+
+		Collection<Reservation> result;
+
+		result = this.reservationRepository.findReservationsByRoutePassengerAndNotPaymentResolved(routeId, passengerId);
 
 		return result;
 	}
@@ -403,6 +422,7 @@ public class ReservationService {
 		Assert.isTrue(route.getDepartureDate().after(new Date()));
 
 		reservation.setStatus(ReservationStatus.REJECTED);
+		reservation.setPaymentResolved(true);
 
 		//We create an alert
 		final Alert alert = this.alertService.create();
@@ -422,6 +442,7 @@ public class ReservationService {
 		Assert.isTrue(route.getDepartureDate().after(new Date()));
 
 		reservation.setStatus(ReservationStatus.CANCELLED);
+		reservation.setPaymentResolved(true);
 
 		//We create an alert
 		final Alert alert = this.alertService.create();
@@ -541,8 +562,32 @@ public class ReservationService {
 			result.setStatus(ReservationStatus.PENDING);
 			result.setDriverPickedMe(false);
 			result.setDriverNoPickedMe(false);
+			result.setPaymentResolved(false);
 		}
 		return result;
 	}
+	
+	public void cronRejectedRequest(){
+		//Obtenemos todas las rutas finalizadas
+    	Collection<Route> completedRoutes = routeService.findFinalizedRoutes(new Date());
+    	
+    	//Obtenemos todas las reservas para cada ruta finalizda. Si la ruta está en estado "PENDING" la actualizamos a "REJECTED"
+    	for(Route route: completedRoutes){
+    		int reservationUptades = 0;
+    		Collection<Reservation> reservations = new ArrayList<Reservation>();
+    		reservations.addAll(route.getReservations());
+    		for(Reservation reservation: reservations){
+    			if(reservation.getStatus().equals(ReservationStatus.PENDING)){
+    				reservation.setStatus(ReservationStatus.REJECTED);
+    				saveCron(reservation);
+    				reservationUptades = reservationUptades + 1;
+    			}
+    		}
+    		if(reservationUptades != 0){
+    			System.out.println("Se han actualizado " + reservationUptades + " reservas para la ruta con origen: " + route.getOrigin() + 
+        				"y con destino: " + route.getDestination());
+    		}
+    	}
+    }
 
 }

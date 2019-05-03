@@ -62,6 +62,9 @@ public class MessagesThreadService {
 
 	@Autowired
 	private RouteService				routeService;
+	
+	@Autowired
+	private ReservationService			reservationService;
 
 
 	/*
@@ -156,48 +159,52 @@ public class MessagesThreadService {
 	}
 
 	// REPORTS ----------------------------------------------------------------------------------
+	
+	public Collection<MessagesThread> findReportsThreadFromParticipant(int participantId) {
+		return mtRepository.findReportsThreadFromParticipant(participantId);
+	}
 
 	public MessagesThread findReportsThreadFromParticipantsAndRoute(final int routeId, final int reportingUserId, final int reportedUserId) {
 		return this.mtRepository.findReportsThreadFromParticipantsAndRoute(routeId, reportingUserId, reportedUserId);
 	}
-
-	public Collection<MessagesThread> findReportsThreadFromParticipant(final int participantId) {
-		return this.mtRepository.findReportsThreadFromParticipant(participantId);
+	
+	public Collection<MessagesThread> findReportsThreadFromRoute(int routeId) {
+		Collection<MessagesThread> res = new ArrayList<MessagesThread>();
+		res.addAll(mtRepository.findReportsThreadFromRoute(routeId));
+		return res;
 	}
-
-	/*
-	 * public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
-	 * boolean result = false;
-	 * if (reportingUser.getId() != reportedUser.getId()) {
-	 * MessagesThread reportThread = mtRepository.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
-	 * if (reportThread == null) {
-	 * Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
-	 * if (finishDate.before(new Date())) {
-	 * if (reportingUser.getId() == route.getDriver().getId()) {
-	 * for (Reservation reservation : route.getReservations()) {
-	 * if (reservation.getPassenger().getId() == reportedUser.getId()) {
-	 * result = true;
-	 * break;
-	 * }
-	 * }
-	 * }
-	 * else if (reportedUser.getId() == route.getDriver().getId()) {
-	 * for (Reservation reservation : route.getReservations()) {
-	 * if (reservation.getPassenger().getId() == reportingUser.getId()) {
-	 * result = true;
-	 * break;
-	 * }
-	 * }
-	 * }
-	 * }
-	 * }
-	 * }
-	 * else {
-	 * result = true;
-	 * }
-	 * return result;
-	 * }
-	 */
+	
+	/*public boolean validReportData(Actor reportingUser, Actor reportedUser, Route route) {
+	boolean result = false;
+	if (reportingUser.getId() != reportedUser.getId()) {
+		MessagesThread reportThread = mtRepository.findReportsThreadFromParticipantsAndRoute(route.getId(), reportingUser.getId(), reportedUser.getId());
+		if (reportThread == null) {
+			Date finishDate = new Date(route.getDepartureDate().getTime() + route.getEstimatedDuration() * 60000);
+			if (finishDate.before(new Date())) {
+				if (reportingUser.getId() == route.getDriver().getId()) {
+					for (Reservation reservation : route.getReservations()) {
+						if (reservation.getPassenger().getId() == reportedUser.getId()) {
+							result = true;
+							break;
+						}
+					}
+				}
+				else if (reportedUser.getId() == route.getDriver().getId()) {
+					for (Reservation reservation : route.getReservations()) {
+						if (reservation.getPassenger().getId() == reportingUser.getId()) {
+							result = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	else {
+		result = true;
+	}
+	return result;
+}*/
 
 	public boolean canReport(final Actor user, final Route route) {
 		boolean result = false;
@@ -259,6 +266,8 @@ public class MessagesThreadService {
 					final Map<String, Object> params = new HashMap<>();
 					params.put("charge", currentReservation.getChargeId());
 					final Refund refund2 = Refund.create(params);
+					currentReservation.setPaymentResolved(true);
+					currentReservation = reservationService.save2(currentReservation);
 				} catch (final StripeException e) {
 					e.printStackTrace();
 				}
@@ -284,6 +293,8 @@ public class MessagesThreadService {
 				payoutParams.put("currency", StripeConfig.CURRENCY);
 				//			payoutParams.put("destination", bankAccount.getId());
 				Payout.create(payoutParams);
+				currentReservation.setPaymentResolved(true);
+				currentReservation = reservationService.save2(currentReservation);
 			} catch (final StripeException e) {
 				e.printStackTrace();
 			}

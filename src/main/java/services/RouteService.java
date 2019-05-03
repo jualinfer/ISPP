@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.decimal4j.util.DoubleRounder;
 import org.json.JSONArray;
@@ -23,11 +25,19 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 
 import repositories.RouteRepository;
+import utilities.StripeConfig;
+
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Payout;
+import com.stripe.model.Refund;
+
 import domain.Alert;
 import domain.ControlPoint;
 import domain.Driver;
 import domain.Finder;
 import domain.LuggageSize;
+import domain.MessagesThread;
 import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
@@ -56,13 +66,21 @@ public class RouteService {
 
 	@Autowired
 	private ReservationService	reservationService;
+	
 	@Autowired
 	private DriverService		driverService;
 
 	@Autowired
 	private AlertService		alertService;
-
-
+	
+	@Autowired
+	private MessagesThreadService		messagesThreadService;
+	
+	@Autowired
+	private PassengerService		passengerService;
+	
+	private StripeConfig		stripeConfig;
+	
 	//Simple CRUD methods
 
 	public Route create() {
@@ -553,6 +571,16 @@ public class RouteService {
 
 		return result;
 	}
+	
+	public Collection<Route> findFinalizedRoutes(final Date now) {
+		Assert.notNull(now);
+
+		Collection<Route> result;
+
+		result = this.routeRepository.findFinalizedRoutes(now);
+
+		return result;
+	}
 
 	// Construct
 
@@ -658,5 +686,77 @@ public class RouteService {
 
 		return result;
 	}
-
+	
+	public void cronCompleteRoutes(){
+//		try {
+			Date now = new Date();
+			Reservation reservation = null;
+	    	Long millisPerDay =  24 * 60 * 60 * 1000L;
+	    	Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
+	    	
+	    	//Obtenemos las rutas completadas 
+	    	Collection<Route> completedRoutes = findFinalizedRoutes(new Date());
+	    	
+	    	//De las rutas completadas sacamos las que ya hayan pasado 24h 
+	    	for(Route route: completedRoutes){
+	    		Calendar departureDate = Calendar.getInstance();
+	    		departureDate.setTime(route.getDepartureDate());
+	    		Integer estimatedDuration = route.getEstimatedDuration();
+	    		
+	    		departureDate.add(Calendar.MINUTE, estimatedDuration);
+	    		Date completedDate = departureDate.getTime();
+	    		
+	    		boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
+	    		if(moreThanDay){
+	    			completedAfterDayRoutes.add(route);
+	    		}
+	    	}
+	    	
+	    	for(Route route: completedAfterDayRoutes){
+	    		Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
+	    		
+	    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
+	    		
+	    		//Comprobamos si los passengers han abierto algún report al driver y obtenemos las reservas que no se han pagado todavía
+	    		for(Passenger passenger: passengersByRoute){
+	    			boolean driverNoPickedMe = false;
+	    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
+	    			MessagesThread report = messagesThreadService.findReportsThreadFromParticipantsAndRoute(
+	    					route.getId(), passenger.getId(), route.getDriver().getId());
+	    			
+	    			reservationOfPassenger.addAll(reservationService.findReservationsByRoutePassengerAndNotPaymentResolved(
+	    					route.getId(), passenger.getId()));
+	    			
+	    			if(!reservationOfPassenger.isEmpty()){
+	    				reservation = reservationOfPassenger.get(0);
+	    				driverNoPickedMe = reservation.isDriverNoPickedMe();
+	    			}
+	
+	    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
+	    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
+	    			if(report == null && reservation != null){
+//	    				Stripe.apiKey = StripeConfig.SECRET_KEY;
+//	    				if(!driverNoPickedMe){
+//	    					//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
+//	    					final Map<String, Object> payoutParams = new HashMap<String, Object>();
+//	    					final Double reservPrice = reservation.getPrice() * 100;
+//	    					payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+//	    					payoutParams.put("currency", StripeConfig.CURRENCY);
+//
+//	    					Payout.create(payoutParams);
+//	    				}else{
+//	    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
+//	    					final Map<String, Object> params = new HashMap<>();
+//	    					params.put("charge", reservation.getChargeId());
+//	    					final Refund refund2 = Refund.create(params);
+//	    				}
+//	    				reservation.setPaymentResolved(true);
+//	    				reservationService.saveCron(reservation);
+	        		}
+    			}
+			}
+//		}catch (StripeException e) {
+//			e.printStackTrace();
+//		}
+	}
 }

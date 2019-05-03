@@ -67,6 +67,8 @@ public class PassengerService {
 		String name, surname, country, city, phone, bankAccountNumber;
 		Integer numberOfTrips;
 		Double averageStars, cash;
+		Integer newAlerts;
+		Integer newMessages;
 
 		name = "";
 		surname = "";
@@ -77,6 +79,8 @@ public class PassengerService {
 		averageStars = 0.0;
 		cash = 0.0;
 		bankAccountNumber = "";
+		newAlerts = 0;
+		newMessages = 0;
 
 		result = new Passenger();
 
@@ -89,6 +93,8 @@ public class PassengerService {
 		result.setNumberOfTrips(numberOfTrips);
 		result.setCash(cash);
 		result.setBankAccountNumber(bankAccountNumber);
+		result.setNewAlerts(newAlerts);
+		result.setNewMessages(newMessages);
 
 		result.setUserAccount(ua);
 		result.setComments(comments);
@@ -121,9 +127,9 @@ public class PassengerService {
 
 		return result;
 	}
-	
-	public Passenger saveUpdateNotifications(Passenger passenger) {
-		return (Passenger) actorService.save(passenger);
+
+	public Passenger saveUpdateNotifications(final Passenger passenger) {
+		return (Passenger) this.actorService.save(passenger);
 	}
 
 	public Collection<Passenger> findPassengersAcceptedByRoute(final int routeId) {

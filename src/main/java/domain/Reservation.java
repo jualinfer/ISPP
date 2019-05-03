@@ -25,6 +25,7 @@ public class Reservation extends DomainEntity {
 	private ReservationStatus	status;
 	private boolean				driverPickedMe;
 	private boolean				driverNoPickedMe;
+	private Boolean				paymentResolved;
 	private String				chargeId;
 
 	//Relationships
@@ -90,6 +91,11 @@ public class Reservation extends DomainEntity {
 	public boolean isDriverNoPickedMe() {
 		return this.driverNoPickedMe;
 	}
+	
+	@NotNull
+	public Boolean isPaymentResolved() {
+		return paymentResolved;
+	}
 
 	public String getChargeId() {
 		return this.chargeId;
@@ -135,6 +141,10 @@ public class Reservation extends DomainEntity {
 
 	public void setDriverNoPickedMe(final boolean driverNoPickedMe) {
 		this.driverNoPickedMe = driverNoPickedMe;
+	}
+	
+	public void setPaymentResolved(final Boolean paymentResolved) {
+		this.paymentResolved = paymentResolved;
 	}
 
 	public void setChargeId(final String chargeId) {
