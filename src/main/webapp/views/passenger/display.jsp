@@ -328,12 +328,12 @@
 		<div class="card-body d-flex flex-column">
 	
 			<div
-				class="reservations d-flex flex-row align-items-baseline justify-content-center m-2">
-				<div class="comments">
+				class="routes d-flex flex-row align-items-baseline justify-content-center m-2">
+				<div class="routes">
 	
 					<jstl:forEach var="reservation" items="${passenger.reservations}">
 						<div class="title listReservation"></div>
-						<div class="comment d-flex flex-column align-items-center">
+						<div class="route d-flex flex-column align-items-center">
 	
 							<a
 								class="stretched-link d-flex align-items-center justify-content-space-between flex-wrap"
@@ -350,12 +350,12 @@
 								<fmt:formatDate value="${reservation.route.departureDate}"
 									pattern="${formatDate}" />
 							</div>
-	<spring:url var="alertUrl"
+	<%-- <spring:url var="alertUrl"
 			value="alert/list.do">
 			<spring:param name="actorId"
 				value="${passenger.id}"/>
 		</spring:url>
-		<a href="${alertUrl}"><jstl:out value="${alert}" /></a>
+		<a href="${alertUrl}"><jstl:out value="${alert}" /></a> --%>
 						</div>
 					</jstl:forEach>
 	

@@ -364,12 +364,12 @@
 								<fmt:formatDate value="${route.departureDate}"
 									pattern="${formatDate}" />
 							</div>
-	<spring:url var="alertUrl"
+	<%-- <spring:url var="alertUrl"
 			value="alert/list.do">
 			<spring:param name="actorId"
 				value="${driver.id}"/>
 		</spring:url>
-		<a href="${alertUrl}"><jstl:out value="${alert}" /></a>
+		<a href="${alertUrl}"><jstl:out value="${alert}" /></a> --%>
 						</div>
 					</jstl:forEach>
 	

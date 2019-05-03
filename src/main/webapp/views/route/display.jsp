@@ -9,7 +9,7 @@
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
-<!-- Nueva libreria fn para obtener la funcion length() para poder obtener el tama�o de una coleccion -->
+<!-- Nueva libreria fn para obtener la funcion length() para poder obtener el tamaï¿½o de una coleccion -->
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <spring:message code="route.formatDate" var="formatDate" />
@@ -310,7 +310,7 @@
 						<p>
 							${priceMsg}: &nbsp <span class="badge badge-pill badge-success"
 								style="font-size: 25px"> <jstl:out
-									value="${route.pricePerPassenger}"></jstl:out>
+									value="${route.pricePerPassenger}"></jstl:out>&euro;
 							</span>
 						</p>
 					</div>
@@ -462,9 +462,9 @@
 										<jstl:out value="${rra}" />
 									</dd>
 
-									<!-- (COMO PASAJERO)PARA RESERVA ACEPTADA POR EL CONDUCTOR, BOTONES DE "�ME HA RECOGIDO EL CONDUCTOR O NO?" -->
+									<!-- (COMO PASAJERO)PARA RESERVA ACEPTADA POR EL CONDUCTOR, BOTONES DE "ï¿½ME HA RECOGIDO EL CONDUCTOR O NO?" -->
 
-									<!-- SI LA RUTA EST� EMPEZADA...  -->
+									<!-- SI LA RUTA ESTï¿½ EMPEZADA...  -->
 									<jstl:if test="${startedRoute == true }">
 										<spring:message code="route.driver.pick.up" var="pickup" />
 										<!--...Y SI EL SISTEMA AUN NO SABE SI LO HA RECOGIDO, SE MUESTRA EL BOTON DE "ME HA RECOGIDO"...-->
@@ -859,9 +859,9 @@
 					<jstl:out value="${rra}" />
 				</dd>
 
-				<!-- (COMO PASAJERO)PARA RESERVA ACEPTADA POR EL CONDUCTOR, BOTONES DE "�ME HA RECOGIDO EL CONDUCTOR O NO?" -->
+				<!-- (COMO PASAJERO)PARA RESERVA ACEPTADA POR EL CONDUCTOR, BOTONES DE "ï¿½ME HA RECOGIDO EL CONDUCTOR O NO?" -->
 				
-					<!-- SI LA RUTA EST� EMPEZADA...  -->
+					<!-- SI LA RUTA ESTï¿½ EMPEZADA...  -->
 				<jstl:if test="${startedRoute == true }">
 					<spring:message code="route.driver.pick.up" var="pickup" />
 						<!--...Y SI EL SISTEMA AUN NO SABE SI LO HA RECOGIDO, SE MUESTRA EL BOTON DE "ME HA RECOGIDO"...-->
