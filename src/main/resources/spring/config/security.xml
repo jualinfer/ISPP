@@ -102,6 +102,9 @@
 		<security:intercept-url pattern="/thread/report/close.do" access="hasRole('ADMIN')" />
 		
 		<security:intercept-url pattern="/alert/list.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/alert/edit.do" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/alert/alertSeen.do" access="isAuthenticated() and !principal.banned" />
+			<security:intercept-url pattern="/alert/delete.do" access="isAuthenticated() and !principal.banned" />
 		
 		<security:intercept-url pattern="/comment/create.do" access="(hasRole('PASSENGER') || hasRole('DRIVER')) and !principal.banned" />
 		

@@ -101,7 +101,7 @@ public class AlertController extends AbstractController {
 
 					this.alertService.save(alert);
 				}
-				result = new ModelAndView("redirect:/alert/driver/list.do");
+				result = new ModelAndView("redirect:/alert/list.do");
 			} catch (final Throwable oops) {
 				oops.printStackTrace();
 				result = this.createEditModelAndView(alert, "alert.commit.error");
@@ -142,7 +142,7 @@ public class AlertController extends AbstractController {
 	private ModelAndView createEditModelAndView(final Alert alert, final String message) {
 		ModelAndView result;
 
-		result = new ModelAndView("alert/administrator/edit");
+		result = new ModelAndView("alert/edit");
 		result.addObject("alert", alert);
 		result.addObject("message", message);
 

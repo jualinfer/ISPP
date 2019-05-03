@@ -56,10 +56,20 @@
 					</p></span>
 				<div>
 					<form:input path="alertBody" />
-					<form:errors cssClass="error" path="image" />
+					<form:errors cssClass="error" path="alertBody" />
 				</div>
 			</div>
 		</div>
+		
+		<div class="form-group col-md-6 text-center">
+				<input type="submit" name="save" class="btn btn-success"
+					value="<spring:message code="alert.save" />" />
+
+				<spring:message code="alert.cancel" var="cancel" />
+				<a href="welcome/index.do" class="btn btn-danger"><jstl:out
+						value="${cancel}" /></a>
+			</div>
+		
 	</div>
 
 </form:form>

@@ -34,8 +34,7 @@ public class Alert extends DomainEntity {
 	//Getters
 
 	@Valid
-	@NotNull
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = true)
 	public Route getRelatedRoute() {
 		return this.relatedRoute;
 	}
