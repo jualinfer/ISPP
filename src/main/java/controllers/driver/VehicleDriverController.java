@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,7 +48,7 @@ public class VehicleDriverController extends AbstractController {
 		final Collection<Vehicle> vehicles;
 		Driver principal;
 
-		principal = (Driver)this.actorService.findByPrincipal();
+		principal = (Driver) this.actorService.findByPrincipal();
 		vehicles = this.vehicleService.findVehiclesByDriver(principal.getId());
 
 		result = new ModelAndView("vehicle/driver/list");
@@ -61,7 +60,7 @@ public class VehicleDriverController extends AbstractController {
 		return result;
 
 	}
-	
+
 	// Create -------------------------------------
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -108,9 +107,6 @@ public class VehicleDriverController extends AbstractController {
 		Driver driver;
 		Vehicle saved;
 
-		for (final ObjectError asd : binding.getAllErrors())
-			System.out.println(asd);
-
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(vehicle);
 		else
@@ -120,7 +116,10 @@ public class VehicleDriverController extends AbstractController {
 				result = new ModelAndView("redirect:/vehicle/driver/list.do");
 			} catch (final Throwable oops) {
 				oops.printStackTrace();
-				result = this.createEditModelAndView(vehicle, "vehicle.commit.error");
+				if (oops.getMessage().equals("seats mal"))
+					result = this.createEditModelAndView(vehicle, "vehicle.seats.error");
+				else
+					result = this.createEditModelAndView(vehicle, "vehicle.commit.error");
 			}
 
 		return result;
