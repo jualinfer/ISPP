@@ -30,6 +30,18 @@
 	var="profileManagementcss" />
 <link href="${profileManagementcss}" rel="stylesheet" />
 <script src="${profileManagementcss}"></script>
+<style>
+.card-img-top --img-overlay {
+	position: relative;
+	max-width: 100px;
+	//
+	whatever
+	your
+	max-width
+	should
+	be
+}
+</style>
 
 
 
@@ -73,64 +85,58 @@
 	<div class="text-center active-routes">
 		<!-- <h3>Vehicle list</h3> -->
 	</div>
-	<center>
-		<div class="card text-center" style="width: 65rem;">
-			<ul class="list-group list-group-flush">
-				<jstl:forEach var="vehicle" items="${vehicles}">
-					<li class="list-group-item">
-					<center>
-					<img src="${vehicle.image}"
-						width="300" height="250" class="card border-primary mb-3">
-						</center>
-						<div class="caption" style="padding-top: 10px">
-							<span class="badge badge-pill badge-primary">
-								<h3>${vehicle.vehicleBrand} ${vehicle.model}</h3>
-							</span>
-							<div class="media-body pl-3">
-								<div class="plate" style="padding-top: 10px">
-									<span class="badge badge-pill badge-secondary">${vehicle.plate}</span>
-								</div>
-
-								<div class="capacity">
-									${vehicle.seatsCapacity} <span><spring:message
-											code="seats.availability" /></span>
-								</div>
-								<div class="description">${vehicle.description}</div>
-							</div>
-							<spring:message code="vehicle.edit" var="editVehicle" />
-							<jstl:if test="${principal.id eq driverId }">
-								<div class="font-weight-bold">
-									<dd>
-										<%-- <a class="text-danger"
-													href="vehicle/driver/edit.do?vehicleId=${vehicle.id}"><jstl:out
-														value="${editVehicle}" /></a> --%>
-									</dd>
-
-								</div>
-							</jstl:if>
-							<p>
-								<a href="vehicle/driver/edit.do?vehicleId=${vehicle.id}"
-									class="btn btn-success" role="button">Editar</a>
-
-							</p>
-						</div></li>
-				</jstl:forEach>
-			</ul>
-			<div class="card-footer text-muted">
-				<security:authorize access="hasRole('DRIVER')">
-
+	<div class="form-group col-xs-12 col-sm-10 col-md-8  mx-auto">
+		<jstl:forEach var="vehicle" items="${vehicles}">
+			<div class="card">
+				<img class="card-img-top " src="${vehicle.image}"
+					alt="Card image cap">
+				<div class="card-img-overlay">
+					<span class="badge badge-pill badge-primary">
+						${vehicle.vehicleBrand}${vehicle.model} </span>
+					<div class="plate" style="padding-top: 10px">
+						<span class="badge badge-pill badge-secondary">${vehicle.plate}</span>
+					</div>
+					<spring:message code="vehicle.edit" var="editVehicle" />
 					<jstl:if test="${principal.id eq driverId }">
-						<spring:message code="vehicle.new" var="vehNew" />
-
-						<a href="vehicle/driver/create.do"
-							class="btn btn-success btn-square btn-xl"><i
-							class="fas fa-plus fa-2x"></i></a>
-						<a href="vehicle/driver/create.do"><jstl:out value="${vehNew}" /></a>
+						<div class="edit" style="padding-top: 10px">
+							<a href="vehicle/driver/edit.do?vehicleId=${vehicle.id}"
+								class="btn btn-success" role="button">${editVehicle}</a>
+						</div>
 					</jstl:if>
 
 
-				</security:authorize>
+
+				</div>
+
+
+				<div class="card-footer text-center">
+					<div class="capacity">
+						<span class="fa-stack"> <span
+							class="fa fas fa-user fa-4x fa-stack-2x"></span> <strong
+							class="fa-stack-1x fa-stack-text fa-inverse">
+								${vehicle.seatsCapacity}</strong>
+						</span>
+					</div>
+				</div>
 			</div>
+		</jstl:forEach>
+		<div class="form-group col-xs-12 col-sm-10 col-md-8  mx-auto">
+		<security:authorize access="hasRole('DRIVER')">
+			<div id=new style="padding-top:10px">
+			<jstl:if test="${principal.id eq driverId }">
+				<spring:message code="vehicle.new" var="vehNew" />
+
+				<a href="vehicle/driver/create.do"
+					class="btn btn-success btn-square btn-xl"><i
+					class="fas fa-plus fa-2x"></i></a>
+				<a href="vehicle/driver/create.do"><jstl:out value="${vehNew}" /></a>
+			</jstl:if>
+			</div>
+
+
+
+		</security:authorize>
 		</div>
-	</center>
+	</div>
 </div>
+
