@@ -22,253 +22,265 @@
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
 <div class="text-center active-routes">
-	<h3><spring:message code="createRoute" /></h3>
+	<h3>
+		<spring:message code="createRoute" />
+	</h3>
 </div>
-
 
 <spring:message code="route.cancel" var="cancel" />
 <security:authorize access="hasRole('DRIVER')">
 	<center>
 		<jstl:if test="${!noVehicles}">
-		<form:form action="${requestURI}" modelAttribute="route">
-			<form:hidden path="id" />
-			<form:hidden path="pricePerPassenger" />
-			<form:hidden path="distance" />
+			<form:form action="${requestURI}" modelAttribute="route">
+				<form:hidden path="id" />
+				<form:hidden path="pricePerPassenger" />
+				<form:hidden path="distance" />
 
-			<div class="col-sm-6 text-center" style="padding-top: 20px;">
-				<div class="form-group">
-					<spring:message code="route.departureDate" var="routeDepartureDate" />
-					<div class="input-group date" id="datetimepicker"
-						data-target-input="nearest">
-						<form:input type="text" path="departureDate"
-							class="form-control datetimepicker-input"
-							data-target="#datetimepicker1"
-							placeholder="${routeDepartureDate}" />
-						<div class="input-group-append" data-target="#datetimepicker"
-							data-toggle="datetimepicker">
-							<div class="input-group-text">
-								<i class="fa fa-calendar"></i>
+
+
+				<div class="col-xs-12 col-sm-10 col-md-8 text-center"
+					style="padding-top: 20px;">
+					<div class="form-group">
+						<spring:message code="route.departureDate"
+							var="routeDepartureDate" />
+						<div class="input-group date" id="datetimepicker"
+							data-target-input="nearest">
+							<form:input type="text" path="departureDate"
+								class="form-control datetimepicker-input"
+								data-target="#datetimepicker1"
+								placeholder="${routeDepartureDate}" />
+							<div class="input-group-append" data-target="#datetimepicker"
+								data-toggle="datetimepicker">
+								<div class="input-group-text">
+									<i class="fa fa-calendar"></i>
+								</div>
 							</div>
 						</div>
+						<form:errors path="departureDate" cssClass="error" />
 					</div>
-					<form:errors path="departureDate" cssClass="error" />
 				</div>
-			</div>
-			<script type="text/javascript">
-				$(function() {
-					$('#datetimepicker').datetimepicker({
-						format : 'DD/MM/YYYY HH:mm',
-						minDate : new Date()
+				<script type="text/javascript">
+					$(function() {
+						$('#datetimepicker').datetimepicker({
+							format : 'DD/MM/YYYY HH:mm',
+							minDate : new Date()
+						});
 					});
-				});
-			</script>
+				</script>
 
-
-			<div class="form-group col-md-6">
-				<div class="form-row align-items-center">
-					<div class="col-auto">
-						<button name="icon1" disabled
-							style="border: 0; background: transparent;">
-							<img src="images/marcador.png" width="35px" height="40px" />
-						</button>
-					</div>
-					<div class="col-10">
-						<spring:message code="route.origin" var="routeOrigin" />
-						<form:input type="text" path="origin.location"
-							class="form-control" placeholder="${routeOrigin}"
-							id="autocompleteOrigin" onFocus="geolocate()" />
-
-
-
-						<form:hidden path="origin.estimatedTime" />
-						<form:hidden path="origin.arrivalOrder" />
-						<form:hidden path="origin.distance" />
-					</div>
-					<div class="col-3" hidden="true">
-						<div class="input-group">
-							<form:input type="number" path="origin.estimatedTime"
-								class="form-control" value="0" disabled="true"
-								aria-describedy="originTime" />
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="originTime"><spring:message
-										code="minutes" /></span>
+				<div class="form-group col-xs-12 col-sm-10 col-md-8 text-center">
+					<div class="form-group col-xs-12 col-sm-12 col-md-12">
+						<div class="form-row align-items-center">
+							<div class="col-auto">
+								<button name="icon1" disabled
+									style="border: 0; background: transparent;">
+									<img src="images/marcador.png" width="35px" height="40px" />
+								</button>
 							</div>
-						</div>
-					</div>
-				</div>
-				<form:errors path="origin.location" cssClass="error" />
-			</div>
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<spring:message code="route.origin" var="routeOrigin" />
+								<form:input type="text" path="origin.location"
+									class="form-control" placeholder="${routeOrigin}"
+									id="autocompleteOrigin" onFocus="geolocate()" />
 
 
-			<jstl:choose>
-				<jstl:when test="${empty route.controlpoints}">
-					<!-- empty -->
-				</jstl:when>
-				<jstl:otherwise>
-					<jstl:forEach items="${route.controlpoints}" var="cp"
-						varStatus="status">
-						<div class="form-group col-md-6">
-							<div class="form-row align-items-center">
-								<div class="col-auto">
-									<button type="submit" name="remove_cp"
-										formaction="controlpoint/driver/remove.do?index=${status.index}"
-										style="border: 0; background: transparent;">
-										<img src="images/marcador-delete.png" width="35px"
-											height="40px" />
-									</button>
-								</div>
-								<div class="col-10">
-									<spring:message code="route.stop" var="routeStop" />
-									<form:input type="text"
-										path="controlpoints[${status.index}].location"
-										class="form-control"
-										placeholder="${routeStop} ${status.index + 1}"
-										id="autocomplete${status.index}" onFocus="geolocate()" />
-									<form:hidden path="controlpoints[${status.index}].arrivalOrder" />
-									<form:hidden path="controlpoints[${status.index}].distance" />
-								</div>
-								<div class="col-3" hidden="true">
-									<div class="input-group">
-										<form:input type="number"
-											path="controlpoints[${status.index}].estimatedTime"
-											class="form-control" min="0"
-											aria-describedy="controlpointTime${status.index}" />
-										<div class="input-group-prepend">
-											<span class="input-group-text"
-												id="controlpointTime${status.index}"><spring:message
-													code="minutes" /></span>
-										</div>
+
+								<form:hidden path="origin.estimatedTime" />
+								<form:hidden path="origin.arrivalOrder" />
+								<form:hidden path="origin.distance" />
+							</div>
+							<div class="col-1" hidden="true">
+								<div class="input-group">
+									<form:input type="number" path="origin.estimatedTime"
+										class="form-control" value="0" disabled="true"
+										aria-describedy="originTime" />
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="originTime"><spring:message
+												code="minutes" /></span>
 									</div>
 								</div>
 							</div>
-							<form:errors path="controlpoints[${status.index}].location"
-								cssClass="error" />
-							<form:errors path="controlpoints[${status.index}].estimatedTime"
-								cssClass="error" />
 						</div>
-					</jstl:forEach>
-				</jstl:otherwise>
-			</jstl:choose>
-
-			<div class="form-group col-md-6">
-				<button type="submit" name="add_cp"
-					formaction="controlpoint/driver/add.do"
-					style="border: 0; background: transparent;">
-					<img src="images/marcador-add.png" width="35px" height="40px" />
-					<spring:message code="route.addStop" />
-				</button>
-			</div>
-
-			<div class="form-group col-md-6">
-				<div class="form-row align-items-center">
-					<div class="col-auto">
-						<button name="icon1" disabled
-							style="border: 0; background: transparent;">
-							<img src="images/marcador-ok.png" width="35px" height="40px" />
-						</button>
+						<form:errors path="origin.location" cssClass="error" />
 					</div>
-					<div class="col-10">
-						<spring:message code="route.destination" var="routeDestination" />
-						<div id="locationField">
-							<form:input type="text" path="destination.location"
-								class="form-control" placeholder="${routeDestination}"
-								id="autocompleteDestination" onFocus="geolocate()" />
+
+
+					<jstl:choose>
+						<jstl:when test="${empty route.controlpoints}">
+							<!-- empty -->
+						</jstl:when>
+						<jstl:otherwise>
+							<jstl:forEach items="${route.controlpoints}" var="cp"
+								varStatus="status">
+								<div class="form-group col-md-6">
+									<div class="form-row align-items-center">
+										<div class="col-auto">
+											<button type="submit" name="remove_cp"
+												formaction="controlpoint/driver/remove.do?index=${status.index}"
+												style="border: 0; background: transparent;">
+												<img src="images/marcador-delete.png" width="35px"
+													height="40px" />
+											</button>
+										</div>
+										<div class="col-xs-12 col-sm-6 col-md-8">
+											<spring:message code="route.stop" var="routeStop" />
+											<form:input type="text"
+												path="controlpoints[${status.index}].location"
+												class="form-control"
+												placeholder="${routeStop} ${status.index + 1}"
+												id="autocomplete${status.index}" onFocus="geolocate()" />
+											<form:hidden
+												path="controlpoints[${status.index}].arrivalOrder" />
+											<form:hidden path="controlpoints[${status.index}].distance" />
+										</div>
+										<div class="col-1" hidden="true">
+											<div class="input-group">
+												<form:input type="number"
+													path="controlpoints[${status.index}].estimatedTime"
+													class="form-control" min="0"
+													aria-describedy="controlpointTime${status.index}" />
+												<div class="input-group-prepend">
+													<span class="input-group-text"
+														id="controlpointTime${status.index}"><spring:message
+															code="minutes" /></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<form:errors path="controlpoints[${status.index}].location"
+										cssClass="error" />
+									<form:errors
+										path="controlpoints[${status.index}].estimatedTime"
+										cssClass="error" />
+								</div>
+							</jstl:forEach>
+						</jstl:otherwise>
+					</jstl:choose>
+					<center>
+						<div class="form-group col-xs-12 col-sm-10 col-md-8 text-center"
+							style="padding: 20px">
+							<button type="submit" name="add_cp"
+								formaction="controlpoint/driver/add.do"
+								style="border: 0; background: transparent;">
+								<img src="images/marcador-add.png" width="35px" height="40px" />
+								<spring:message code="route.addStop" />
+							</button>
 						</div>
-						<form:hidden path="destination.arrivalOrder" />
-						<form:hidden path="destination.distance" />
-					</div>
-					<div class="col-3" hidden="true">
-						<div class="input-group">
-							<form:input type="number" path="destination.estimatedTime"
-								class="form-control" min="1" aria-describedy="destinationTime" />
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="destinationTime"><spring:message
-										code="minutes" /></span>
+					</center>
+
+					<div class="form-group col-xs-12 col-sm-12 col-md-12">
+						<div class="form-row align-items-center">
+							<div class="col-auto">
+								<button name="icon1" disabled
+									style="border: 0; background: transparent;">
+									<img src="images/marcador-ok.png" width="35px" height="40px" />
+								</button>
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<spring:message code="route.destination" var="routeDestination" />
+								<div id="locationField">
+									<form:input type="text" path="destination.location"
+										class="form-control" placeholder="${routeDestination}"
+										id="autocompleteDestination" onFocus="geolocate()" />
+								</div>
+								<form:hidden path="destination.arrivalOrder" />
+								<form:hidden path="destination.distance" />
+							</div>
+							<div class="col-1" hidden="true">
+								<div class="input-group">
+									<form:input type="number" path="destination.estimatedTime"
+										class="form-control" min="1" aria-describedy="destinationTime" />
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="destinationTime"><spring:message
+												code="minutes" /></span>
+									</div>
+								</div>
+
 							</div>
 						</div>
-
+						<form:errors path="destination.location" cssClass="error" />
+						<form:errors path="destination.estimatedTime" cssClass="error" />
 					</div>
 				</div>
-				<form:errors path="destination.location" cssClass="error" />
-				<form:errors path="destination.estimatedTime" cssClass="error" />
-			</div>
 
-			<div class="form-group col-md-6">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="routeVehicle"><spring:message
-								code="route.vehicle" /></span>
+				<div class="form-group col-xs-12 col-sm-10 col-md-8">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="routeVehicle"><spring:message
+									code="route.vehicle" /></span>
+						</div>
+						<form:select path="vehicle" class="form-control"
+							aria-describedby="routeVehicle">
+							<form:option label="-------" value="0">
+							</form:option>
+							<form:options items="${vehicles}" itemLabel="model"
+								itemValue="id" required="true" />
+						</form:select>
 					</div>
-					<form:select path="vehicle" class="form-control"
-						aria-describedby="routeVehicle">
-						<form:option label="-------" value="0">
-						</form:option>
-						<form:options items="${vehicles}" itemLabel="model" itemValue="id"
-							required="true" />
-					</form:select>
+					<form:errors cssClass="error" path="vehicle" />
 				</div>
-				<form:errors cssClass="error" path="vehicle" />
-			</div>
 
-			<div class="form-group col-md-6">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="routeAvailableSeats"><spring:message
-								code="route.availableSeats" /></span>
+				<div class="form-group col-xs-12 col-sm-10 col-md-8">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="routeAvailableSeats"><spring:message
+									code="route.availableSeats" /></span>
+						</div>
+						<form:input type="number" path="availableSeats"
+							class="form-control" aria-describedby="routeAvailableSeats"
+							min="1" max="8" />
 					</div>
-					<form:input type="number" path="availableSeats"
-						class="form-control" aria-describedby="routeAvailableSeats"
-						min="1" max="8" />
+					<form:errors path="availableSeats" cssClass="error" />
 				</div>
-				<form:errors path="availableSeats" cssClass="error" />
-			</div>
 
-			<div class="form-group col-md-6">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="routeMaxLuggage"><spring:message
-								code="route.maxLuggage" /></span>
+				<div class="form-group col-xs-12 col-sm-10 col-md-8">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="routeMaxLuggage"><spring:message
+									code="route.maxLuggage" /></span>
+						</div>
+
+						<spring:message code="route.luggage.none" var="noneMsg" />
+						<spring:message code="route.luggage.small" var="smallMsg" />
+						<spring:message code="route.luggage.medium" var="mediumMsg" />
+						<spring:message code="route.luggage.big" var="bigMsg" />
+						<form:select path="maxLuggage" class="form-control"
+							aria-describedby="routeMaxLuggage">
+							<form:option label="${noneMsg}" value="NOTHING" />
+							<form:option label="${smallMsg}" value="SMALL" />
+							<form:option label="${mediumMsg}" value="MEDIUM" />
+							<form:option label="${bigMsg}" value="BIG" />
+						</form:select>
 					</div>
-					
-		<spring:message code="route.luggage.none"  var = "noneMsg"/>	
-		<spring:message code="route.luggage.small"  var = "smallMsg"/>
-		<spring:message code="route.luggage.medium"  var = "mediumMsg"/>
-		<spring:message code="route.luggage.big"  var = "bigMsg"/>
-					<form:select path="maxLuggage" class="form-control"
-						aria-describedby="routeMaxLuggage">
-						<form:option label="${noneMsg}" value="NOTHING" />
-						<form:option label="${smallMsg}" value="SMALL" />
-						<form:option label="${mediumMsg}" value="MEDIUM" />
-						<form:option label="${bigMsg}" value="BIG" />
-					</form:select>
+					<form:errors path="maxLuggage" cssClass="error" />
 				</div>
-				<form:errors path="maxLuggage" cssClass="error" />
-			</div>
 
-			<div class="form-group col-md-6">
-				<form:label path="details">
-					<spring:message code="route.details" />
-				</form:label>
-				<form:textarea path="details" class="form-control" />
-				<form:errors cssClass="error" path="details" />
-			</div>
+				<div class="form-group col-xs-12 col-sm-10 col-md-8">
+					<form:label path="details">
+						<spring:message code="route.details" />
+					</form:label>
+					<form:textarea path="details" class="form-control" />
+					<form:errors cssClass="error" path="details" />
+				</div>
 
-			<div class="form-group col-md-6 text-center">
-				<input type="submit" class="btn btn-success"
-					value="<spring:message code="route.save" />" />
+				<div class="form-group col-md-6 text-center">
+					<input type="submit" class="btn btn-success"
+						value="<spring:message code="route.save" />" />
 
-				<spring:message code="route.cancel" var="cancel" />
-				<a href="route/driver/listActive.do" class="btn btn-danger"><jstl:out
-						value="${cancel}" /></a>
-			</div>
+					<spring:message code="route.cancel" var="cancel" />
+					<a href="route/driver/listActive.do" class="btn btn-danger"><jstl:out
+							value="${cancel}" /></a>
+				</div>
 
-		</form:form>
+			</form:form>
 		</jstl:if>
 		<jstl:if test="${noVehicles}">
-			<spring:message code="route.noVehicles" /><br><br>
+			<spring:message code="route.noVehicles" />
+			<br>
+			<br>
 			<spring:message code="route.createVehicle" var="createVehicle" />
-			<a href="vehicle/driver/create.do" class="btn btn-success">
-				<jstl:out value="${createVehicle}" />
+			<a href="vehicle/driver/create.do" class="btn btn-success"> <jstl:out
+					value="${createVehicle}" />
 			</a>
 		</jstl:if>
 	</center>
@@ -282,7 +294,7 @@
 	// parameter when you first load the API. For example:
 	// <script
 	// src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-	
+
 	var autocompleteOrigin, autocompleteDestination;
 	<jstl:forEach items="${route.controlpoints}" var="cp" varStatus="status">
 	var autocomplete<jstl:out value="${status.index}" />;
@@ -321,7 +333,7 @@
 		autocompleteDestination.setFields([
 			'address_component'
 		]);
-		
+
 		<jstl:forEach items="${route.controlpoints}" var="cp" varStatus="status">
 		autocomplete<jstl:out value="${status.index}" /> = new google.maps.places.Autocomplete(document.getElementById('autocomplete<jstl:out value="${status.index}" />'), {
 			types : [
@@ -329,8 +341,8 @@
 			]
 		});
 		autocomplete<jstl:out value="${status.index}" />.setFields([
-        	'address_component'
-        ]);
+			'address_component'
+		]);
 		</jstl:forEach>
 	}
 

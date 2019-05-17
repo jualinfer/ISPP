@@ -51,6 +51,46 @@
 </head>
 
 <body>
+<style>
+/* landscape phones, 576px and up */
+@MEDIA ( max-width : 576px) {
+	html {
+		font-size: calc(1em + 1vw)
+	}
+	h1 {
+		font-size: 2em
+	}
+	h2 {
+		font-size: 1.5em
+	}
+	h3 {
+		font-size: 1.3em
+	}
+}
+/* tablets, 768px and up */
+@MEDIA ( max-width : 768px) {
+	html {
+		font-size: calc(1em + 1vw)
+	}
+	h1 {
+		font-size: 2em
+	}
+	h2 {
+		font-size: 1.5em
+	}
+	h3 {
+		font-size: 1.3em
+	}
+}
+/* desktops, 992px and up */
+@MEDIA ( max-width : 992px) {
+}
+/* large desktops, 1200px and up */
+@MEDIA ( max-width : 1200px) {
+}
+}
+</style>
+
 
 	<div>
 		<tiles:insertAttribute name="header" />

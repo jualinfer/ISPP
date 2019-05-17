@@ -21,26 +21,30 @@
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
 <div class="text-center active-routes">
-	<h3><spring:message code="searchRoute" /></h3>
+	<h3>
+		<spring:message code="searchRoute" />
+	</h3>
 </div>
 <form:form action="${requestURI}" modelAttribute="finder">
 	<center>
 
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<spring:message code="route.origin" var="routeOrigin" />
-			<form:input type="text" path="origin" class="form-control" placeholder="${routeOrigin}" id="autocompleteOrigin" />
+			<form:input type="text" path="origin" class="form-control"
+				placeholder="${routeOrigin}" id="autocompleteOrigin" />
 			<form:errors path="origin" cssClass="error" />
 		</div>
 
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<div class="form-group">
 				<spring:message code="route.departureDate" var="routeDepartureDate" />
 				<div class="input-group date" id="datetimepicker4"
 					data-target-input="nearest">
 					<form:input type="text" path="departureDate"
 						class="form-control datetimepicker-input"
-						data-target="#datetimepicker4"
-						placeholder="${routeDepartureDate}" />
+						data-target="#datetimepicker4" placeholder="${routeDepartureDate}" />
 					<div class="input-group-append" data-target="#datetimepicker4"
 						data-toggle="datetimepicker">
 						<div class="input-group-text">
@@ -52,21 +56,24 @@
 			</div>
 		</div>
 
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<spring:message code="route.destination" var="routeDestination" />
-			<form:input type="text" path="destination" class="form-control" required="true" placeholder="${routeDestination}" id="autocompleteDestination" />
+			<form:input type="text" path="destination" class="form-control"
+				required="true" placeholder="${routeDestination}"
+				id="autocompleteDestination" />
 			<form:errors path="destination" cssClass="error" />
 		</div>
-		
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
+
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<div class="form-group">
 				<spring:message code="search.arrivalDate" var="routeArrivalDate" />
 				<div class="input-group date" id="datetimepicker3"
 					data-target-input="nearest">
 					<form:input type="text" path="arrivalDate"
 						class="form-control datetimepicker-input"
-						data-target="#datetimepicker3"
-						placeholder="${routeArrivalDate}" />
+						data-target="#datetimepicker3" placeholder="${routeArrivalDate}" />
 					<div class="input-group-append" data-target="#datetimepicker3"
 						data-toggle="datetimepicker">
 						<div class="input-group-text">
@@ -77,12 +84,14 @@
 				<form:errors path="arrivalDate" cssClass="error" />
 			</div>
 		</div>
-		
-		
-		<div class="form-group col-md-6">
+
+
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<div class="input-group">
 				<div class="input-group-prepend">
-					<span class="input-group-text" id="routeVehicleType"><spring:message code="search.vehicleType" /></span>
+					<span class="input-group-text" id="routeVehicleType"><spring:message
+							code="search.vehicleType" /></span>
 				</div>
 				<form:select path="vehicleType" class="form-control"
 					aria-describedby="routeVehicleType">
@@ -93,22 +102,28 @@
 			</div>
 			<form:errors path="vehicleType" cssClass="error" />
 		</div>
-		
-		<div class="form-group col-md-6">
+
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<div class="input-group">
 				<div class="input-group-prepend">
-					<span class="input-group-text" id="routeAvailableSeats"><spring:message code="route.availableSeats" /></span>
+					<span class="input-group-text" id="routeAvailableSeats"><spring:message
+							code="route.availableSeats" /></span>
 				</div>
-				<form:input type="number" path="availableSeats" min="1" max="9" class="form-control" aria-describedby="routeAvailableSeats" />
+				<form:input type="number" path="availableSeats" min="1" max="9"
+					class="form-control" aria-describedby="routeAvailableSeats" />
 			</div>
 		</div>
-		
-		<div class="form-group col-md-6">
+
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<div class="input-group">
 				<div class="input-group-prepend">
-					<span class="input-group-text" id="routeMaxLuggage"><spring:message code="route.maxLuggage" /></span>
+					<span class="input-group-text" id="routeMaxLuggage"><spring:message
+							code="route.maxLuggage" /></span>
 				</div>
-				<form:select path="luggageSize" class="form-control" aria-describedby="routeMaxLuggage" >
+				<form:select path="luggageSize" class="form-control"
+					aria-describedby="routeMaxLuggage">
 					<form:option label="Nothing" value="NOTHING" />
 					<form:option label="Small" value="SMALL" />
 					<form:option label="Medium" value="MEDIUM" />
@@ -117,41 +132,48 @@
 			</div>
 		</div>
 
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
-			<div class="form-check">
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
+			<div class="form-check form-check-inline">
 				<form:checkbox class="form-check-input" value="true" path="pets"
 					id="defaultCheck1" />
-				<label class="form-check-label" for="defaultCheck1"> <spring:message code="route.pets" /> </label>
+				<label class="form-check-label" for="defaultCheck1"> <spring:message
+						code="route.pets" />
+				</label>
 			</div>
-		</div>
 
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
-			<div class="form-check">
+
+
+			<div class="form-check form-check-inline">
 				<form:checkbox class="form-check-input" value="true" path="childs"
 					id="defaultCheck2" />
-				<label class="form-check-label" for="defaultCheck2"> <spring:message code="route.children" /> </label>
+				<label class="form-check-label" for="defaultCheck2"> <spring:message
+						code="route.children" />
+				</label>
 			</div>
-		</div>
-		
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
-			<div class="form-check">
+
+			<div class="form-check form-check-inline">
 				<form:checkbox class="form-check-input" value="true" path="smoke"
 					id="defaultCheck3" />
-				<label class="form-check-label" for="defaultCheck3"> <spring:message code="route.smoke" /> </label>
+				<label class="form-check-label" for="defaultCheck3"> <spring:message
+						code="route.smoke" />
+				</label>
 			</div>
-		</div>
-		
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
-			<div class="form-check">
+
+			<div class="form-check form-check-inline">
 				<form:checkbox class="form-check-input" value="true" path="music"
 					id="defaultCheck4" />
-				<label class="form-check-label" for="defaultCheck4"> <spring:message code="route.music" /> </label>
+				<label class="form-check-label" for="defaultCheck4"> <spring:message
+						code="route.music" />
+				</label>
 			</div>
 		</div>
 
-		<div class="col-sm-6 text-center" style="padding-top: 20px;">
+		<div class="col-xs-12 col-sm-10 col-md-10 text-center"
+			style="padding-top: 20px;">
 			<spring:message code="search" var="search" />
-			<input type="submit" name="search" class="btn btn-success" value="${search}" />
+			<input type="submit" name="search" class="btn btn-success"
+				value="${search}" />
 		</div>
 	</center>
 </form:form>

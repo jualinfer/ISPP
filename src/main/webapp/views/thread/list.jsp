@@ -32,10 +32,11 @@
 <script src="${messages}"></script>
 
 <security:authorize access="hasAnyRole('DRIVER', 'PASSENGER', 'ADMIN')">
-	<center>
+
+<div class="col-xs-12 col-sm-10 col-md-8 mx-auto text-center">
 		<jstl:forEach items="${threads}" var="thread">
 			<div style="padding-top: 10px">
-				<div class="card text-center" style="width: 70rem;">
+				<div class="card text-center">
 					<div class="card-header">
 						<jstl:if test="${!isReport}">
 							<a href="thread/message/view.do?threadId=${thread.id}">
@@ -104,5 +105,5 @@
 			</div>
 		</jstl:forEach>
 
-	</center>
+	</div>
 </security:authorize>
