@@ -13,7 +13,7 @@
  
  .page-footer{
  background-color: #2295ff;
- height: 150px;
+ height: auto;
  
 
  }
@@ -36,6 +36,6 @@
  .imgcoche{
  position:relative;
  top: -50px;
- padding-left: 50px;	
+ /* padding-left: 50px; */	
  }
  

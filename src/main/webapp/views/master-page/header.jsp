@@ -53,9 +53,9 @@
 	}
 	
 	@MEDIA (min-width:993px) {
-		.navbar-brand img{
+		.home-trond{
 			position: absolute;
-			right: 40%;
+			right: 47%;
     		top: 2px;
 		}
 		.navbar-collapse{
@@ -73,7 +73,7 @@
 	<security:authorize access="isAuthenticated()">
 		<security:authentication property="principal.banned" var="banned" />
 		<nav class="navbar navbar-expand-lg navbar-dark p-1" style="background-color:#fa3274;">
-			<div class="mx-auto order-0">
+			<div class="home-trond mx-auto order-0">
 				<security:authorize access="hasRole('DRIVER')">
 					<a class="navbar-brand mx-auto" href="route/driver/listActive.do"><img src="images/trondicon-header-white.png" width="82px" height="42px" /></a>
 				</security:authorize>

@@ -20,6 +20,21 @@
 <link href="${footercss}" rel="stylesheet" />
 <script src="${footercss}"></script>
 
+<style>
+	@MEDIA (max-width:770px) {
+		.legal-contact {
+			flex-direction: column;
+			text-align: left;
+		}
+	}
+	
+	@MEDIA (max-width:480px) {
+		.legal-contact a {
+			font-size: 15px;
+		}
+	}
+</style>
+
 <hr />
 <div class="container">
 	<div class="row">
@@ -38,10 +53,10 @@
     <div class="container-fluid text-center text-md-left">
 
       <!-- Grid row -->
-      <div class="row">
+      <div class="d-flex justify-content-around">
 
         <!-- Grid column -->
-        <div class="col-md-6 mt-md-0 mt-3">
+        <div class="">
 
           <!-- Content -->
           <div class="imgcoche">
@@ -51,35 +66,37 @@
         </div>
         <!-- Grid column -->
 		
-        <hr class="clearfix w-100 d-md-none pb-3">
+        <!-- <hr class="clearfix w-100 d-md-none pb-3"> -->
 
         <!-- Grid column -->
-        <div class="col-md-3 mb-md-0 mb-3">
-
-            <!-- Links -->
-            <h5 class="text-uppercase"><spring:message code="enlaces.legal"/></h5>
-
-            <ul class="list-unstyled">
-              <li>
-                <a href="welcome/termsAndConditions.do" class="links" ><spring:message code="termsAndConditions"/></a>
-              </li>
-            </ul>
-
-          </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-md-3 mb-md-0 mb-3">
-
-            <!-- Links -->
-            <h5 class="text-uppercase"><spring:message code="enlaces.contacto"/></h5>
-
-            <ul class="list-unstyled">
-              <li>
-                <a href="mailto:ispp.grupo1819@gmail.com" class="links">ispp.grupo1819@gmail.com</a>
-              </li>
-            </ul>
-
+        <div class="legal-contact d-flex justify-content-arround">
+	        <div class="mr-4">
+	
+	            <!-- Links -->
+	            <h5 class="text-uppercase"><spring:message code="enlaces.legal"/></h5>
+	
+	            <ul class="list-unstyled">
+	              <li>
+	                <a href="welcome/termsAndConditions.do" class="links" ><spring:message code="termsAndConditions"/></a>
+	              </li>
+	            </ul>
+	
+	          </div>
+	          <!-- Grid column -->
+	
+	          <!-- Grid column -->
+	          <div class="">
+	
+	            <!-- Links -->
+	            <h5 class="text-uppercase"><spring:message code="enlaces.contacto"/></h5>
+	
+	            <ul class="list-unstyled">
+	              <li>
+	                <a href="mailto:ispp.grupo1819@gmail.com" class="links">ispp.grupo1819@gmail.com</a>
+	              </li>
+	            </ul>
+	
+	          </div>
           </div>
           
           
