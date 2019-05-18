@@ -1,8 +1,6 @@
 
 package controllers.driver;
 
-import java.util.ArrayList;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import services.ActorService;
 import services.ControlPointService;
 import controllers.AbstractController;
 import domain.ControlPoint;
-import forms.ControlPointFormCreate;
 import forms.RouteForm;
 
 @Controller
@@ -44,18 +41,18 @@ public class ControlPointDriverController extends AbstractController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ModelAndView add(@ModelAttribute(value = "route") final RouteForm routeForm, final BindingResult binding) {
 		ModelAndView result;
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			System.out.println("Binding errors on 'controlpoint.add': " + binding.getAllErrors());
-
-		if (routeForm.getControlpoints() == null)
+		}
+		/*if (routeForm.getControlpoints() == null)
 			routeForm.setControlpoints(new ArrayList<ControlPointFormCreate>());
 
 		final ControlPointFormCreate cp = this.controlPointService.constructCreate(this.controlPointService.create(), null);
 		cp.setArrivalOrder(routeForm.getControlpoints().size() + 1);
-		//	cp.setEstimatedTime(1);
 		routeForm.getControlpoints().add(cp);
-		routeForm.getDestination().setArrivalOrder(routeForm.getControlpoints().size() + 1);
-
+		routeForm.getDestination().setArrivalOrder(routeForm.getControlpoints().size() + 1);*/
+		controlPointService.addControlPoint(routeForm);
+		
 		result = this.routeController.createEditModelAndView(routeForm, null);
 
 		return result;
@@ -64,7 +61,10 @@ public class ControlPointDriverController extends AbstractController {
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	public ModelAndView remove(@ModelAttribute(value = "route") final RouteForm routeForm, final BindingResult binding, @RequestParam final Integer index) {
 		ModelAndView result;
-		System.out.println("es index null?? " + index);
+		if (binding.hasErrors()) {
+			System.out.println("Binding errors on 'controlpoint.remove': " + binding.getAllErrors());
+		}
+		/*System.out.println("es index null?? " + index);
 		System.out.println("es cp null?? " + Boolean.toString(routeForm.getControlpoints() == null));
 		if (routeForm.getControlpoints() != null)
 			System.out.println("size: " + routeForm.getControlpoints().size());
@@ -79,8 +79,9 @@ public class ControlPointDriverController extends AbstractController {
 			routeForm.getControlpoints().remove((int) index);
 			System.out.println("destination null?? " + Boolean.toString(routeForm.getDestination() == null));
 			routeForm.getDestination().setArrivalOrder(routeForm.getDestination().getArrivalOrder() - 1);
-		}
-
+		}*/
+		controlPointService.removeControlPoint(routeForm, index);
+		
 		result = this.routeController.createEditModelAndView(routeForm, null);
 
 		return result;

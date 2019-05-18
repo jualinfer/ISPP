@@ -17,6 +17,7 @@ import repositories.ControlPointRepository;
 import domain.ControlPoint;
 import domain.Route;
 import forms.ControlPointFormCreate;
+import forms.RouteForm;
 
 @Service
 @Transactional
@@ -76,6 +77,32 @@ public class ControlPointService {
 		Assert.notNull(id);
 
 		return this.controlPointRepository.findOne(id);
+	}
+	
+	public List<ControlPoint> findByRoute(Route route) {
+		return new ArrayList<ControlPoint>(controlPointRepository.findByRouteId(route.getId()));
+	}
+	
+	public void addControlPoint(RouteForm routeForm) {
+		if (routeForm.getControlpoints() == null) {
+			routeForm.setControlpoints(new ArrayList<ControlPointFormCreate>());
+		}
+		ControlPointFormCreate cp = constructCreate(create(), null);
+		cp.setArrivalOrder(routeForm.getControlpoints().size() + 1);
+		routeForm.getControlpoints().add(cp);
+		routeForm.getDestination().setArrivalOrder(routeForm.getControlpoints().size() + 1);
+	}
+	
+	public void removeControlPoint(RouteForm routeForm, Integer index) {
+		if (index != null && index > -1 && routeForm.getControlpoints() != null && routeForm.getControlpoints().size() > index) {
+			ControlPointFormCreate cp;
+			for (int i = index; i < routeForm.getControlpoints().size(); i++) {
+				cp = routeForm.getControlpoints().get(i);
+				cp.setArrivalOrder(cp.getArrivalOrder() - 1);
+			}
+			routeForm.getControlpoints().remove((int) index);
+			routeForm.getDestination().setArrivalOrder(routeForm.getDestination().getArrivalOrder() - 1);
+		}
 	}
 
 	public ControlPoint save2(final ControlPoint controlPoint) {
