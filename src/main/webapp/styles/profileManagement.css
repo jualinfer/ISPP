@@ -31,7 +31,7 @@
 	margin: 0 2rem;
 	display: flex;
     justify-content: space-between;
-    width: 23%;
+    width: 35%;
     align-items: baseline;
 }
 
@@ -43,10 +43,9 @@
 }
 
 .save-cancel-management{
-	margin: 1rem auto;
-	display: flex;
-    justify-content: space-between;
-    width: 35%;
+	width:125px;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .item-profile-management input{

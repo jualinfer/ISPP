@@ -43,11 +43,11 @@
 <spring:message code="alert.confirm.delete" var="confirm" />
 
 
-<center>
+<div class="content-principal">
 
 	<jstl:forEach items="${alerts}" var="alert">
 		<div style="padding-top: 10px">
-			<div class="card text-center" style="width: 70rem;">
+			<div class="card text-center">
 				<div class="card-header">
 					<spring:url var="seenUrl" value="alert/alertSeen.do">
 						<spring:param name="varId" value="${alert.id}" />
@@ -115,7 +115,7 @@
 			</div>
 		</div>
 	</jstl:forEach>
-</center>
+</div>
 <security:authorize access="hasRole('ADMIN')">
 	<a href="alert/edit.do" class="btn btn-success btn-lg p-1 text-white"><spring:message
 			code="alert.create" /> </a>

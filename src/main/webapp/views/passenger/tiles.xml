@@ -27,7 +27,7 @@
 	</definition>
 	
 	<definition name="passenger/create" extends="master.page">	
-		<put-attribute name="title" value="Create Passenger" />
+		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="/views/passenger/create.jsp" />
 	</definition>
 	
