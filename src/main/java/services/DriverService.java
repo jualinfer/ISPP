@@ -158,6 +158,10 @@ public class DriverService {
 	}
 
 	// Complex business rules
+
+	public void flush() {
+		this.driverRepository.flush();
+	}
 	public Driver reconstruct(final Driver driver, final BindingResult binding) {
 		Driver result;
 
