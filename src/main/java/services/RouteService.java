@@ -54,31 +54,32 @@ public class RouteService {
 	//Managed repository
 
 	@Autowired
-	private RouteRepository		routeRepository;
+	private RouteRepository			routeRepository;
 
 	//Supporting services
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private ControlPointService	controlPointService;
+	private ControlPointService		controlPointService;
 
 	@Autowired
-	private ReservationService	reservationService;
-	
-	@Autowired
-	private DriverService		driverService;
+	private ReservationService		reservationService;
 
 	@Autowired
-	private AlertService		alertService;
-	
+	private DriverService			driverService;
+
 	@Autowired
-	private MessagesThreadService		messagesThreadService;
-	
+	private AlertService			alertService;
+
+	@Autowired
+	private MessagesThreadService	messagesThreadService;
+
 	@Autowired
 	private PassengerService		passengerService;
-	
+
+
 	//Simple CRUD methods
 
 	public Route create() {
@@ -139,8 +140,9 @@ public class RouteService {
 
 		//Assertion that the user modifying this task has the correct privilege.
 
-		if (this.actorService.findByPrincipal() instanceof Driver)
+		if (this.actorService.findByPrincipal() instanceof Driver) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == r.getDriver().getId());
+		}
 		//Assertion that the avaliable seats  isn't a bigger value than the vehicle capacity
 		Assert.isTrue(r.getAvailableSeats() < r.getVehicle().getSeatsCapacity());
 		//
@@ -187,8 +189,9 @@ public class RouteService {
 		Assert.notNull(route.getDriver());
 
 		// Comprobar que el usuario conectado es el propietario de la ruta
-		if (this.actorService.findByPrincipal() instanceof Driver)
+		if (this.actorService.findByPrincipal() instanceof Driver) {
 			Assert.isTrue(this.actorService.findByPrincipal().getId() == route.getDriver().getId());
+		}
 		// Comprobar que la ruta no ha sido previamente cancelada
 		Assert.isTrue(!route.getIsCancelled());
 		// Comprobar que la ruta no ha comenzado o finalizado
@@ -250,8 +253,9 @@ public class RouteService {
 			final BufferedReader in = new BufferedReader(new InputStreamReader(((HttpURLConnection) (new URL(url)).openConnection()).getInputStream(), Charset.forName("UTF-8")));
 			String inputLine;
 			final StringBuffer response = new StringBuffer();
-			while ((inputLine = in.readLine()) != null)
+			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
+			}
 			in.close();
 
 			final JSONObject myResponse = new JSONObject(response.toString());
@@ -269,7 +273,7 @@ public class RouteService {
 		return DoubleRounder.round(value, 2);
 
 	}
-	
+
 	public void calculaDuracion(final Route route) {
 		final List<ControlPoint> cps = route.getControlPoints();
 		long acum = 0;
@@ -278,12 +282,12 @@ public class RouteService {
 		final Calendar date = Calendar.getInstance();
 		date.setTime(route.getDepartureDate());
 		final long departureDateMilis = date.getTimeInMillis();
-		final Date arrivalDate = new Date(departureDateMilis + getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000);
+		final Date arrivalDate = new Date(departureDateMilis + this.getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000);
 
 		final ControlPoint cp = cps.get(0);
 		cp.setArrivalTime(arrivalDate);
 		cps.set(0, cp);
-		acum = acum + departureDateMilis + getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000;
+		acum = acum + departureDateMilis + this.getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000;
 
 		//-------Control Points intermedios ---------
 
@@ -292,13 +296,14 @@ public class RouteService {
 			date2.setTime(c.getArrivalTime());
 			final long departureDateMilis2 = date2.getTimeInMillis();
 			if (cps.indexOf(c) < cps.size() - 1) {
-				final Date arrivalDate2 = new Date(departureDateMilis2 + getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000);
+				final Date arrivalDate2 = new Date(departureDateMilis2 + this.getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000);
 				final ControlPoint b = cps.get(cps.indexOf(c) + 1);
 				b.setArrivalTime(arrivalDate2);
 				cps.set(cps.indexOf(c) + 1, b);
-				acum = acum + departureDateMilis2 + getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000;
-			} else
+				acum = acum + departureDateMilis2 + this.getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000;
+			} else {
 				break;
+			}
 
 		}
 
@@ -309,7 +314,7 @@ public class RouteService {
 
 		final int cosa = Math.toIntExact(acum / 60000);
 
-		route.setEstimatedDuration((int) (acum / 60000 + departureDateMilis3 / 60000 + getDurationMinutes(cps.get(cps.size() - 1).getLocation(), route.getDestination())));
+		route.setEstimatedDuration((int) (acum / 60000 + departureDateMilis3 / 60000 + this.getDurationMinutes(cps.get(cps.size() - 1).getLocation(), route.getDestination())));
 
 		route.setControlPoints(cps);
 
@@ -327,8 +332,9 @@ public class RouteService {
 			final BufferedReader in = new BufferedReader(new InputStreamReader(((HttpURLConnection) (new URL(url)).openConnection()).getInputStream(), Charset.forName("UTF-8")));
 			String inputLine;
 			final StringBuffer response = new StringBuffer();
-			while ((inputLine = in.readLine()) != null)
+			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
+			}
 			in.close();
 
 			final JSONObject myResponse = new JSONObject(response.toString());
@@ -356,7 +362,7 @@ public class RouteService {
 	 * final String str = String.valueOf(distance / 3);
 	 * final Integer intNumber = Integer.parseInt(str.substring(0, str.indexOf('.')));
 	 * price = intNumber * price3km + profit;
-	 * 
+	 *
 	 * }
 	 * return DoubleRounder.round(price, 2);
 	 * }
@@ -365,8 +371,9 @@ public class RouteService {
 	public Double getPrice(final double distance) {
 		Assert.isTrue(distance >= 0);
 		double result = 1.1d;
-		if (distance > 9d)
+		if (distance > 9d) {
 			result += (distance - 9d) * 0.11d;
+		}
 		return DoubleRounder.round(result, 2);
 	}
 
@@ -379,16 +386,16 @@ public class RouteService {
 		Assert.isTrue(route.getId() > 0);
 		final Collection<Reservation> reservations = this.reservationService.findReservationsByRouteAndStatus(route.getId(), ReservationStatus.ACCEPTED);
 		int occupiedSeats = 0;
-		for (final Reservation r : reservations)
+		for (final Reservation r : reservations) {
 			occupiedSeats += r.getSeat();
+		}
 		return route.getAvailableSeats() - occupiedSeats;
 	}
 
 	//Finder
 
-	public Collection<Route> searchRoutes(final Finder finder, final BindingResult binding) {
+	public Collection<Route> searchRoutes(final Finder finder) {
 		Assert.notNull(finder);
-		Assert.notNull(binding);
 
 		Collection<Route> queryResult = null;
 		queryResult = this.routeRepository.search(finder.getDestination(), finder.getAvailableSeats());
@@ -396,70 +403,86 @@ public class RouteService {
 
 		for (final Route r : queryResult) {
 			// Filtrar por preferencias
-			if (finder.getChilds() && !r.getDriver().getChilds())
+			if (finder.getChilds() && !r.getDriver().getChilds()) {
 				continue;
-			if (finder.getMusic() && !r.getDriver().getMusic())
+			}
+			if (finder.getMusic() && !r.getDriver().getMusic()) {
 				continue;
-			if (finder.getPets() && !r.getDriver().getPets())
+			}
+			if (finder.getPets() && !r.getDriver().getPets()) {
 				continue;
-			if (finder.getSmoke() && !r.getDriver().getSmoke())
+			}
+			if (finder.getSmoke() && !r.getDriver().getSmoke()) {
 				continue;
+			}
 
 			// Filtrar por vehículo
 			if (finder.getVehicleType() != null) {
-				if (finder.getVehicleType() == 1 && r.getVehicle().getType() != VehicleType.CAR)
+				if (finder.getVehicleType() == 1 && r.getVehicle().getType() != VehicleType.CAR) {
 					continue;
-				if (finder.getVehicleType() == 2 && r.getVehicle().getType() != VehicleType.BIKE)
+				}
+				if (finder.getVehicleType() == 2 && r.getVehicle().getType() != VehicleType.BIKE) {
 					continue;
+				}
 			}
 
 			// Filtrar por tamaño del equipaje
-			if (finder.getLuggageSize() != null && r.getMaxLuggage().getId() < finder.getLuggageSize().getId())
+			if (finder.getLuggageSize() != null && r.getMaxLuggage().getId() < finder.getLuggageSize().getId()) {
 				continue;
+			}
 
 			// Filtrar por asientos disponibles
 			int availableSeats = r.getAvailableSeats();
-			for (final Reservation re : r.getReservations())
-				if (re.getStatus() == ReservationStatus.ACCEPTED)
+			for (final Reservation re : r.getReservations()) {
+				if (re.getStatus() == ReservationStatus.ACCEPTED) {
 					availableSeats -= re.getSeat();
-			if (availableSeats < finder.getAvailableSeats())
+				}
+			}
+			if (availableSeats < finder.getAvailableSeats()) {
 				continue;
+			}
 
 			// Obtener el controlpoint de destino
 			final String destinationLocation = finder.getDestination().trim().toLowerCase();
 			ControlPoint destination = null;
-			for (final ControlPoint cp : r.getControlPoints())
-				if (cp.getLocation().toLowerCase().contains(destinationLocation))
+			for (final ControlPoint cp : r.getControlPoints()) {
+				if (cp.getLocation().toLowerCase().contains(destinationLocation)) {
 					destination = cp;
+				}
+			}
 
 			// Filtrar por fecha y hora de llegada
 			if (finder.getArrivalDate() != null) {
 				final Date minTime = new Date(finder.getArrivalDate().getTime() - 900000);
 				final Date maxTime = new Date(finder.getArrivalDate().getTime() + 900000);
-				if (destination.getArrivalTime().before(minTime) || destination.getArrivalTime().after(maxTime))
+				if (destination.getArrivalTime().before(minTime) || destination.getArrivalTime().after(maxTime)) {
 					continue;
+				}
 			}
 
 			// Filtrar por origen
 			ControlPoint origin = null;
 			if (finder.getOrigin() != null && !finder.getOrigin().trim().isEmpty()) {
 				final String originLocation = finder.getOrigin().trim().toLowerCase();
-				for (final ControlPoint cp : r.getControlPoints())
+				for (final ControlPoint cp : r.getControlPoints()) {
 					if (cp.getLocation().toLowerCase().contains(originLocation)) {
 						origin = cp;
 						break;
 					}
+				}
 				// No existe la ubicación de origen en la ruta, o es una parada posterior al destino
-				if (origin == null || destination.getArrivalOrder() <= origin.getArrivalOrder())
+				if (origin == null || destination.getArrivalOrder() <= origin.getArrivalOrder()) {
 					continue;
+				}
 			}
 
 			// Filtrar por fecha de salida
 			if (finder.getDepartureDate() != null && origin != null) {
 				final Date minTime = new Date(finder.getDepartureDate().getTime() - 900000);
 				final Date maxTime = new Date(finder.getDepartureDate().getTime() + 900000);
-				if (origin.getArrivalTime().before(minTime) || origin.getArrivalTime().after(maxTime))
+				if (origin.getArrivalTime().before(minTime) || origin.getArrivalTime().after(maxTime)) {
 					continue;
+				}
 			}
 
 			result.add(r);
@@ -470,11 +493,11 @@ public class RouteService {
 
 	/*
 	 * public Collection<Route> searchRoutes2(final Finder finder) {
-	 * 
+	 *
 	 * this.validateFinder(finder);
-	 * 
+	 *
 	 * Collection<Route> queryResult, finalResult;
-	 * 
+	 *
 	 * final Date departureDate = finder.getDepartureDate();
 	 * final LocalTime timeStart = finder.getOriginTime();
 	 * final LocalTime timeEnds = finder.getDestinationTime();
@@ -485,94 +508,94 @@ public class RouteService {
 	 * final Boolean music = finder.getMusic();
 	 * final LuggageSize luggageSize = finder.getLuggageSize();
 	 * VehicleType vehicleType = null;
-	 * 
+	 *
 	 * final Integer vehicleTypeInteger = finder.getVehicleType();
-	 * 
+	 *
 	 * if (vehicleTypeInteger != 0)
 	 * vehicleType = finder.getVehicleTypeById(vehicleTypeInteger);
-	 * 
+	 *
 	 * // En los set de origin y destination, se ponen como "" o lo que sea en minusculas
 	 * final String origin = finder.getOrigin();
 	 * final String destination = finder.getDestination();
-	 * 
+	 *
 	 * final Calendar departureDateFinder = Calendar.getInstance();
-	 * 
+	 *
 	 * if (departureDate != null)
 	 * departureDateFinder.setTime(departureDate);
-	 * 
+	 *
 	 * // Buscamos todas las rutas no canceladas futuras
 	 * queryResult = this.routeRepository.searchRoutes(availableSeats);
 	 * finalResult = new ArrayList<Route>();
-	 * 
+	 *
 	 * final Calendar rutaActual = Calendar.getInstance();
-	 * 
+	 *
 	 * for (final Route r : queryResult) {
-	 * 
+	 *
 	 * rutaActual.setTime(r.getDepartureDate());
-	 * 
+	 *
 	 * // Primero filtramos por FECHA Y HORA:
 	 * if (departureDate != null && rutaActual.get(Calendar.DAY_OF_YEAR) != departureDateFinder.get(Calendar.DAY_OF_YEAR))
 	 * continue;
-	 * 
+	 *
 	 * final LocalTime departureTime = LocalTime.fromDateFields(r.getDepartureDate());
-	 * 
+	 *
 	 * if (timeStart != null && departureTime.isBefore(timeStart))
 	 * // Si la hora de inicio de la ruta es anterior a la del finder, ignorar esta ruta
 	 * continue;
-	 * 
+	 *
 	 * if (timeEnds != null && departureTime.isAfter(timeEnds))
 	 * //Si la hora de fin de la ruta es posterior a la del finder, ignorar esta ruta
 	 * continue;
-	 * 
+	 *
 	 * // Luego por origen y destino:
-	 * 
+	 *
 	 * if (origin != "" && !r.getOrigin().toLowerCase().contains(origin))
 	 * continue;
-	 * 
+	 *
 	 * if (destination != "" && !r.getDestination().toLowerCase().contains(destination))
 	 * continue;
-	 * 
+	 *
 	 * // Después smoke, pets, childs, music
-	 * 
+	 *
 	 * final Driver driver = r.getDriver();
-	 * 
+	 *
 	 * if (smoke && !driver.getSmoke())
 	 * continue;
-	 * 
+	 *
 	 * if (pets && !driver.getPets())
 	 * continue;
-	 * 
+	 *
 	 * if (childs && !driver.getChilds())
 	 * continue;
-	 * 
+	 *
 	 * if (music && !driver.getMusic())
 	 * continue;
-	 * 
+	 *
 	 * // Y por ultimo LuggageSize y VehicleType
 	 * if (vehicleType != null && r.getVehicle().getType() != vehicleType)
 	 * continue;
-	 * 
+	 *
 	 * if (luggageSize != null && r.getMaxLuggage().getId() < luggageSize.getId())
 	 * continue;
-	 * 
+	 *
 	 * finalResult.add(r);
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * return finalResult;
 	 * }
-	 * 
+	 *
 	 * private void validateFinder(final Finder finder) {
-	 * 
+	 *
 	 * Assert.notNull(finder);
-	 * 
+	 *
 	 * // Origen o destino deben estar presentes
 	 * Assert.isTrue(!finder.getDestination().isEmpty());
-	 * 
+	 *
 	 * // La hora minima de salida debe ser inferior a la hora máxima de salida
 	 * if (finder.getOriginTime() != null && finder.getDestinationTime() != null)
 	 * Assert.isTrue((finder.getOriginTime().isBefore(finder.getDestinationTime())));
-	 * 
+	 *
 	 * //Solamente podemos buscar rutas que sean del día actual hasta el futuro
 	 * if (finder.getDepartureDate() != null) {
 	 * final Calendar de = Calendar.getInstance();
@@ -597,8 +620,9 @@ public class RouteService {
 			date.setTime(r.getDepartureDate());
 			final long departureDateMilis = date.getTimeInMillis();
 			final Date arrivalDate = new Date(departureDateMilis + (r.getEstimatedDuration() * 60000));
-			if (arrivalDate.after(now))
+			if (arrivalDate.after(now)) {
 				result.add(r);
+			}
 		}
 
 		return result;
@@ -614,7 +638,7 @@ public class RouteService {
 
 		return result;
 	}
-	
+
 	public Collection<Route> findStartedRoutes() {
 		Collection<Route> result;
 
@@ -644,8 +668,9 @@ public class RouteService {
 			routeForm.setDestination(this.controlPointService.constructCreate(cps.removeLast(), route));
 			routeForm.setControlpoints(new ArrayList<ControlPointFormCreate>());
 
-			for (final ControlPoint cp : cps)
+			for (final ControlPoint cp : cps) {
 				routeForm.getControlpoints().add(this.controlPointService.constructCreate(cp, route));
+			}
 		}
 		routeForm.setDepartureDate(route.getDepartureDate());
 		routeForm.setDetails(route.getDetails());
@@ -684,20 +709,24 @@ public class RouteService {
 		if (keepGoing) {
 			final List<ControlPointFormCreate> cps = new ArrayList<ControlPointFormCreate>();
 			cps.add(routeForm.getOrigin());
-			if (routeForm.getControlpoints() != null)
-				for (final ControlPointFormCreate cp : routeForm.getControlpoints())
+			if (routeForm.getControlpoints() != null) {
+				for (final ControlPointFormCreate cp : routeForm.getControlpoints()) {
 					cps.add(cp);
+				}
+			}
 			cps.add(routeForm.getDestination());
 			final List<ControlPoint> controlPoints = this.controlPointService.reconstructCreate(cps, routeForm.getDepartureDate());
 
 			Double routeDistance = 0d;
-			for (final ControlPoint cp : controlPoints)
+			for (final ControlPoint cp : controlPoints) {
 				routeDistance += cp.getDistance();
+			}
 			routeDistance = DoubleRounder.round(routeDistance, 2);
 
 			Integer estimatedDuration = 0;
-			for (final ControlPointFormCreate cp : cps)
+			for (final ControlPointFormCreate cp : cps) {
 				estimatedDuration += cp.getEstimatedTime();
+			}
 
 			final double pricePerPassenger = this.getPrice(routeDistance);
 
@@ -727,84 +756,80 @@ public class RouteService {
 
 		return result;
 	}
-	
-	public void cronCompleteRoutes(){
+
+	public void cronCompleteRoutes() {
 		Date now = new Date();
 		Reservation reservation = null;
-    	Long millisPerDay =  24 * 60 * 60 * 1000L;
-    	Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
-    	
-    	//Obtenemos las rutas que ya comenzaron 
-    	Collection<Route> startedRoutes = findStartedRoutes();
-    	
-    	//De las rutas comenzadas sacamos las que ya hayan pasado 24h desde 
-    	//la fecha y hora de finalización
-    	for(Route route: startedRoutes){
-    		Calendar departureDate = Calendar.getInstance();
-    		departureDate.setTime(route.getDepartureDate());
-    		Integer estimatedDuration = route.getEstimatedDuration();
-    		
-    		departureDate.add(Calendar.MINUTE, estimatedDuration);
-    		Date completedDate = departureDate.getTime();
-    		
-    		boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
-    		if(moreThanDay){
-    			completedAfterDayRoutes.add(route);
-    		}
-    	}
-    	
-    	for(Route route: completedAfterDayRoutes){
-    		Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
-    		
-    		passengersByRoute.addAll(passengerService.findPassengersAcceptedByRoute(route.getId()));
-    		
-    		//Comprobamos si los passengers han abierto algún report al driver y obtenemos las reservas que no se han pagado todavía
-    		for(Passenger passenger: passengersByRoute){
-    			boolean driverNoPickedMe = false;
-    			List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
-    			MessagesThread report = messagesThreadService.findReportsThreadFromParticipantsAndRoute(
-    					route.getId(), passenger.getId(), route.getDriver().getId());
-    			
-    			reservationOfPassenger.addAll(reservationService.findReservationsByRoutePassengerAndNotPaymentResolved(
-    					route.getId(), passenger.getId()));
-    			
-    			if(!reservationOfPassenger.isEmpty()){
-    				reservation = reservationOfPassenger.get(0);
-    				driverNoPickedMe = reservation.isDriverNoPickedMe();
-    			}
+		Long millisPerDay = 24 * 60 * 60 * 1000L;
+		Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
 
-    			//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
-    			//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
-    			if(report == null && reservation != null && reservation.getChargeId() != null && !reservation.getChargeId().isEmpty()){
-    				Stripe.apiKey = StripeConfig.SECRET_KEY;
-    				if(!driverNoPickedMe){
-    					//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
-    					try {
-	    					final Map<String, Object> payoutParams = new HashMap<String, Object>();
-	    					final Double reservPrice = reservation.getPrice() * 100;
-	    					payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
-	    					payoutParams.put("currency", StripeConfig.CURRENCY);
+		//Obtenemos las rutas que ya comenzaron 
+		Collection<Route> startedRoutes = this.findStartedRoutes();
 
-	    					Payout.create(payoutParams);
-    					}
-    					catch (StripeException e) {
-    						e.printStackTrace();
-    					}
-    				}else{
-    					//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
-    					try {
-	    					final Map<String, Object> params = new HashMap<>();
-	    					params.put("charge", reservation.getChargeId());
-	    					final Refund refund2 = Refund.create(params);
-    					}
-    					catch (StripeException e) {
-    						e.printStackTrace();
-    					}
-    				}
+		//De las rutas comenzadas sacamos las que ya hayan pasado 24h desde 
+		//la fecha y hora de finalización
+		for (Route route : startedRoutes) {
+			Calendar departureDate = Calendar.getInstance();
+			departureDate.setTime(route.getDepartureDate());
+			Integer estimatedDuration = route.getEstimatedDuration();
 
-        			reservation.setPaymentResolved(true);
-    				reservationService.saveCron(reservation);
-        		}
+			departureDate.add(Calendar.MINUTE, estimatedDuration);
+			Date completedDate = departureDate.getTime();
+
+			boolean moreThanDay = Math.abs(now.getTime() - completedDate.getTime()) > millisPerDay;
+			if (moreThanDay) {
+				completedAfterDayRoutes.add(route);
+			}
+		}
+
+		for (Route route : completedAfterDayRoutes) {
+			Collection<Passenger> passengersByRoute = new ArrayList<Passenger>();
+
+			passengersByRoute.addAll(this.passengerService.findPassengersAcceptedByRoute(route.getId()));
+
+			//Comprobamos si los passengers han abierto algún report al driver y obtenemos las reservas que no se han pagado todavía
+			for (Passenger passenger : passengersByRoute) {
+				boolean driverNoPickedMe = false;
+				List<Reservation> reservationOfPassenger = new ArrayList<Reservation>();
+				MessagesThread report = this.messagesThreadService.findReportsThreadFromParticipantsAndRoute(route.getId(), passenger.getId(), route.getDriver().getId());
+
+				reservationOfPassenger.addAll(this.reservationService.findReservationsByRoutePassengerAndNotPaymentResolved(route.getId(), passenger.getId()));
+
+				if (!reservationOfPassenger.isEmpty()) {
+					reservation = reservationOfPassenger.get(0);
+					driverNoPickedMe = reservation.isDriverNoPickedMe();
+				}
+
+				//En caso de que el passenger no haya creado ningún report y le hayan recogido se realiza el pago al driver
+				//En caso de que el passenger no haya creado ningún report y no le hayan recogido se realiza la devolución del pago al passenger
+				if (report == null && reservation != null && reservation.getChargeId() != null && !reservation.getChargeId().isEmpty()) {
+					Stripe.apiKey = StripeConfig.SECRET_KEY;
+					if (!driverNoPickedMe) {
+						//SE REALIZA EL PAGO AL DRIVER (PAYOUT)
+						try {
+							final Map<String, Object> payoutParams = new HashMap<String, Object>();
+							final Double reservPrice = reservation.getPrice() * 100;
+							payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
+							payoutParams.put("currency", StripeConfig.CURRENCY);
+
+							Payout.create(payoutParams);
+						} catch (StripeException e) {
+							e.printStackTrace();
+						}
+					} else {
+						//SE REALIZA LA DEVOLUCIÓN DEL PAGO AL PASSENGER (REFOUND)
+						try {
+							final Map<String, Object> params = new HashMap<>();
+							params.put("charge", reservation.getChargeId());
+							final Refund refund2 = Refund.create(params);
+						} catch (StripeException e) {
+							e.printStackTrace();
+						}
+					}
+
+					reservation.setPaymentResolved(true);
+					this.reservationService.saveCron(reservation);
+				}
 			}
 		}
 	}

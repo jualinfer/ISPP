@@ -4074,7 +4074,7 @@
 	</bean>
 	<!-- ROUTES (78) -->
 	<bean id="route1" class="domain.Route">
-		<property name="departureDate" value="6/4/2019 12:21" />
+		<property name="departureDate" value="8/4/2019 12:21" />
 		<property name="origin" value="Felipe II, Sevilla" />
 		<property name="destination" value="Avenida de El Greco, Sevilla" />
 		<property name="estimatedDuration" value="15" />
@@ -4116,7 +4116,7 @@
 		</property>
 	</bean>
 	<bean id="route3" class="domain.Route">
-		<property name="departureDate" value="5/14/2019 6:1" />
+		<property name="departureDate" value="8/14/2019 6:1" />
 		<property name="origin" value="San Bernardo, Sevilla" />
 		<property name="destination"
 			value="Reina Mercedes (Escuela de Arquitectura), Sevilla" />
@@ -4267,7 +4267,7 @@
 		</property>
 	</bean>
 	<bean id="route10" class="domain.Route">
-		<property name="departureDate" value="2/20/2019 8:27" />
+		<property name="departureDate" value="8/20/2019 8:27" />
 		<property name="origin"
 			value="Nervión Plaza, Calle Luis de Morales, Sevilla" />
 		<property name="destination" value="Avenida de El Greco, Sevilla" />
