@@ -112,7 +112,7 @@
 						<jstl:otherwise>
 							<jstl:forEach items="${route.controlpoints}" var="cp"
 								varStatus="status">
-								<div class="form-group col-md-6">
+								<div class="form-group col-xs-12 col-sm-12 col-md-12">
 									<div class="form-row align-items-center">
 										<div class="col-auto">
 											<button type="submit" name="remove_cp"
@@ -122,7 +122,7 @@
 													height="40px" />
 											</button>
 										</div>
-										<div class="col-xs-12 col-sm-6 col-md-8">
+										<div class="col-xs-12 col-sm-12 col-md-12">
 											<spring:message code="route.stop" var="routeStop" />
 											<form:input type="text"
 												path="controlpoints[${status.index}].location"
