@@ -39,7 +39,7 @@ public class CommentService {
 	private DriverService		driverService;
 
 
-	//CRUD 
+	//CRUD
 	public Comment create() {
 		Comment result;
 
@@ -201,26 +201,31 @@ public class CommentService {
 		routeCommentPeriodStart.setTime(route.getDepartureDate());
 		routeCommentPeriodStart.add(Calendar.MINUTE, route.getEstimatedDuration());
 
-		if (now.before(routeCommentPeriodStart))
+		if (now.before(routeCommentPeriodStart)) {
 			return result;
+		}
 
 		// Reutilizamos esta variable y ahora sería el fin del periodo:
 		routeCommentPeriodStart.add(Calendar.HOUR, 24);
 
-		if (now.after(routeCommentPeriodStart))
+		if (now.after(routeCommentPeriodStart)) {
 			return result;
+		}
 
 		// Si se llega hasta aquí, le está permitido comentar, faltaria ver si es alguien de los passengers con reservations aceptadas o el driver
 		if (actor instanceof Driver) {
-			if (route.getDriver().getId() == actor.getId())
+			if (route.getDriver().getId() == actor.getId()) {
 				result = true;
-		} else {
+			}
+		} else if (actor instanceof Passenger) {
 
 			passengers = this.passengerService.findPassengersAcceptedByRoute(route.getId());
-			if (passengers.contains(actor))
+			if (passengers.contains(actor)) {
 				// En caso de ser un pasenger, además comprobaremos si ya ha comentado o no a este driver para esta ruta
-				if (this.findCommentFromPassenger(route.getId(), actor.getId(), route.getDriver().getId()) == null)
+				if (this.findCommentFromPassenger(route.getId(), actor.getId(), route.getDriver().getId()) == null) {
 					result = true;
+				}
+			}
 		}
 
 		return result;
@@ -232,9 +237,11 @@ public class CommentService {
 
 		aux = this.passengerService.findPassengersAcceptedByRoute(routeId);
 
-		for (Passenger passenger : aux)
-			if (this.findCommentFromDriver(routeId, passenger.getId(), driver.getId()) == null)
+		for (Passenger passenger : aux) {
+			if (this.findCommentFromDriver(routeId, passenger.getId(), driver.getId()) == null) {
 				result.add(passenger);
+			}
+		}
 
 		return result;
 	}
