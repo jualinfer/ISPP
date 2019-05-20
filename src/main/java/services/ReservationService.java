@@ -223,6 +223,7 @@ public class ReservationService {
 	}
 
 	//TODO: Puede que no esté lo bastante pulido, pero como lo mio (Jesus) y Juanma es sobre Crear Reservas pues xd
+	//no se usa
 	public void delete(final Reservation reservation) {
 		UserAccount ua;
 		Actor principal;
@@ -258,7 +259,7 @@ public class ReservationService {
 	}
 
 	//Other business methods
-
+//no se usa
 	public Collection<Reservation> findReservationsByPassenger(final int passengerId) {
 		Assert.isTrue(passengerId != 0);
 
@@ -268,7 +269,7 @@ public class ReservationService {
 
 		return result;
 	}
-
+	//no se usa
 	public Collection<Reservation> findReservationsByRoute(final int routeId) {
 		Assert.isTrue(routeId != 0);
 
@@ -337,7 +338,7 @@ public class ReservationService {
 
 		return result;
 	}
-
+	//no se usa
 	public Collection<Reservation> findPendingReservationsByRoute(final int routeId) {
 		Assert.isTrue(routeId != 0);
 
@@ -353,7 +354,7 @@ public class ReservationService {
 
 		return result;
 	}
-
+	//no se usa
 	public Collection<Reservation> findCancelledReservationsByRoute(final int routeId) {
 		Assert.isTrue(routeId != 0);
 
@@ -369,7 +370,7 @@ public class ReservationService {
 
 		return result;
 	}
-
+	//no se usa
 	public void driverPickedMe(final int reservationId) {
 		final Reservation reservation = this.reservationRepository.findOne(reservationId);
 
