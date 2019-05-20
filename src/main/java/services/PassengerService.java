@@ -141,6 +141,10 @@ public class PassengerService {
 	}
 
 	// Complex business rules
+
+	public void flush() {
+		this.passengerRepository.flush();
+	}
 	public Passenger reconstruct(final Passenger passenger, final BindingResult binding) {
 		Passenger result;
 

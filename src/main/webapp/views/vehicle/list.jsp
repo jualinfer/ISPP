@@ -85,57 +85,66 @@
 	<div class="text-center active-routes">
 		<!-- <h3>Vehicle list</h3> -->
 	</div>
-	<div class="form-group col-xs-12 col-sm-10 col-md-8  mx-auto">
-		<jstl:forEach var="vehicle" items="${vehicles}">
-			<div class="card">
-				<img class="card-img-top " src="${vehicle.image}"
-					alt="Card image cap">
-				<div class="card-img-overlay">
-					<span class="badge badge-pill badge-primary">
-						${vehicle.vehicleBrand}${vehicle.model} </span>
-					<div class="plate" style="padding-top: 10px">
-						<span class="badge badge-pill badge-secondary">${vehicle.plate}</span>
+	<div class="form-group col-xs-12 col-sm-12 col-md-8  mx-auto">
+		<div class="card-group">
+			<jstl:forEach var="vehicle" items="${vehicles}">
+				<div class="card" style="min-width: 250px; max-width: 300px;">
+					<img class="card-img-top " src="${vehicle.image}"
+						style="min-height: 250px;">
+					<div class="card-img-overlay">
+						<spring:message code="vehicle.edit" var="editVehicle" />
+						<jstl:if test="${principal.id eq driverId }">
+							<div class="edit" style="padding-top: 10px">
+								<a href="vehicle/driver/edit.do?vehicleId=${vehicle.id}"
+									class="btn btn-success" role="button">${editVehicle}</a>
+							</div>
+						</jstl:if>
+
+
+
 					</div>
-					<spring:message code="vehicle.edit" var="editVehicle" />
-					<jstl:if test="${principal.id eq driverId }">
-						<div class="edit" style="padding-top: 10px">
-							<a href="vehicle/driver/edit.do?vehicleId=${vehicle.id}"
-								class="btn btn-success" role="button">${editVehicle}</a>
+
+
+					<div class="card-footer text-center">
+						<div class="row">
+							<div class="col">
+								<div class="capacity">
+									<span class="fa-stack"> <span
+										class="fa fas fa-user fa-5x fa-stack-2x"></span> <strong
+										class="fa-stack-1x fa-stack-text fa-inverse">
+											${vehicle.seatsCapacity}</strong>
+									</span>
+								</div>
+							</div>
+							<div class="col">
+								<span class="badge badge-pill badge-primary">
+									${vehicle.vehicleBrand} ${vehicle.model} </span>
+								<div class="plate" style="padding-top: 10px">
+									<span class="badge badge-pill badge-secondary">${vehicle.plate}</span>
+								</div>
+							</div>
 						</div>
-					</jstl:if>
-
-
-
-				</div>
-
-
-				<div class="card-footer text-center">
-					<div class="capacity">
-						<span class="fa-stack"> <span
-							class="fa fas fa-user fa-4x fa-stack-2x"></span> <strong
-							class="fa-stack-1x fa-stack-text fa-inverse">
-								${vehicle.seatsCapacity}</strong>
-						</span>
 					</div>
 				</div>
-			</div>
-		</jstl:forEach>
-		<div class="form-group col-xs-12 col-sm-10 col-md-8  mx-auto">
-		<security:authorize access="hasRole('DRIVER')">
-			<div id=new style="padding-top:10px">
-			<jstl:if test="${principal.id eq driverId }">
-				<spring:message code="vehicle.new" var="vehNew" />
+			</jstl:forEach>
+		</div>
+		<div
+			class="form-group col-xs-12 col-sm-10 col-md-8  mx-auto text-center">
+			<security:authorize access="hasRole('DRIVER')">
+				<div id=new style="padding-top: 10px">
+					<jstl:if test="${principal.id eq driverId }">
+						<spring:message code="vehicle.new" var="vehNew" />
 
-				<a href="vehicle/driver/create.do"
-					class="btn btn-success btn-square btn-xl"><i
-					class="fas fa-plus fa-2x"></i></a>
-				<a href="vehicle/driver/create.do"><jstl:out value="${vehNew}" /></a>
-			</jstl:if>
-			</div>
+						<a href="vehicle/driver/create.do"
+							class="btn btn-success btn-square btn-xl"><i
+							class="fas fa-plus fa-2x"></i></a>
+						<a href="vehicle/driver/create.do"><jstl:out value="${vehNew}" /></a>
+					</jstl:if>
+				</div>
 
 
 
-		</security:authorize>
+			</security:authorize>
 		</div>
 	</div>
 </div>

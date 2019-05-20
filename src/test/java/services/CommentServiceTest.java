@@ -176,7 +176,7 @@ public class CommentServiceTest extends AbstractTest {
 
 	@Test
 	public void CommentFlow() {
-		// Test del método ValidateComment intentando probar todas las variables que tiene en cuenta
+		// Test del método Save de CommentService intentando probar todas las variables que tiene en cuenta
 
 		final Object testingData[][] = {
 			{
