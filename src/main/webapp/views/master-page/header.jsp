@@ -16,7 +16,7 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
-	
+<meta name="viewport" content="width=device-width, initial-scale=1.0">	
 <style>	
 	@MEDIA (max-width:992px) {
 		.navbar-collapse .navbar-nav{
