@@ -3,9 +3,12 @@ package services;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -241,10 +244,12 @@ public class RouteService {
 	//		this.routeRepository.delete(route);
 	//	}
 
-	public Double getDistance(final String origin, final String destination) {
+	public Double getDistance(String origin, String destination) {
+		origin = encodeValue(origin);
+		destination = encodeValue(destination);
 		Double value = 0.0;
 		try {
-			final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin.replaceAll(" ", "+") + "&destination=" + destination.replaceAll(" ", "+") + "&key=AIzaSyAKoI-jZJQyPjIp1XGUSsbWh47JBix7qws";
+			final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + destination + "&key=AIzaSyAKoI-jZJQyPjIp1XGUSsbWh47JBix7qws";
 			final URL obj = new URL(url);
 			final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
@@ -273,7 +278,7 @@ public class RouteService {
 		return DoubleRounder.round(value, 2);
 
 	}
-
+	
 	public void calculaDuracion(final Route route) {
 		final List<ControlPoint> cps = route.getControlPoints();
 		long acum = 0;
@@ -320,10 +325,12 @@ public class RouteService {
 
 	}
 
-	public Integer getDurationMinutes(final String origin, final String destination) {
+	public Integer getDurationMinutes(String origin, String destination) {
+		origin = encodeValue(origin);
+		destination = encodeValue(destination);
 		Double value = 0.0;
 		try {
-			final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin.replaceAll(" ", "+") + "&destination=" + destination.replaceAll(" ", "+") + "&key=AIzaSyAKoI-jZJQyPjIp1XGUSsbWh47JBix7qws";
+			final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + destination + "&key=AIzaSyAKoI-jZJQyPjIp1XGUSsbWh47JBix7qws";
 			final URL obj = new URL(url);
 			final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
@@ -350,6 +357,16 @@ public class RouteService {
 			e.printStackTrace();
 		}
 		return value.intValue();
+	}
+	
+	private String encodeValue(String value) {
+		try {
+			return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+		}
+		catch (UnsupportedEncodingException ex) {
+			ex.printStackTrace();
+			return value;
+		}
 	}
 	/*
 	 * public Double getPrice(final Double distance) {
