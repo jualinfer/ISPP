@@ -360,13 +360,17 @@ public class RouteService {
 	}
 	
 	private String encodeValue(String value) {
-		try {
-			return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+		String result = value;
+		if (value != null && !value.isEmpty()) {
+			try {
+				result = URLEncoder.encode(value.trim(), StandardCharsets.UTF_8.toString());
+			}
+			catch (UnsupportedEncodingException ex) {
+				ex.printStackTrace();
+				result = result.trim().replaceAll(" ", "+");
+			}
 		}
-		catch (UnsupportedEncodingException ex) {
-			ex.printStackTrace();
-			return value;
-		}
+		return result;
 	}
 	/*
 	 * public Double getPrice(final Double distance) {
