@@ -1,8 +1,10 @@
 
 package services;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.transaction.Transactional;
 
@@ -35,11 +37,22 @@ public class RouteServiceSearchingTest extends AbstractTest {
 
 	@Override
 	public void setUp() {
-		Route route2;
+		Route route1, route2, route3, route10;
+		Date newDate;
 
 		//Ponemos en la ruta2 el mismo origen y destino
 		route2 = this.routeService.findOne(this.getEntityId("route2"));
 		route2.setOrigin("Avenida del Cid, Sevilla");
+
+		route1 = this.routeService.findOne(this.getEntityId("route1"));
+		route3 = this.routeService.findOne(this.getEntityId("route3"));
+		route10 = this.routeService.findOne(this.getEntityId("route10"));
+
+		newDate = new Date(new Date().getTime() + 10000000);
+
+		route1.setDepartureDate(newDate);
+		route3.setDepartureDate(newDate);
+		route10.setDepartureDate(newDate);
 
 	}
 
@@ -47,6 +60,11 @@ public class RouteServiceSearchingTest extends AbstractTest {
 	public void RouteSearch() {
 		// Test del método de búsqueda de rutas a partir de un Finder
 		Finder finder;
+		Date date1, date2, date3;
+
+		date1 = new GregorianCalendar(2019, Calendar.JUNE, 4, 12, 36).getTime();
+		date2 = new GregorianCalendar(2019, Calendar.JUNE, 6, 12, 36).getTime();
+		date3 = new GregorianCalendar(2019, Calendar.JUNE, 4, 12, 21).getTime();
 
 		final Object testingData[][] = {
 			{
@@ -109,6 +127,18 @@ public class RouteServiceSearchingTest extends AbstractTest {
 			}, {
 				"route3", null, "reina", 1, null, null, null, null, null, null, null, null, LuggageSize.BIG
 			// Luggage T
+			}, {
+				"route1", null, "avenida", 1, null, null, null, null, null, null, null, date1, null
+			// Arrival Time T
+			}, {
+				"route1", IllegalArgumentException.class, "avenida", 1, null, null, null, null, null, null, null, date2, null
+			// Arrival Time F
+			}, {
+				"route1", null, "avenida", 1, "felipe", null, null, null, null, null, date3, null, null
+			// Departure Time T
+			}, {
+				"route1", IllegalArgumentException.class, "avenida", 1, "felipe", null, null, null, null, null, date2, null, null
+			// Departure Time F
 			}
 		};
 
@@ -135,7 +165,6 @@ public class RouteServiceSearchingTest extends AbstractTest {
 			this.RouteSearchTemplate(finder, (String) testingData[i][0], (Class<?>) testingData[i][1]);
 		}
 	}
-
 	public void RouteSearchTemplate(Finder finder, String routeBean, Class<?> expected) {
 
 		Class<?> caught;
@@ -150,24 +179,12 @@ public class RouteServiceSearchingTest extends AbstractTest {
 			if (routeBean != null) {
 				route = this.routeService.findOne(this.getEntityId(routeBean));
 
-				if (finder.getLuggageSize() != null) {
-					System.out.println("test");
-				}
-
 				Assert.isTrue(result.contains(route));
 			} else {
 				Assert.isTrue(result.size() == 0);
 			}
 		} catch (Throwable oops) {
 			caught = oops.getClass();
-		}
-
-		if (expected == null && caught != null) {
-			System.out.println("wasd");
-		}
-
-		if (expected != null && caught == null) {
-			System.out.println("wasd");
 		}
 
 		this.checkExceptions(expected, caught);
