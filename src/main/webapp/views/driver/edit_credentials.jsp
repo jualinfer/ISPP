@@ -26,7 +26,15 @@
 <link href="${profileManagementcss}" rel="stylesheet" />
 <script src="${profileManagementcss}"></script>
 
-
+<style>
+	/* landscape phones, 576px and up */
+	@MEDIA ( max-width : 576px) {
+		.nav-profile-enlaces .nav-link{
+			padding: .5rem;
+    		font-size: 16px;
+		}
+	}
+</style>
 
 <div class="title-principal">
 	<h3>
