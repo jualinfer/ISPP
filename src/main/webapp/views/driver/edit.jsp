@@ -63,7 +63,7 @@
 		<div class="profile-management d-flex flex-column justify-content-center">
 			<div class="item-profile-management d-flex d-row justify-content-arround">
 				<div class="form-group">
-					<span><p><form:label path="image">
+					<span><p><form:label path="image" style="padding-right:10px">
 						<spring:message code="driver.image" />: 
 					</form:label></p></span>
 					<div><form:input path="image" class="form-control"/>
