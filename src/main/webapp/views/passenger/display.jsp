@@ -60,7 +60,7 @@
 			<jstl:out value="${passenger.surname}" />
 		</dt>
 
-		<div class="comment.star">
+		<div class="comment.star d-flex">
 			<jstl:if
 				test="${passenger.mediumStars >= 0 && passenger.mediumStars <= 0.4 }">
 				<img src="images/vaciauser.png" />
