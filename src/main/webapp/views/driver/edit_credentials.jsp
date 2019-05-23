@@ -50,19 +50,23 @@
 	<div class="content-principal">
 		<div class="profile-management d-flex flex-column justify-content-center">
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="password">
-					<spring:message code="driver.password"/>: 
-				</form:label></p></span>
-				<div><form:password id="password" path="password" class="form-control"/>
-				<form:errors cssClass="error" path="password"/></div>
+				<div class="form-group">
+					<span><p><form:label path="password">
+						<spring:message code="driver.password"/>: 
+					</form:label></p></span>
+					<div><form:password id="password" path="password" class="form-control"/>
+					<form:errors cssClass="error" path="password"/></div>
+				</div>
 			</div>
 			
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="repeatPassword">
-					<spring:message code="driver.repeat.password"/>: 
-				</form:label></p></span>
-				<div><form:password id="repeatPassword" path="repeatPassword" class="form-control"/>
-				<form:errors cssClass="error" path="repeatPassword"/></div>
+				<div class="form-group">
+					<span><p><form:label path="repeatPassword">
+						<spring:message code="driver.repeat.password"/>: 
+					</form:label></p></span>
+					<div><form:password id="repeatPassword" path="repeatPassword" class="form-control"/>
+					<form:errors cssClass="error" path="repeatPassword"/></div>
+				</div>
 			</div>
 		</div>
 	
