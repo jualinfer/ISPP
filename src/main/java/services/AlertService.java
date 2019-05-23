@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.AlertRepository;
+import security.UserAccount;
 import security.UserAccountService;
 import domain.Actor;
 import domain.Alert;
@@ -57,19 +58,17 @@ public class AlertService {
 	}
 
 	public Alert createAdmin() {
-			final Actor receiver= this.actorService.findByPrincipal();
-			final Alert alert = new Alert();
-			final Actor sender = this.actorService.findByPrincipal();
-			alert.setSender(sender);
-			alert.setIsRead(false);
-			alert.setDate(new Date(System.currentTimeMillis() - 1));
-			alert.setReceiver(receiver);
+		final Actor receiver = this.actorService.findByPrincipal();
+		final Alert alert = new Alert();
+		final Actor sender = this.actorService.findByPrincipal();
+		alert.setSender(sender);
+		alert.setIsRead(false);
+		alert.setDate(new Date(System.currentTimeMillis() - 1));
+		alert.setReceiver(receiver);
 
-			alert.setTypeAlert(TypeAlert.SYSTEM_NEWS);
-			return alert;
-		}
-	
-	
+		alert.setTypeAlert(TypeAlert.SYSTEM_NEWS);
+		return alert;
+	}
 
 	public Alert save(final Alert alert) {
 		Assert.notNull(alert);
@@ -78,6 +77,10 @@ public class AlertService {
 		//Assert.notNull(alert.getRelatedRoute());
 
 		Alert result;
+		if (alert.getTypeAlert() == TypeAlert.SYSTEM_NEWS) {
+			final UserAccount adminAccount = this.uaService.findByUsername("admin@gmail.com");
+			Assert.isTrue(alert.getSender().getUserAccount().equals(adminAccount));
+		}
 		result = this.alertRepository.save(alert);
 
 		return result;
