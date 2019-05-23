@@ -27,6 +27,15 @@
 	<link href="${routecss}" rel="stylesheet" />
 	<script src="${routecss}"></script>
 <security:authentication property="principal.banned" var="banned" />
+
+<style>
+	@MEDIA ( max-width : 360px) {
+		.route .circle{
+			display: none;
+		}
+	}
+</style>
+
 <div class="text-center active-routes">
 	<h3><jstl:if test="${!banned}"><spring:message code="activeRoutes" /></jstl:if></h3>
 </div>
