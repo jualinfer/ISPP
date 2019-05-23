@@ -358,7 +358,7 @@
 						<div class="route d-flex flex-column align-items-center">
 
 							<a
-								class="stretched-link d-flex align-items-center justify-content-space-between flex-wrap"
+								class="d-flex align-items-center justify-content-space-between flex-wrap"
 								href="route/display.do?routeId=${reservation.route.id }">
 
 								<div class="origin">
