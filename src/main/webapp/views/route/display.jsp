@@ -97,12 +97,12 @@ li {
 			<!-- origin, destination and date -->
 			<center>
 				<div class="col-xs-12 col-sm-10 col-md-8 text-center">
-					<h3>
-						<span class="badge badge-info"><jstl:out
-								value="${route.origin }"></jstl:out> <i
-							class="fas fa-arrow-right"></i> <jstl:out
-								value="${route.destination }"></jstl:out></span>
-					</h3>
+
+					<span style="font-size: calc(0.4em + 1vw)" class="badge badge-info"><jstl:out
+							value="${route.origin }"></jstl:out> <i
+						class="fas fa-arrow-right"></i> <jstl:out
+							value="${route.destination }"></jstl:out></span>
+
 				</div>
 			</center>
 
@@ -171,18 +171,15 @@ li {
 												class="driver-name d-flex flex-row justify-content-center m-1">
 												<span class="badge badge-info"> <a
 													href="driver/display.do?driverId=${route.driver.id}"
-													style="color: white; font-size: calc(0.7em + 1vw)"
-													onMouseOver="this.style.cssText='color: #cc0000'"
-													onMouseOut="this.style.cssText='color: #FFFFFF'"><jstl:out
+													style="color: white; font-size: calc(0.7em + 1vw)"><jstl:out
 															value="${route.driver.name}" /> <jstl:out
 															value="${route.driver.surname}" /></a> <jstl:if
 														test="${route.driver.id != connectedUser.id}">
 														<a
 															href="thread/message/create.do?userId=${route.driver.id}&routeId=${route.id}"
-															style="color: white"
-															onMouseOver="this.style.cssText='color: #cc0000'"
-															onMouseOut="this.style.cssText='color: #FFFFFF'"><i
-															class="far fa-envelope"></i></a>
+															style="color: white; font-size: calc(0.2em + 1vw)"><i class="fas fa-comment-dots"></i>
+
+</a>
 													</jstl:if>
 												</span>
 
@@ -363,8 +360,9 @@ li {
 											</a>
 											<jstl:if test="${res.passenger.id != connectedUser.id}">
 												<a
-													href="thread/message/create.do?userId=${res.passenger.id}&routeId=${route.id}"><i
-													class="far fa-envelope"></i></a>
+													href="thread/message/create.do?userId=${res.passenger.id}&routeId=${route.id}"><i class="fas fa-comment-dots"></i>
+
+</a>
 											</jstl:if>
 										</dd></span>
 									<dd>
