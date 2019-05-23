@@ -39,6 +39,20 @@
 <spring:url value="/styles/route.css" var="routecss" />
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
+
+<style>
+	/* landscape phones, 576px and up */
+	@MEDIA ( max-width : 576px) {
+		img.comment.star {
+			width: 10%;
+			height: auto;
+		}
+		._profile{
+			width: 100%;	
+		}
+	}
+</style>
+
 <div class="text-center active-routes">
 	<h3>
 		<spring:message code="driver.nav.profile" />
@@ -163,7 +177,7 @@
 			</jstl:if>
 
 		</div>
-		</div>
+		
 
 
 		<spring:message code="driver.country" var="driverCountry" />
@@ -189,11 +203,12 @@
 		<dd>
 			<jstl:out value="${driver.city}" />
 		</dd>
+		</div>
 
 
 
 
-	</div>
+	
 
 	<div class="card_">
 		<div class="card-header_" id="headingTwo">
@@ -353,7 +368,7 @@
 	</div>
 
 	<div id="collapseOne" class="collapse">
-		<div class="card-body d-flex flex-column">
+		<div class="d-flex flex-column">
 
 			<div
 				class="routes d-flex flex-row align-items-baseline justify-content-center m-2">
@@ -420,5 +435,6 @@
 		<div class="circle background_pink"></div>
 		<div class="circle background_blue"></div>
 		<div class="circle background_green"></div>
+	</div>
 	</div>
 </div>

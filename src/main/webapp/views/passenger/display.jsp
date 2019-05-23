@@ -29,13 +29,16 @@
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
 <style>
-/* landscape phones, 576px and up */
-@MEDIA ( max-width : 576px) {
-	img.comment.star {
-		width: 10%;
-		height: auto;
+	/* landscape phones, 576px and up */
+	@MEDIA ( max-width : 576px) {
+		img.comment.star {
+			width: 10%;
+			height: auto;
+		}
+		._profile{
+			width: 100%;	
+		}
 	}
-}
 </style>
 <div class="text-center active-routes">
 	<h3>
@@ -347,7 +350,7 @@
 	</div>
 
 	<div id="collapseOne" class="collapse">
-		<div class="card-body d-flex flex-column">
+		<div class="d-flex flex-column">
 
 			<div
 				class="routes d-flex flex-row align-items-baseline justify-content-center m-2">
