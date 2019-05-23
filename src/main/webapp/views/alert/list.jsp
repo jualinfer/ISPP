@@ -19,7 +19,11 @@
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
-
+<style>
+html {
+	font-size: calc(0.5em + 1vw)
+}
+</style>
 
 <%-- Stored message variables --%>
 
@@ -75,20 +79,22 @@
 				</div>
 				<div class="card-body">
 
-					<spring:message code="alert.alertType" />
+
 					<br> <span class="badge badge-pill badge-primary">
-						${alert.typeAlert} ${alert.alertBody} </span> <br>
+						${alert.typeAlert}</span>
+					<p>${alert.alertBody}</p>
+					<br>
 
 					<spring:message code="alert.sender" />
 					<br> <span class="badge badge-pill badge-primary">
 						${alert.sender.name} ${alert.sender.surname} </span> <br> <br>
 				</div>
 				<div class="card-footer text-muted">
-				<div style="padding:5px">
-				<i class="fa fa-calendar" aria-hidden="true"></i>
-						<fmt:formatDate value="${alert.date}"
-							type="both" dateStyle="medium" timeStyle="short" />
-							</div>
+					<div style="padding: 5px">
+						<i class="fa fa-calendar" aria-hidden="true"></i>
+						<fmt:formatDate value="${alert.date}" type="both"
+							dateStyle="medium" timeStyle="short" />
+					</div>
 					<div class="text-center">
 
 						<a href="${deleteUrl}"

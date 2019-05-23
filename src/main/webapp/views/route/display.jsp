@@ -305,10 +305,15 @@ li {
 								<img class="card-img-top" src="${route.vehicle.image}">
 								<div class="card-footer text-muted">
 									<p>
-										<jstl:out value="${route.vehicle.vehicleBrand}" />
+										
+
+										
 										<span class="badge badge-primary"> <jstl:out
 												value="${route.vehicle.model}" />
 										</span>
+									</p>
+									<p>
+									<jstl:out value="${route.vehicle.description}" />
 									</p>
 									<jstl:out value="${route.vehicle.plate}" />
 								</div>
