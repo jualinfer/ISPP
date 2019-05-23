@@ -1,0 +1,41 @@
+/* common.css
+ *
+ * Copyright (C) 2019 Universidad de Sevilla
+ * 
+ * The use of this project is hereby constrained to the conditions of the 
+ * TDG Licence, a copy of which you may download from 
+ * http://www.tdg-seville.info/License.html
+ * 
+ */
+@import url(https://fonts.googleapis.com/css?family=Poppins);
+
+
+ 
+ .page-footer{
+ background-color: #2295ff;
+ height: auto;
+ 
+
+ }
+ 
+ .links{
+ color: #fff;
+ }
+ 
+ .links:hover{
+ color: #d1e9ff;
+ }
+ 
+ .footer-copyright{
+ position:relative;
+ background-color: #1a80de;
+
+
+ }
+ 
+ .imgcoche{
+ position:relative;
+ top: -50px;
+ /* padding-left: 50px; */	
+ }
+ 

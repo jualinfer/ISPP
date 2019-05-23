@@ -34,6 +34,7 @@ public class RoutePassengerController extends AbstractController {
 		super();
 	}
 
+	// Listing active routes by driver-------------------------------------
 	@RequestMapping(value = "/listActive", method = RequestMethod.GET)
 	public ModelAndView listActiveRoutesByPassenger() {
 		ModelAndView result;

@@ -5,19 +5,20 @@ import java.util.Date;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-import org.joda.time.LocalTime;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Finder {
 
 	//Atributos
 
-	private Date		departureDate;
 	private String		origin;
-	private LocalTime	originTime;
+	private Date		departureDate;
 	private String		destination;
-	private LocalTime	destinationTime;
+	private Date		arrivalDate;
 	private Integer		vehicleType;
 	private Integer		availableSeats;
 	private LuggageSize	luggageSize;
@@ -26,27 +27,16 @@ public class Finder {
 	private Boolean		smoke;
 	private Boolean		music;
 
-
-	@Temporal(TemporalType.TIME)
-	@DateTimeFormat(pattern = "HH:mm")
-	public LocalTime getOriginTime() {
-		return this.originTime;
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+	public Date getArrivalDate() {
+		return this.arrivalDate;
 	}
 
-	public void setOriginTime(LocalTime originTime) {
-		this.originTime = originTime;
+	public void setArrivalDate(Date arrivalDate) {
+		this.arrivalDate = arrivalDate;
 	}
-
-	@Temporal(TemporalType.TIME)
-	@DateTimeFormat(pattern = "HH:mm")
-	public LocalTime getDestinationTime() {
-		return this.destinationTime;
-	}
-
-	public void setDestinationTime(LocalTime destinationTime) {
-		this.destinationTime = destinationTime;
-	}
-
+	
 	public Boolean getPets() {
 		return this.pets;
 	}
@@ -91,8 +81,8 @@ public class Finder {
 		this.music = music;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	public Date getDepartureDate() {
 		return this.departureDate;
 	}
@@ -100,7 +90,7 @@ public class Finder {
 	public void setDepartureDate(Date departureDate) {
 		this.departureDate = departureDate;
 	}
-
+	
 	public String getOrigin() {
 		return this.origin;
 	}
@@ -112,6 +102,8 @@ public class Finder {
 		this.origin = origin.toLowerCase();
 	}
 
+	@NotNull
+	@NotBlank
 	public String getDestination() {
 		return this.destination;
 	}
@@ -130,7 +122,9 @@ public class Finder {
 	public void setVehicleType(Integer vehicleType) {
 		this.vehicleType = vehicleType;
 	}
-
+	
+	@NotNull
+	@Min(1)
 	public Integer getAvailableSeats() {
 		return this.availableSeats;
 	}

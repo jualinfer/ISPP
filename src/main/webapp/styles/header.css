@@ -2,169 +2,56 @@
 
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
-.item-details a{
-	color:black;
+
+.pinkheader{
+	height: 300px;
 }
 
-.nav-item{
-	color:black;
+.botonnavbar{
+  border: 2px solid black;
+  border-radius: 20px;
+  background-color: white;
+  color: black;
+  padding: 10px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  border-color: #ff6b9b;
+  color: #ff6b9b;
+  margin-left: 6px;
+  margin-right: 6px;
 }
 
-.navbar-icon-top .navbar-nav .nav-link > .fa {
-  position: relative;
-  width: 36px;
-  font-size: 24px;
+.botonnavbar:hover {
+  background-color: #ff6b9b;
+  color: white;
 }
 
-.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
-  font-size: 0.75rem;
-  position: absolute;
-  right: 0;
-  font-family: sans-serif;
-}
-
-.navbar-icon-top .navbar-nav .nav-link > .fa {
-  top: 3px;
-  line-height: 12px;
-}
-
-.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
-  top: -10px;
-}
-
-@media (min-width: 576px) {
-  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link {
-    text-align: center;
-    display: table-cell;
-    height: 70px;
-    vertical-align: middle;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 48px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 24px;
-  }
-
-  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa > .badge {
-    top: -7px;
-  }
-}
-
-@media (min-width: 768px) {
-  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link {
-    text-align: center;
-    display: table-cell;
-
-    height: 70px;
-    vertical-align: middle;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 48px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 24px;
-   
-  }
-
-  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa > .badge {
-    top: -7px;
-    color: #fff;
-  }
-}
-
-@media (min-width: 992px) {
-  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link {
-    text-align: center;
-    display: table-cell;
-    height: 70px;
-    vertical-align: middle;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 48px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 24px;
-  }
-
-  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa > .badge {
-    top: -7px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link {
-    text-align: center;
-    display: table-cell;
-    height: 70px;
-    vertical-align: middle;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa {
-    display: block;
-    width: 48px;
-    margin: 2px auto 4px auto;
-    top: 0;
-    line-height: 24px;
-  }
-
-  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa > .badge {
-    top: -7px;
-  }
-}
-
-.logo img{
-	width: 120px;
-	position: relative;
-	left: -75px;
-	margin: 10px;
-}
-
-
-.headerContent{
-	display: flex;
-	background-color: #fa3274;
-    height: 45px;	
-    padding: 5px;
-}
-
-.menuIcon, .fa{
-	margin: 0 5px;
-}
-
-.hamburguer{
-	width: 35px;
-	height: 5px;
-	background-color: black;
-	margin: 6px 0;
-}
-
-.user{
-	position: absolute;
-    right: 0;
-    margin-right: 12%;
-}
-
-.detalles-usuario {
-	position:relative;
-	float: rigth;
-	rigth: 0px;
+.imgdriver, .imgpassenger{
+	margin-left: 10%;
 	
 }
 
+.imgpassenger{
+	margin-top: 3%;
+/* position: relative;
+ vertical-align: middle;
+ padding-top: -10px;
+ padding-bottom: 0px;
+ margin-left: -50vw;
+ margin-top: 0px;
+ left: 90%;
+ top: -30px; */	
+}
 
-
+.pinkheader .btn-light  {
+ position: relative;
+ /* vertical-align: middle; */
+ /* padding-top: 20px;
+ padding-bottom: 20px;
+ padding-right: 60px;
+ top: 160px;
+ margin-left: 10vw; */
+ background-color: #fff;
+ color: #0086ff;
+	
+}

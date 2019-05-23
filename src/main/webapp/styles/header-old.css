@@ -1,0 +1,262 @@
+@CHARSET "ISO-8859-1";
+
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+
+.pinkheader{
+	height: 300px;
+}
+
+.row-full{
+ /* width: 100vw;
+ position: relative;
+ margin-left: -50vw;
+ height: 400px;
+ margin-top: 0px;
+ background-color: #ff6b9b;
+ left: 50%; */
+}
+
+.add_search{
+	/* width: 30px;
+	height: 30px; */
+	position: relative;
+	float: right;
+	right: 26%;
+	top: 8%;
+}
+.botonnavbar{
+  border: 2px solid black;
+  border-radius: 20px;
+  background-color: white;
+  color: black;
+  padding: 10px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  border-color: #ff6b9b;
+  color: #ff6b9b;
+  margin-left: 12px;
+}
+
+.botonnavbar:hover {
+  background-color: #ff6b9b;
+  color: white;
+}
+
+.derecha{
+	align: right;
+	position: relative;
+ 	vertical-align: right;
+}
+.imgdriver, .imgpassenger{
+	margin-left: 10%;
+	
+}
+
+.imgpassenger{
+	margin-top: 3%;
+/* position: relative;
+ vertical-align: middle;
+ padding-top: -10px;
+ padding-bottom: 0px;
+ margin-left: -50vw;
+ margin-top: 0px;
+ left: 90%;
+ top: -30px; */	
+}
+
+.pinkheader .btn-light  {
+ position: relative;
+ /* vertical-align: middle; */
+ /* padding-top: 20px;
+ padding-bottom: 20px;
+ padding-right: 60px;
+ top: 160px;
+ margin-left: 10vw; */
+ background-color: #fff;
+ color: #0086ff;
+	
+}
+
+.bs-example .navbar-expand-md  {
+	box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
+	
+}
+
+.header_nav{
+	conten: '';
+	height: 50px;
+	width: 100%;
+	position: relative;
+	background-color: #FD497C;
+}
+
+.item-details a{
+	color:black;
+}
+
+.nav-item{
+	color:black;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+  position: relative;
+  width: 36px;
+  font-size: 24px;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+  font-size: 0.75rem;
+  position: absolute;
+  right: 0;
+  font-family: sans-serif;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa {
+  top: 3px;
+  line-height: 12px;
+}
+
+.navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+  top: -10px;
+}
+
+@media (min-width: 576px) {
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+  }
+
+  .navbar-icon-top.navbar-expand-sm .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+   
+  }
+
+  .navbar-icon-top.navbar-expand-md .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+    color: #fff;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+  }
+
+  .navbar-icon-top.navbar-expand-lg .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link {
+    text-align: center;
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa {
+    display: block;
+    width: 48px;
+    margin: 2px auto 4px auto;
+    top: 0;
+    line-height: 24px;
+  }
+
+  .navbar-icon-top.navbar-expand-xl .navbar-nav .nav-link > .fa > .badge {
+    top: -7px;
+  }
+}
+
+.logo img{
+	width: 166px;
+	height: auto;
+	position: relative;
+	/* left: -75px; */
+	/* margin: 10px; */
+}
+
+
+.headerContent{
+	display: flex;
+	background-color: #fa3274;
+    height: 45px;	
+    padding: 5px;
+}
+
+.menuIcon, .fa{
+	margin: 0 5px;
+}
+
+.hamburguer{
+	width: 35px;
+	height: 5px;
+	background-color: black;
+	margin: 6px 0;
+}
+
+.user{
+	position: absolute;
+    right: 0;
+    margin-right: 12%;
+}
+
+.detalles-usuario {
+	position:relative;
+	float: rigth;
+	rigth: 0px;
+	
+}
+
+
+
+
+

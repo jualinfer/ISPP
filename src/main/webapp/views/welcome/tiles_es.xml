@@ -17,7 +17,7 @@
 
 	<definition extends="master.page" name="welcome/termsAndConditions">
 
-		<put-attribute name="title" value="Terms and Conditions" />
+		<put-attribute name="title" value="" />
 
 		<put-attribute name="body"
 			value="/views/welcome/termsAndConditions.jsp" />

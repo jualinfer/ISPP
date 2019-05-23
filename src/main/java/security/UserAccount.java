@@ -1,17 +1,17 @@
 /*
- * 
+ *
  * UserAccount.java
- * 
- * 
- * 
+ *
+ *
+ *
  * Copyright (C) 2019 Universidad de Sevilla
- * 
- * 
- * 
+ *
+ *
+ *
  * The use of this project is hereby constrained to the conditions of the
- * 
+ *
  * TDG Licence, a copy of which you may download from
- * 
+ *
  * http://www.tdg-seville.info/License.html
  */
 
@@ -38,7 +38,7 @@ import domain.DomainEntity;
 
 @Entity
 @Access(AccessType.PROPERTY)
-public class UserAccount extends DomainEntity implements UserDetails {    // Constructors -----------------------------------------------------------    
+public class UserAccount extends DomainEntity implements UserDetails {    // Constructors -----------------------------------------------------------
 
 	private static final long	serialVersionUID	= 7254823034213841482L;
 
@@ -48,7 +48,7 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 		super();
 		this.authorities = new ArrayList<Authority>();
 
-	}    // Attributes -------------------------------------------------------------    // UserDetails interface --------------------------------------------------    
+	}    // Attributes -------------------------------------------------------------    // UserDetails interface --------------------------------------------------
 
 
 	private String					username;
@@ -58,6 +58,8 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 	private Boolean					banned;
 
 	private Collection<Authority>	authorities;
+
+	private boolean					enabled;
 
 
 	@Size(min = 5, max = 32)
@@ -139,13 +141,7 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 		return true;
 
 	}
-	@Transient
-	@Override
-	public boolean isEnabled() {
 
-		return true;
-
-	}
 	public Boolean getBanned() {
 
 		return this.banned;
@@ -157,9 +153,13 @@ public class UserAccount extends DomainEntity implements UserDetails {    // Con
 		this.banned = banned;
 
 	}
-	public void setEnabled(final boolean b) {
-		// TODO Auto-generated method stub
 
+	@Override
+	public boolean isEnabled() {
+		return this.enabled;
 	}
 
+	public void setEnabled(final boolean enabled) {
+		this.enabled = enabled;
+	}
 }

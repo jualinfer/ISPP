@@ -42,29 +42,77 @@
 		<security:intercept-url pattern="/welcome/index.do" access="permitAll" />
 		<security:intercept-url pattern="/welcome/termsAndConditions.do" access="permitAll" />  
 
-		<security:intercept-url pattern="/administrator/action-1.do" access="hasRole('ADMIN')" /> 
-		<security:intercept-url pattern="/administrator/action-2.do" access="hasRole('ADMIN')" /> 
+		<security:intercept-url pattern="/administrator/controlPanel.do" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/administrator/ban.do" access="hasRole('ADMIN')" />
 
 		<security:intercept-url pattern="/customer/action-1.do" access="hasRole('CUSTOMER')" /> 
 		<security:intercept-url pattern="/customer/action-2.do" access="hasRole('CUSTOMER')" /> 
 
-		<security:intercept-url pattern="/route/list.do" access="isAuthenticated()" /> 
-		<security:intercept-url pattern="/route/driver/**" access="hasRole('DRIVER')" /> 
-		<security:intercept-url pattern="/route/display.do" access="isAuthenticated()" /> 
-		<security:intercept-url pattern="/route/search.do" access="isAuthenticated()" />
-		<security:intercept-url pattern="/route/driver/listActive.do" access="hasRole('DRIVER')" /> 
-		<security:intercept-url pattern="/route/passenger/listActive.do" access="hasRole('PASSENGER')" />
-		<security:intercept-url pattern="/route/driver/cancel.do" access="hasRole('DRIVER')" />
+		<security:intercept-url pattern="/route/list.do" access="isAuthenticated() and !principal.banned" /> 
+		<security:intercept-url pattern="/route/display.do" access="isAuthenticated() and !principal.banned" /> 
+		<security:intercept-url pattern="/route/search.do" access="isAuthenticated() and !principal.banned" />
 		
-		<security:intercept-url pattern="/reservation/passenger/create.do" access="hasRole('PASSENGER')" /> 
-		<security:intercept-url pattern="/reservation/passenger/driverPickUp.do" access="hasRole('PASSENGER')" /> 
-		<security:intercept-url pattern="/reservation/passenger/driverNoPickUp.do" access="hasRole('PASSENGER')" /> 
-		<security:intercept-url pattern="/reservation/display.do" access="isAuthenticated()" />
-		<security:intercept-url pattern="/reservation/driver/acceptReservation.do" access="hasRole('DRIVER')" />
-		<security:intercept-url pattern="/reservation/driver/rejectReservation.do" access="hasRole('DRIVER')" /> 
-		<security:intercept-url pattern="/reservation/passenger/cancelReservation.do" access="hasRole('PASSENGER')" /> 
+		<security:intercept-url pattern="/route/driver/listActive.do" access="hasRole('DRIVER')" /> 
+		<security:intercept-url pattern="/route/driver/create.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		<security:intercept-url pattern="/route/driver/confirm.do" access="hasRole('DRIVER') and !principal.banned" />
+		<security:intercept-url pattern="/route/driver/edit.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		<security:intercept-url pattern="/route/driver/cancel.do" access="hasRole('DRIVER') and !principal.banned" />	
+		
+		<security:intercept-url pattern="/route/passenger/listActive.do" access="hasRole('PASSENGER')" />
+
+		<security:intercept-url pattern="/controlpoint/driver/add.do" access="hasRole('DRIVER') and !principal.banned" />
+		<security:intercept-url pattern="/controlpoint/driver/remove.do" access="hasRole('DRIVER') and !principal.banned" />		
+		
+		<security:intercept-url pattern="/reservation/passenger/create.do" access="hasRole('PASSENGER') and !principal.banned" /> 
+		<security:intercept-url pattern="/reservation/passenger/save.do" access="hasRole('PASSENGER') and !principal.banned" />
+		<security:intercept-url pattern="/reservation/passenger/cancelReservation.do" access="hasRole('PASSENGER') and !principal.banned" />
+		<security:intercept-url pattern="/reservation/passenger/driverPickUp.do" access="hasRole('PASSENGER') and !principal.banned" /> 
+		<security:intercept-url pattern="/reservation/passenger/driverNoPickUp.do" access="hasRole('PASSENGER') and !principal.banned" /> 
+		<security:intercept-url pattern="/reservation/driver/acceptReservation.do" access="hasRole('DRIVER') and !principal.banned" />
+		<security:intercept-url pattern="/reservation/driver/rejectReservation.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		
+		<security:intercept-url pattern="/driver/create.do" access="!isAuthenticated()" />
+		<security:intercept-url pattern="/driver/edit.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		<security:intercept-url pattern="/driver/display.do" access="isAuthenticated() and !principal.banned" /> 
+		<security:intercept-url pattern="/driver/displayPrincipal.do" access="hasRole('DRIVER')" /> 
+		<security:intercept-url pattern="/driver/unsubscribe.do" access="hasRole('DRIVER')" /> 
+		
+		
+		<security:intercept-url pattern="/vehicle/driver/list.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		<security:intercept-url pattern="/vehicle/driver/edit.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		<security:intercept-url pattern="/vehicle/driver/create.do" access="hasRole('DRIVER') and !principal.banned" /> 
+		<security:intercept-url pattern="/vehicle/driver/editPhoto.do" access="hasRole('DRIVER') and !principal.banned" /> 
+	<!--	<security:intercept-url pattern="/vehicle/driver/delete.do" access="hasRole('DRIVER')" />   -->
+		<security:intercept-url pattern="/driver/editCredentials.do" access="hasRole('DRIVER') and !principal.banned" />
+		<security:intercept-url pattern="/passenger/create.do" access="!isAuthenticated()" />
+		<security:intercept-url pattern="/passenger/edit.do" access="hasRole('PASSENGER') and !principal.banned" /> 
+		<security:intercept-url pattern="/passenger/display.do" access="isAuthenticated() and !principal.banned" /> 
+		<security:intercept-url pattern="/passenger/displayPrincipal.do" access="hasRole('PASSENGER')" /> 
+		<security:intercept-url pattern="/passenger/editCredentials.do" access="hasRole('PASSENGER') and !principal.banned" />
+		<security:intercept-url pattern="/passenger/unsubscribe.do" access="hasRole('PASSENGER')" /> 
+		
+		<security:intercept-url pattern="/thread/message/create.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/message/add.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/message/view.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/message/list.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/report/create.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/report/add.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/report/view.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/report/list.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/thread/report/close.do" access="hasRole('ADMIN')" />
+		
+		<security:intercept-url pattern="/alert/list.do" access="isAuthenticated() and !principal.banned" />
+		<security:intercept-url pattern="/alert/edit.do" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/alert/alertSeen.do" access="isAuthenticated() and !principal.banned" />
+			<security:intercept-url pattern="/alert/delete.do" access="isAuthenticated() and !principal.banned" />
+		
+		<security:intercept-url pattern="/comment/create.do" access="(hasRole('PASSENGER') || hasRole('DRIVER')) and !principal.banned" />
+		
+		<security:intercept-url pattern="/profile/download.do" access="hasRole('PASSENGER') || hasRole('DRIVER')" />
 		
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />
+		
+		
 
 		<security:form-login 
 			login-page="/security/login.do"

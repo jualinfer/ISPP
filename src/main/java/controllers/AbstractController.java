@@ -11,13 +11,21 @@
 package controllers;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import security.UserAccount;
+import security.UserAccountService;
+
 @Controller
 public class AbstractController {
+	
+	@Autowired
+	private UserAccountService	userAccountService;
 
 	// Panic handler ----------------------------------------------------------
 
@@ -33,4 +41,15 @@ public class AbstractController {
 		return result;
 	}
 
+	public UserAccount hashSavePassword(final UserAccount userAccount) {
+		UserAccount result;
+		Md5PasswordEncoder encoder;
+
+		encoder = new Md5PasswordEncoder();
+		userAccount.setPassword(encoder.encodePassword(userAccount.getPassword(), null));
+
+		result = this.userAccountService.save(userAccount);
+
+		return result;
+	}
 }
