@@ -361,12 +361,13 @@
 						<div class="route d-flex flex-column align-items-center">
 
 							<a
-								class="d-flex align-items-center justify-content-space-between flex-wrap"
+								class="d-flex flex-column align-items-center justify-content-space-between flex-wrap"
 								href="route/display.do?routeId=${reservation.route.id }">
 
 								<div class="origin">
 									<jstl:out value="${reservation.route.origin }"></jstl:out>
 								</div>
+								<i class="fas fa-arrow-down text-dark"></i>
 								<div class="destination">
 									<jstl:out value="${reservation.route.destination }"></jstl:out>
 								</div>
