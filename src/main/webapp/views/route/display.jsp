@@ -121,28 +121,22 @@ li {
 					</div>
 				</div>
 				<div id="collapseOne" class="collapse show">
-					<div class="col-xs-12 col-sm-10 col-md-10 text-center">
-						<div class="card-body d-flex flex-column">
 
-							<jstl:forEach var="point" items="${route.controlPoints}">
-								<div class="item-route-accordion d-inline-flex font-weight-bold">
-									<div
-										class="hidden circle m-0 mr-3 align-items-baseline background_orange"></div>
-									<p>
-										<jstl:out value="${point.location}" />
-										&nbsp
-									</p>
-									<p class="font-weight-normal">
-										<span class="hidden badge badge-pill badge-primary"
-											style="font-size: 15px"> <fmt:formatDate
-												value="${point.arrivalTime}" pattern="${formatDate}" />
-										</span>
-									</p>
-								</div>
-							</jstl:forEach>
 
-						</div>
-					</div>
+					<jstl:forEach var="point" items="${route.controlPoints}">
+
+
+						<p>
+							<jstl:out value="${point.location}" />
+							&nbsp
+						</p>
+						<p class="font-weight-normal">
+							<span class="badge badge-pill badge-primary"
+								style="font-size: calc(0.4em + 0.4vw)"> <fmt:formatDate
+									value="${point.arrivalTime}" pattern="${formatDate}" />
+							</span>
+					</jstl:forEach>
+
 				</div>
 
 				<div class="card_">
@@ -159,164 +153,169 @@ li {
 				<!-- Details -->
 
 				<div id="collapseTwo" class="collapse">
-					<div class="col-lg 12 col-md-12 col-sm-12 col-xs-12">
-						<div class="card-body d-flex flex-column">
+					<div class="col-lg 12 col-md-12 col-sm-12 col-xs-12"
+						style="padding: 10px">
 
-							<div class="card text-center">
-								<div class="card-header">
 
-									<div class="driver">
-										<div class="text-center m-1">
-											<div
-												class="driver-name d-flex flex-row justify-content-center m-1">
-												<span class="badge badge-info"> <a
-													href="driver/display.do?driverId=${route.driver.id}"
-													style="color: white; font-size: calc(0.7em + 1vw)"><jstl:out
-															value="${route.driver.name}" /> <jstl:out
-															value="${route.driver.surname}" /></a> <jstl:if
-														test="${route.driver.id != connectedUser.id}">
-														<a
-															href="thread/message/create.do?userId=${route.driver.id}&routeId=${route.id}"
-															style="color: white; font-size: calc(0.2em + 1vw)"><i class="fas fa-comment-dots"></i>
+						<div class="card text-center">
+							<div class="card-header">
 
-</a>
-													</jstl:if>
-												</span>
-
-											</div>
-											<span class="badge badge-pill badge-success"
-												style="font-size: calc(0.3em + 1vw)"> <jstl:out
-													value="${route.driver.mediumStars}" />
+								<div class="driver">
+									<div class="text-center m-1">
+										<div
+											class="driver-name d-flex flex-row justify-content-center m-1">
+											<span class="badge badge-info"> <a
+												href="driver/display.do?driverId=${route.driver.id}"
+												style="color: white; font-size: calc(0.7em + 1vw)"><jstl:out
+														value="${route.driver.name}" /> <jstl:out
+														value="${route.driver.surname}" /></a> <jstl:if
+													test="${route.driver.id != connectedUser.id}">
+													<a
+														href="thread/message/create.do?userId=${route.driver.id}&routeId=${route.id}"
+														style="color: white; font-size: calc(0.2em + 1vw)"><i
+														class="fas fa-comment-dots"></i> </a>
+												</jstl:if>
 											</span>
+
 										</div>
+										<span class="badge badge-pill badge-success"
+											style="font-size: calc(0.3em + 1vw)"> <jstl:out
+												value="${route.driver.mediumStars}" />
+										</span>
+									</div>
 
 
-										<div class="text-center m-3">
-											<jstl:if test="${canComment}">
-												<security:authorize access="hasRole('PASSENGER')">
+									<div class="text-center m-3">
+										<jstl:if test="${canComment}">
+											<security:authorize access="hasRole('PASSENGER')">
 
-													<form:form action="comment/create.do?routeId=${route.id}"
-														modelAttribute="commentForm" method="post">
+												<form:form action="comment/create.do?routeId=${route.id}"
+													modelAttribute="commentForm" method="post">
 
-														<form:hidden path="route" />
-
+													<form:hidden path="route" />
+													<p>
 														<form:label path="star">
 															<spring:message code="comment.star" />:
                					</form:label>
-														<form:input path="star" />
+													</p>
+													<p>
+														<form:input path="star" class="form-control" />
 														<form:errors cssClass="error" path="star" />
 														<br />
+													</p>
 
-														<form:label path="text">
-															<spring:message code="comment.text" />:
+													<form:label path="text">
+														<spring:message code="comment.text" />:
                					</form:label>
-														<form:input path="text" />
-														<form:errors cssClass="error" path="text" />
-														<br />
+													<form:input path="text" class="form-control" />
+													<form:errors cssClass="error" path="text" />
+													<br />
 
 
-														<button type="submit" name="save" class="btn btn-primary">
-															<spring:message code="comment.save" />
-														</button>
+													<button type="submit" name="save" class="btn btn-primary">
+														<spring:message code="comment.save" />
+													</button>
 
-													</form:form>
-
-
-												</security:authorize>
+												</form:form>
 
 
+											</security:authorize>
 
-											</jstl:if>
-											<jstl:if test="${canReport}">
-												<security:authorize access="hasRole('PASSENGER')">
-													<spring:message code="thread.report" var="reportText" />
+
+
+										</jstl:if>
+										<jstl:if test="${canReport}">
+											<security:authorize access="hasRole('PASSENGER')">
+												<spring:message code="thread.report" var="reportText" />
+												<div style="padding-top: 15px">
 													<a
 														href="thread/report/create.do?userId=${route.driver.id}&routeId=${route.id}"
-														class="btn btn-danger"><jstl:out value="${reportText}" /></a>
-												</security:authorize>
-											</jstl:if>
-										</div>
+														class="btn btn-danger"><jstl:out
+															value="${reportText}" /></a>
+												</div>
+											</security:authorize>
+										</jstl:if>
 									</div>
 								</div>
+							</div>
 
-								<div class="vehicle d-flex flex-row justify-content-center m-1">
-
-
-
-
-
-									<ul class="list-group list-group-flush">
-										<li style="padding-top: 10px">${luggageMsg}:<span
-											class="badge badge-warning"><jstl:out
-													value=" ${route.maxLuggage}" /></span>
-										</li>
-										<li style="padding-top: 10px"><spring:message
-												code="route.preferences" var="routePref" /> <spring:message
-												code="route.pets" var="routePets" /> <spring:message
-												code="route.smoke" var="routeSmoke" /> <spring:message
-												code="route.children" var="routeChildren" /> <spring:message
-												code="route.music" var="routeMusic" /> <jstl:if
-												test="${route.driver.pets == true}">
-												<jstl:out value="${routePets}: " />
-												<input type="checkbox" disabled="disabled" checked="checked">
-											</jstl:if> <jstl:if test="${route.driver.pets == false}">
-												<jstl:out value="${routePets}: " />
-												<input type="checkbox" disabled="disabled">
-											</jstl:if> <jstl:if test="${route.driver.childs == true}">
-												<jstl:out value="${routeChildren}: " />
-												<input type="checkbox" disabled="disabled" checked="checked">
-											</jstl:if> <jstl:if test="${route.driver.childs == false}">
-												<jstl:out value="${routeChildren}: " />
-												<input type="checkbox" disabled="disabled">
-											</jstl:if> <jstl:if test="${route.driver.smoke == true}">
-												<jstl:out value="${routeSmoke}: " />
-												<input type="checkbox" disabled="disabled" checked="checked">
-											</jstl:if> <jstl:if test="${route.driver.smoke == false}">
-												<jstl:out value="${routeSmoke}: " />
-												<input type="checkbox" disabled="disabled">
-											</jstl:if> <jstl:if test="${route.driver.music == true}">
-												<jstl:out value="${routeMusic}: " />
-												<input type="checkbox" disabled="disabled" checked="checked">
-											</jstl:if> <jstl:if test="${route.driver.music == false}">
-												<jstl:out value="${routeMusic}: " />
-												<input type="checkbox" disabled="disabled">
-											</jstl:if></li>
-
-
-										<li style="padding-top: 10px">
-
-											<div
-												class="details d-flex flex-row justify-content-center m-1">
-												${detailsMsg}:&nbsp
-												<p>
-													<jstl:out value="${route.details}" />
-												</p>
-											</div>
-										</li>
-									</ul>
+							<div class="vehicle d-flex flex-row justify-content-center m-1">
 
 
 
 
 
+								<ul class="list-group list-group-flush">
+									<li style="padding-top: 10px">${luggageMsg}:<span
+										class="badge badge-warning"><jstl:out
+												value=" ${route.maxLuggage}" /></span>
+									</li>
+									<li style="padding-top: 10px"><spring:message
+											code="route.preferences" var="routePref" /> <spring:message
+											code="route.pets" var="routePets" /> <spring:message
+											code="route.smoke" var="routeSmoke" /> <spring:message
+											code="route.children" var="routeChildren" /> <spring:message
+											code="route.music" var="routeMusic" /> <jstl:if
+											test="${route.driver.pets == true}">
+											<jstl:out value="${routePets}: " />
+											<input type="checkbox" disabled="disabled" checked="checked">
+										</jstl:if> <jstl:if test="${route.driver.pets == false}">
+											<jstl:out value="${routePets}: " />
+											<input type="checkbox" disabled="disabled">
+										</jstl:if> <jstl:if test="${route.driver.childs == true}">
+											<jstl:out value="${routeChildren}: " />
+											<input type="checkbox" disabled="disabled" checked="checked">
+										</jstl:if> <jstl:if test="${route.driver.childs == false}">
+											<jstl:out value="${routeChildren}: " />
+											<input type="checkbox" disabled="disabled">
+										</jstl:if> <jstl:if test="${route.driver.smoke == true}">
+											<jstl:out value="${routeSmoke}: " />
+											<input type="checkbox" disabled="disabled" checked="checked">
+										</jstl:if> <jstl:if test="${route.driver.smoke == false}">
+											<jstl:out value="${routeSmoke}: " />
+											<input type="checkbox" disabled="disabled">
+										</jstl:if> <jstl:if test="${route.driver.music == true}">
+											<jstl:out value="${routeMusic}: " />
+											<input type="checkbox" disabled="disabled" checked="checked">
+										</jstl:if> <jstl:if test="${route.driver.music == false}">
+											<jstl:out value="${routeMusic}: " />
+											<input type="checkbox" disabled="disabled">
+										</jstl:if></li>
 
 
-								</div>
-								<img class="card-img-top" src="${route.vehicle.image}">
-								<div class="card-footer text-muted">
-									<p>
-										
+									<li style="padding-top: 10px">
 
-										
-										<span class="badge badge-primary"> <jstl:out
-												value="${route.vehicle.model}" />
-										</span>
-									</p>
-									<p>
+										<div
+											class="details d-flex flex-row justify-content-center m-1">
+											${detailsMsg}:&nbsp
+											<p>
+												<jstl:out value="${route.details}" />
+											</p>
+										</div>
+									</li>
+								</ul>
+
+
+
+
+
+
+
+							</div>
+							<img class="card-img-top" src="${route.vehicle.image}">
+							<div class="card-footer text-muted">
+								<p>
+
+
+
+									<span class="badge badge-primary"> <jstl:out
+											value="${route.vehicle.model}" />
+									</span>
+								</p>
+								<p>
 									<jstl:out value="${route.vehicle.description}" />
-									</p>
-									<jstl:out value="${route.vehicle.plate}" />
-								</div>
+								</p>
+								<jstl:out value="${route.vehicle.plate}" />
 							</div>
 						</div>
 					</div>
@@ -365,9 +364,8 @@ li {
 											</a>
 											<jstl:if test="${res.passenger.id != connectedUser.id}">
 												<a
-													href="thread/message/create.do?userId=${res.passenger.id}&routeId=${route.id}"><i class="fas fa-comment-dots"></i>
-
-</a>
+													href="thread/message/create.do?userId=${res.passenger.id}&routeId=${route.id}"><i
+													class="fas fa-comment-dots"></i> </a>
 											</jstl:if>
 										</dd></span>
 									<dd>
@@ -394,14 +392,14 @@ li {
 													<form:label path="star">
 														<spring:message code="comment.star" />:
                     							</form:label>
-													<form:input type="number" path="star" />
+													<form:input type="number" path="star" class="form-control"/>
 													<form:errors cssClass="error" path="star" />
 													<br />
 
 													<form:label path="text">
 														<spring:message code="comment.text" />:
                     							</form:label>
-													<form:input type="text" path="text" />
+													<form:input type="text" path="text" class="form-control"/>
 													<form:errors cssClass="error" path="text" />
 													<br />
 
@@ -502,23 +500,7 @@ li {
 
 									<!-- SI LA RUTA ESTï¿½ EMPEZADA...  -->
 									<jstl:if test="${startedRoute == true }">
-										<spring:message code="route.driver.pick.up" var="pickup" />
-										<!--...Y SI EL SISTEMA AUN NO SABE SI LO HA RECOGIDO, SE MUESTRA EL BOTON DE "ME HA RECOGIDO"...-->
-										<jstl:if
-											test="${reservation.driverPickedMe eq false and reservation.driverNoPickedMe eq false and arrivalPlus10Min eq false}">
-											<dd>
-												<a
-													href="reservation/passenger/driverPickUp.do?reservationId=${reservation.id}"><jstl:out
-														value="${pickup}" /></a>
-											</dd>
-										</jstl:if>
-										<!-- ...PERO SI EL SISTEMA YA SABE QUE HA RECOGIDO AL PASAJERO, SOLO SE MUESTRA EL MENSAJE DE "ME HA RECOGIDO"-->
-										<jstl:if
-											test="${(reservation.driverPickedMe eq true and reservation.driverNoPickedMe eq false) or arrivalPlus10Min eq true}">
-											<dd>
-												<jstl:out value="${pickup}" />
-											</dd>
-										</jstl:if>
+
 										<!-- UNA VEZ HAN PASADO 10 MINUTOS DESDE LA HORA DE SALIDA... -->
 										<jstl:if test="${hasPassed10Minutes == true }">
 											<spring:message code="route.driver.no.pick.up" var="nopickup" />
@@ -597,13 +579,15 @@ li {
 
 					<spring:message code="route.cancel.route" var="cancelRoute" />
 					<jstl:if test="${rol==1 }">
-						<div class="font-weight-bold">
-							<dd>
-								<a class="text-danger"
-									href="route/driver/cancel.do?routeId=${route.id}"><jstl:out
-										value="${cancelRoute}" /></a>
-							</dd>
-						</div>
+						<jstl:if test="${route.isCancelled==false }">
+							<div class="font-weight-bold">
+								<dd>
+									<a class="text-danger"
+										href="route/driver/cancel.do?routeId=${route.id}"><jstl:out
+											value="${cancelRoute}" /></a>
+								</dd>
+							</div>
+						</jstl:if>
 					</jstl:if>
 
 				</security:authorize>
