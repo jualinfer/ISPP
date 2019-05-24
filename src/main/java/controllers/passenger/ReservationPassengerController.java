@@ -33,6 +33,8 @@ import org.springframework.web.servlet.ModelAndView;
 import security.LoginService;
 import security.UserAccount;
 import services.ActorService;
+import services.CommentService;
+import services.MessagesThreadService;
 import services.ReservationService;
 import services.RouteService;
 import utilities.StripeConfig;
@@ -51,6 +53,7 @@ import domain.Passenger;
 import domain.Reservation;
 import domain.ReservationStatus;
 import domain.Route;
+import forms.CommentForm;
 import forms.ReservationForm;
 
 @Controller
@@ -59,6 +62,10 @@ public class ReservationPassengerController extends AbstractController {
 
 	@Autowired
 	private ReservationService	reservationService;
+	@Autowired
+	private CommentService 		commentService;
+	@Autowired
+	private MessagesThreadService	mtService;
 	@Autowired
 	private RouteService		routeService;
 	@Autowired
@@ -399,45 +406,38 @@ public class ReservationPassengerController extends AbstractController {
 		UserAccount ua;
 		Actor actor;
 		Integer rol = 0;	//1->conductor de la ruta | 2->pasajero con reserva | 3-> pasajero sin reserva | 4->admin
-		Reservation reservation;
-		final Reservation currentReservation;
+		//		Reservation reservation;
 		boolean startedRoute = false;
 		boolean hasPassed10Minutes = false;
 		boolean arrivalPlus10Min = false;
+		boolean canComment = false;
+		Collection<Passenger> passengersToComment = new ArrayList<Passenger>();
+		final CommentForm commentForm = new CommentForm();
+		Reservation currentReservation = null;
 
-		currentReservation = this.reservationService.findOne(reservationId);
+		currentReservation = this.reservationService.driverPickedMe(reservationId);
 		route = currentReservation.getRoute();
 		Assert.notNull(route);
-		reservation = this.reservationService.create();
-		reservation.setRoute(route);
+		commentForm.setRoute(route);
+		startedRoute = route.getDepartureDate().before(new Date());
+//		reservation = this.reservationService.create();
+//		reservation.setRoute(route);
 
-		//		try {
-		//			Stripe.apiKey = StripeConfig.SECRET_KEY;
-		//
-		//			//payout
-		//
-		//			final Map<String, Object> payoutParams = new HashMap<String, Object>();
-		//			final Double reservPrice = currentReservation.getPrice() * 100;
-		//			payoutParams.put("amount", Integer.toString(reservPrice.intValue()));
-		//			payoutParams.put("currency", StripeConfig.CURRENCY);
-		//			//			payoutParams.put("destination", bankAccount.getId());
-		//			Payout.create(payoutParams);
-		//
-		//			this.reservationService.driverPickedMe(reservationId);
-		//		} catch (final StripeException e) {
-		//			e.printStackTrace();
-		//
-		//		}
 
 		reservations = route.getReservations();
-
 		displayableReservations = new ArrayList<Reservation>();
 		occupiedSeats = 0;
 		ua = LoginService.getPrincipal();
 		actor = this.actorService.findByUserAccount(ua);
 		Assert.notNull(actor);
 
-		if (reservations != null && reservations.size() > 0)
+		if (actor instanceof Driver) {
+			final Driver driver = (Driver) actor;
+			if (route.getDriver().equals(driver)) {
+				rol = 1;
+			}
+		}
+		if (reservations != null && reservations.size() > 0) {
 			for (final Reservation res : reservations) {
 				if (res.getStatus().equals(ReservationStatus.ACCEPTED)) {
 					occupiedSeats = occupiedSeats + res.getSeat();		//Contamos asientos ocupados
@@ -447,129 +447,39 @@ public class ReservationPassengerController extends AbstractController {
 					final Driver driver = (Driver) actor;
 					if (route.getDriver().equals(driver)) {				//Si el conductor logeado es el de la ruta...
 						rol = 1;							//...se considerará como "conductor de la ruta"...
-						if (route.getDepartureDate().after(new Date()))	// ...y además si la ruta no ha empezado...
-							if (res.getStatus().equals(ReservationStatus.PENDING))
+						if (route.getDepartureDate().after(new Date())) {
+							if (res.getStatus().equals(ReservationStatus.PENDING)) {
 								displayableReservations.add(res);	//...añadimos tambien reservas pendientes
+							}
+						}
 					}
 				}
 
 				if (actor instanceof Passenger) {					//Si el actor logueado es pasajero...
 					final Passenger passenger = (Passenger) actor;
-					for (final Reservation r : reservations)
+					for (final Reservation r : reservations) {
 						//...y ha hecho alguna reserva en la ruta
 						if (r.getPassenger().equals(passenger)) {
 							rol = 2;		//...se considerara como "pasajero con reserva"
 							result.addObject("reservation", r);
-							if (route.getDepartureDate().before(new Date()))
+							if (route.getDepartureDate().before(new Date())) {
 								startedRoute = true;
+							}
 							break;
-						} else
-							rol = 3;		//si no, se considera "pasajero sin reserva"
-				}
-
-				if (actor instanceof Administrator)
-					rol = 4;
-			}
-
-		//----proceso para conseguir la fecha de llegada---
-		final Calendar date = Calendar.getInstance();
-		date.setTime(route.getDepartureDate());
-		final long departureDateMilis = date.getTimeInMillis();
-		final Date arrivalDate = new Date(departureDateMilis + route.getEstimatedDuration() * 60000);
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-		sdf.format(arrivalDate);
-		//------------------------------------------------
-
-		//----proceso para conseguir la fecha de salida + 10 minutos---
-		final Date tenMinutesAfterDeparture = new Date(departureDateMilis + 600000);
-		if (new Date().after(tenMinutesAfterDeparture))
-			hasPassed10Minutes = true;
-		//----proceso para conseguir la fecha de llegada + 10 minutos---
-		final Date tenMinutesAfterArrival = new Date(departureDateMilis + (route.getEstimatedDuration() * 60000) + 600000);
-		if (new Date().after(tenMinutesAfterArrival))
-			arrivalPlus10Min = true;
-		//------------------------------------------------
-		result.addObject("route", route);
-		result.addObject("remainingSeats", route.getAvailableSeats() - occupiedSeats);
-		result.addObject("arrivalDate", sdf.format(arrivalDate));
-		result.addObject("reservations", displayableReservations);
-		result.addObject("rol", rol);
-		result.addObject("newReservation", reservation);
-		result.addObject("startedRoute", startedRoute);
-		result.addObject("hasPassed10Minutes", hasPassed10Minutes);
-		result.addObject("arrivalPlus10Min", arrivalPlus10Min);
-
-		return result;
-	}
-	// Confirmacion de que conductor NO me ha recogido ---------------------------------------------------------------
-
-	@RequestMapping(value = "/driverNoPickUp", method = RequestMethod.GET)
-	public ModelAndView driverNoPickUp(final int reservationId) {
-		ModelAndView result;
-
-		this.reservationService.driverNoPickedMe(reservationId);
-		result = new ModelAndView("reservation/passenger/driverNoPickUp");
-
-		//TENGO QUE PASARLE OTRA VEZ TODA LA INFO QUE HAY EN EL DISPLAY DE ROUTE
-
-		Route route;
-		Collection<Reservation> reservations, displayableReservations;
-		Integer occupiedSeats;
-		UserAccount ua;
-		Actor actor;
-		Integer rol = 0;	//1->conductor de la ruta | 2->pasajero con reserva | 3-> pasajero sin reserva | 4->admin
-		Reservation reservation;
-		final Reservation currentReservation;
-		boolean startedRoute = false;
-		boolean hasPassed10Minutes = false;
-		boolean arrivalPlus10Min = false;
-
-		currentReservation = this.reservationService.findOne(reservationId);
-		route = currentReservation.getRoute();
-		Assert.notNull(route);
-		reservation = this.reservationService.create();
-		reservation.setRoute(route);
-
-		reservations = route.getReservations();
-		displayableReservations = new ArrayList<Reservation>();
-		occupiedSeats = 0;
-		ua = LoginService.getPrincipal();
-		actor = this.actorService.findByUserAccount(ua);
-		Assert.notNull(actor);
-
-		if (reservations != null && reservations.size() > 0)
-			for (final Reservation res : reservations) {
-				if (res.getStatus().equals(ReservationStatus.ACCEPTED)) {
-					occupiedSeats = occupiedSeats + res.getSeat();		//Contamos asientos ocupados
-					displayableReservations.add(res);	//añadimos las reservas aceptadas
-				}
-				if (actor instanceof Driver) {
-					final Driver driver = (Driver) actor;
-					if (route.getDriver().equals(driver)) {				//Si el conductor logeado es el de la ruta...
-						rol = 1;							//...se considerará como "conductor de la ruta"...
-						if (route.getDepartureDate().after(new Date()))	// ...y además si la ruta no ha empezado...
-							if (res.getStatus().equals(ReservationStatus.PENDING))
-								displayableReservations.add(res);	//...añadimos tambien reservas pendientes
+						} else {
+							rol = 3;
+						}
 					}
 				}
 
-				if (actor instanceof Passenger) {					//Si el actor logueado es pasajero...
-					final Passenger passenger = (Passenger) actor;
-					for (final Reservation r : reservations)
-						//...y ha hecho alguna reserva en la ruta
-						if (r.getPassenger().equals(passenger)) {
-							rol = 2;		//...se considerara como "pasajero con reserva"
-							result.addObject("reservation", r);
-							if (route.getDepartureDate().before(new Date()))
-								startedRoute = true;
-							break;
-						} else
-							rol = 3;		//si no, se considera "pasajero sin reserva"
-				}
-
-				if (actor instanceof Administrator)
+				if (actor instanceof Administrator) {
 					rol = 4;
+				}
 			}
+		} else if (actor instanceof Passenger) {
+			//final Passenger passenger = (Passenger) actor;
+			rol = 3;
+		}
 
 		//----proceso para conseguir la fecha de llegada---
 		final Calendar date = Calendar.getInstance();
@@ -584,32 +494,186 @@ public class ReservationPassengerController extends AbstractController {
 		final Date tenMinutesAfterDeparture = new Date(departureDateMilis + 600000);
 		if (new Date().after(tenMinutesAfterDeparture)) {
 			hasPassed10Minutes = true;
+		}
+		//----proceso para conseguir la fecha de llegada + 10 minutos---
+		final Date tenMinutesAfterArrival = new Date(departureDateMilis + (route.getEstimatedDuration() * 60000) + 600000);
+		if (new Date().after(tenMinutesAfterArrival)) {
+			arrivalPlus10Min = true;
+			//------------------------------------------------
+		}
 
-			try {
-				if (currentReservation.getChargeId() != null) {
-					Stripe.apiKey = StripeConfig.SECRET_KEY;
-					final Map<String, Object> params = new HashMap<>();
-					params.put("charge", currentReservation.getChargeId());
-					final Refund refund = Refund.create(params);
+		// Proceso para ver si el actor puede comentar y a quien puede comentar:
+		canComment = this.commentService.canComment(actor, route);
+
+		// En caso de ser un passenger, el metodo anterior ya determina si ha comentado para esta ruta y driver ya.
+		// Pero si el actor es un driver, no se ha determinado aun si le queda algun passenger sobre el que opinar.
+		if (canComment) {
+			if (actor instanceof Driver) {
+				passengersToComment = this.commentService.passengersToComment((Driver) actor, route.getId());
+				if (passengersToComment.isEmpty()) {
+					canComment = false;
 				}
-			} catch (final StripeException e) {
-				e.printStackTrace();
 			}
 		}
-		//----proceso para conseguir la fecha de salida + 20 minutos---
-		final Date twentyMinutesAfterDeparture = new Date(departureDateMilis + (600000 * 2));
-		if (new Date().after(twentyMinutesAfterDeparture))
-			arrivalPlus10Min = true;
-		//------------------------------------------------
+
+		final Actor connectedUser = this.actorService.findByPrincipal();
+		
 		result.addObject("route", route);
 		result.addObject("remainingSeats", route.getAvailableSeats() - occupiedSeats);
 		result.addObject("arrivalDate", sdf.format(arrivalDate));
 		result.addObject("reservations", displayableReservations);
 		result.addObject("rol", rol);
-		result.addObject("newReservation", reservation);
+		//		result.addObject("newReservation", reservation);
 		result.addObject("startedRoute", startedRoute);
 		result.addObject("hasPassed10Minutes", hasPassed10Minutes);
 		result.addObject("arrivalPlus10Min", arrivalPlus10Min);
+		result.addObject("canComment", canComment);
+		result.addObject("canReport", mtService.canReport(connectedUser, route));
+		result.addObject("passengersToComment", passengersToComment);
+		result.addObject("commentForm", commentForm);
+		result.addObject("connectedUser", connectedUser);
+
+		return result;
+	}
+	// Confirmacion de que conductor NO me ha recogido ---------------------------------------------------------------
+
+	@RequestMapping(value = "/driverNoPickUp", method = RequestMethod.GET)
+	public ModelAndView driverNoPickUp(final int reservationId) {
+		ModelAndView result;
+
+		result = new ModelAndView("reservation/passenger/driverNoPickUp");
+
+		//TENGO QUE PASARLE OTRA VEZ TODA LA INFO QUE HAY EN EL DISPLAY DE ROUTE
+
+		Route route;
+		Collection<Reservation> reservations, displayableReservations;
+		Integer occupiedSeats;
+		UserAccount ua;
+		Actor actor;
+		Integer rol = 0;	//1->conductor de la ruta | 2->pasajero con reserva | 3-> pasajero sin reserva | 4->admin
+		//		Reservation reservation;
+		boolean startedRoute = false;
+		boolean hasPassed10Minutes = false;
+		boolean arrivalPlus10Min = false;
+		boolean canComment = false;
+		Collection<Passenger> passengersToComment = new ArrayList<Passenger>();
+		final CommentForm commentForm = new CommentForm();
+		Reservation currentReservation = null;
+
+		currentReservation = this.reservationService.driverNoPickedMe(reservationId);
+		route = currentReservation.getRoute();
+		Assert.notNull(route);
+		commentForm.setRoute(route);
+		startedRoute = route.getDepartureDate().before(new Date());
+
+		reservations = route.getReservations();
+		displayableReservations = new ArrayList<Reservation>();
+		occupiedSeats = 0;
+		ua = LoginService.getPrincipal();
+		actor = this.actorService.findByUserAccount(ua);
+		Assert.notNull(actor);
+
+		if (actor instanceof Driver) {
+			final Driver driver = (Driver) actor;
+			if (route.getDriver().equals(driver)) {
+				rol = 1;
+			}
+		}
+		if (reservations != null && reservations.size() > 0) {
+			for (final Reservation res : reservations) {
+				if (res.getStatus().equals(ReservationStatus.ACCEPTED)) {
+					occupiedSeats = occupiedSeats + res.getSeat();		//Contamos asientos ocupados
+					displayableReservations.add(res);	//añadimos las reservas aceptadas
+				}
+				if (actor instanceof Driver) {
+					final Driver driver = (Driver) actor;
+					if (route.getDriver().equals(driver)) {				//Si el conductor logeado es el de la ruta...
+						rol = 1;							//...se considerará como "conductor de la ruta"...
+						if (route.getDepartureDate().after(new Date())) {
+							if (res.getStatus().equals(ReservationStatus.PENDING)) {
+								displayableReservations.add(res);	//...añadimos tambien reservas pendientes
+							}
+						}
+					}
+				}
+
+				if (actor instanceof Passenger) {					//Si el actor logueado es pasajero...
+					final Passenger passenger = (Passenger) actor;
+					for (final Reservation r : reservations) {
+						//...y ha hecho alguna reserva en la ruta
+						if (r.getPassenger().equals(passenger)) {
+							rol = 2;		//...se considerara como "pasajero con reserva"
+							result.addObject("reservation", r);
+							if (route.getDepartureDate().before(new Date())) {
+								startedRoute = true;
+							}
+							break;
+						} else {
+							rol = 3;
+						}
+					}
+				}
+
+				if (actor instanceof Administrator) {
+					rol = 4;
+				}
+			}
+		} else if (actor instanceof Passenger) {
+			//final Passenger passenger = (Passenger) actor;
+			rol = 3;
+		}
+
+		//----proceso para conseguir la fecha de llegada---
+		final Calendar date = Calendar.getInstance();
+		date.setTime(route.getDepartureDate());
+		final long departureDateMilis = date.getTimeInMillis();
+		final Date arrivalDate = new Date(departureDateMilis + route.getEstimatedDuration() * 60000);
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+		sdf.format(arrivalDate);
+		//------------------------------------------------
+
+		//----proceso para conseguir la fecha de salida + 10 minutos---
+		final Date tenMinutesAfterDeparture = new Date(departureDateMilis + 600000);
+		if (new Date().after(tenMinutesAfterDeparture)) {
+			hasPassed10Minutes = true;
+		}
+		//----proceso para conseguir la fecha de llegada + 10 minutos---
+		final Date tenMinutesAfterArrival = new Date(departureDateMilis + (route.getEstimatedDuration() * 60000) + 600000);
+		if (new Date().after(tenMinutesAfterArrival)) {
+			arrivalPlus10Min = true;
+			//------------------------------------------------
+		}
+
+		// Proceso para ver si el actor puede comentar y a quien puede comentar:
+		canComment = this.commentService.canComment(actor, route);
+
+		// En caso de ser un passenger, el metodo anterior ya determina si ha comentado para esta ruta y driver ya.
+		// Pero si el actor es un driver, no se ha determinado aun si le queda algun passenger sobre el que opinar.
+		if (canComment) {
+			if (actor instanceof Driver) {
+				passengersToComment = this.commentService.passengersToComment((Driver) actor, route.getId());
+				if (passengersToComment.isEmpty()) {
+					canComment = false;
+				}
+			}
+		}
+
+		final Actor connectedUser = this.actorService.findByPrincipal();
+		
+		result.addObject("route", route);
+		result.addObject("remainingSeats", route.getAvailableSeats() - occupiedSeats);
+		result.addObject("arrivalDate", sdf.format(arrivalDate));
+		result.addObject("reservations", displayableReservations);
+		result.addObject("rol", rol);
+		//		result.addObject("newReservation", reservation);
+		result.addObject("startedRoute", startedRoute);
+		result.addObject("hasPassed10Minutes", hasPassed10Minutes);
+		result.addObject("arrivalPlus10Min", arrivalPlus10Min);
+		result.addObject("canComment", canComment);
+		result.addObject("canReport", mtService.canReport(connectedUser, route));
+		result.addObject("passengersToComment", passengersToComment);
+		result.addObject("commentForm", commentForm);
+		result.addObject("connectedUser", connectedUser);
 
 		return result;
 	}

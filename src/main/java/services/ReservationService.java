@@ -370,19 +370,25 @@ public class ReservationService {
 
 		return result;
 	}
-	//no se usa
-	public void driverPickedMe(final int reservationId) {
-		final Reservation reservation = this.reservationRepository.findOne(reservationId);
-
-		reservation.setDriverPickedMe(true);
-		reservation.setDriverNoPickedMe(false);
+	
+	public Reservation driverPickedMe(final int reservationId) {
+		Reservation reservation = this.reservationRepository.findOne(reservationId);
+		if (reservation != null) {
+			reservation.setDriverPickedMe(true);
+			reservation.setDriverNoPickedMe(false);
+			reservation = this.reservationRepository.save(reservation);
+		}
+		return reservation;
 	}
 
-	public void driverNoPickedMe(final int reservationId) {
-		final Reservation reservation = this.reservationRepository.findOne(reservationId);
-
-		reservation.setDriverPickedMe(false);
-		reservation.setDriverNoPickedMe(true);
+	public Reservation driverNoPickedMe(final int reservationId) {
+		Reservation reservation = this.reservationRepository.findOne(reservationId);
+		if (reservation != null) {
+			reservation.setDriverPickedMe(false);
+			reservation.setDriverNoPickedMe(true);
+			reservation = this.reservationRepository.save(reservation);
+		}
+		return reservation;
 	}
 
 	public void acceptReservation(final int reservationId) {
