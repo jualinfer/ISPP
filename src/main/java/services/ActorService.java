@@ -78,14 +78,7 @@ public class ActorService {
 
 			Assert.notNull(userAccount.getUsername());
 			Assert.notNull(userAccount.getPassword());
-			
-			UserAccount uaAccount = uaService.findByUsername(userAccount.getUsername());
-			if (uaAccount == null) {
-				result = this.actorRepository.save(actor);
-			}
-			else {
-				throw new IllegalArgumentException();
-			}
+			result = this.actorRepository.save(actor);
 		} else {
 			final UserAccount principal, userAccount;
 			final UserAccount savedUserAccount;
