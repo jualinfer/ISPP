@@ -96,12 +96,13 @@ li {
 		<div class="content">
 			<!-- origin, destination and date -->
 			<center>
-				<div class="col-xs-12 col-sm-10 col-md-8 text-center">
+				<div style= "width:60%">
 
-					<span style="font-size: calc(0.4em + 1vw)" class="badge badge-info"><jstl:out
-							value="${route.origin }"></jstl:out> <i
-						class="fas fa-arrow-right"></i> <jstl:out
-							value="${route.destination }"></jstl:out></span>
+					<div class="d-flex flex-column" style="font-size: calc(0.4em + 1vw); color:white; background-color: #00ACE2" >
+						<jstl:out value="${route.origin }"></jstl:out> 
+						<i class="fas fa-arrow-down"></i> 
+						<jstl:out value="${route.destination }"></jstl:out>
+					</div>
 
 				</div>
 			</center>
