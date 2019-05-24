@@ -382,33 +382,35 @@ li {
 										<security:authorize access="hasRole('DRIVER')">
 
 											<jstl:forEach items="${passengersToComment}" var="passenger">
+												<jstl:if test="${passenger.id == res.passenger.id}">
 
-												<form:form
-													action="comment/create.do?passengerId=${passenger.id}"
-													modelAttribute="commentForm" method="post">
-
-													<form:hidden path="route" />
-
-													<form:label path="star">
-														<spring:message code="comment.star" />:
-                    							</form:label>
-													<form:input type="number" path="star" class="form-control"/>
-													<form:errors cssClass="error" path="star" />
-													<br />
-
-													<form:label path="text">
-														<spring:message code="comment.text" />:
-                    							</form:label>
-													<form:input type="text" path="text" class="form-control"/>
-													<form:errors cssClass="error" path="text" />
-													<br />
-
-
-													<button type="submit" name="save" class="btn btn-primary">
-														<spring:message code="comment.save" />
-													</button>
-
-												</form:form>
+													<form:form
+														action="comment/create.do?passengerId=${passenger.id}"
+														modelAttribute="commentForm" method="post">
+	
+														<form:hidden path="route" />
+	
+														<form:label path="star">
+															<spring:message code="comment.star" />:
+	                    							</form:label>
+														<form:input type="number" path="star" class="form-control"/>
+														<form:errors cssClass="error" path="star" />
+														<br />
+	
+														<form:label path="text">
+															<spring:message code="comment.text" />:
+	                    							</form:label>
+														<form:input type="text" path="text" class="form-control"/>
+														<form:errors cssClass="error" path="text" />
+														<br />
+	
+	
+														<button type="submit" name="save" class="btn btn-primary">
+															<spring:message code="comment.save" />
+														</button>
+	
+													</form:form>
+												</jstl:if>
 
 											</jstl:forEach>
 
@@ -495,32 +497,63 @@ li {
 										<jstl:out value="${rra}" />
 									</dd>
 
-									<!-- (COMO PASAJERO)PARA RESERVA ACEPTADA POR EL CONDUCTOR, BOTONES DE "
-		ï¿½ME HA RECOGIDO EL CONDUCTOR ONO?" -->
+									<!-- (COMO PASAJERO)PARA RESERVA ACEPTADA POR EL CONDUCTOR, BOTONES DE "ï¿½ME HA RECOGIDO EL CONDUCTOR ONO?" -->
 
-									<!-- SI LA RUTA ESTï¿½ EMPEZADA...  -->
+									<!-- SI LA RUTA HA COMENZADO...  -->
 									<jstl:if test="${startedRoute == true }">
-
-										<!-- UNA VEZ HAN PASADO 10 MINUTOS DESDE LA HORA DE SALIDA... -->
-										<jstl:if test="${hasPassed10Minutes == true }">
+										<!-- ...PERO NO HA FINALIZADO... -->
+										<jstl:if test="${arrivalPlus10Min == false}">
+											<spring:message code="route.driver.pick.up" var="pickup" />
 											<spring:message code="route.driver.no.pick.up" var="nopickup" />
-											<!-- ...SI  EL SISTEMA AUN NO SABE SI LO HA RECOGIDO, SE MUESTRA EL BOTON DE "NO ME HA RECOGIDO"...-->
-											<jstl:if
-												test="${reservation.driverPickedMe eq false and reservation.driverNoPickedMe eq false and arrivalPlus10Min eq false}">
+											<!-- ...SI EL SISTEMA AUN NO SABE SI LO HA RECOGIDO O NO, SE MUESTRA EL BOTON DE "ME HA RECOGIDO"... -->
+											<jstl:if test="${reservation.driverPickedMe == false && reservation.driverNoPickedMe == false}">
 												<dd>
-													<a
-														href="reservation/passenger/driverNoPickUp.do?reservationId=${reservation.id}"><jstl:out
-															value="${nopickup}" /></a>
+													<a href="reservation/passenger/driverPickUp.do?reservationId=${reservation.id}"><jstl:out value="${pickup}" /></a>
 												</dd>
 											</jstl:if>
-											<!-- ...PERO SI EL SISTEMA YA SABE QUE NO HA RECOGIDO AL PASAJERO, SOLO SE MUESTRA EL MENSAJE DE "NO ME HA RECOGIDO"-->
-											<jstl:if
-												test="${reservation.driverPickedMe eq false and reservation.driverNoPickedMe eq true and arrivalPlus10Min eq false}">
+											<!-- ...ADEMAS, SI YA HAN PASADO 10 MINUTOS DESDE LA HORA DE INICIO... -->
+											<jstl:if test="${hasPassed10Minutes == true}">
+												<!-- ...SI EL SISTEMA AUN NO SABE SI LO HA RECOGIDO, SE MUESTRA EL BOTON DE "NO ME HA RECOGIDO" -->
+												<jstl:if
+													test="${reservation.driverPickedMe == false && reservation.driverNoPickedMe == false}">
+													<dd>
+														<a href="reservation/passenger/driverNoPickUp.do?reservationId=${reservation.id}"><jstl:out value="${nopickup}" /></a>
+													</dd>
+												</jstl:if>
+											</jstl:if>
+											<!-- ...SI EL SISTEMA SABE QUE LO HA RECOGIDO, SE MUESTRA EL MENSAJE DE "ME HA RECOGIDO"... -->
+											<jstl:if test="${reservation.driverPickedMe == true && reservation.driverNoPickedMe == false}">
+												<dd>
+													<jstl:out value="${pickup}" />
+												</dd>
+											</jstl:if>
+											<!-- ...SI EL SISTEMA SABE QUE NO LO HA RECOGIDO, SE MUESTRA EL MENSAJE DE "ME HA RECOGIDO"... -->
+											<jstl:if test="${reservation.driverPickedMe == false && reservation.driverNoPickedMe == true}">
 												<dd>
 													<jstl:out value="${nopickup}" />
 												</dd>
 											</jstl:if>
-
+										</jstl:if>
+										<!-- ...SIN EMBARGO, SI LA RUTA HA FINALIZADO... -->
+										<jstl:if test="${arrivalPlus10Min == true}">
+											<!-- ...SI EL SISTEMA SABE QUE LO HA RECOGIDO, SE MUESTRA EL MENSAJE DE "ME HA RECOGIDO"... -->
+											<jstl:if test="${reservation.driverPickedMe == true && reservation.driverNoPickedMe == false}">
+												<dd>
+													<jstl:out value="${pickup}" />
+												</dd>
+											</jstl:if>
+											<!-- ...SI EL SISTEMA SABE QUE NO LO HA RECOGIDO, SE MUESTRA EL MENSAJE DE "NO ME HA RECOGIDO"... -->
+											<jstl:if test="${reservation.driverPickedMe == false && reservation.driverNoPickedMe == true}">
+												<dd>
+													<jstl:out value="${nopickup}" />
+												</dd>
+											</jstl:if>
+											<!-- ...SI TODAVIA NO SE HA ESPECIFICADO, SE CONSIDERA COMO RECOGIDO Y MUESTRA EL MENSAJE DE "ME HA RECOGIDO"... -->
+											<jstl:if test="${reservation.driverPickedMe == false && reservation.driverNoPickedMe == false}">
+												<dd>
+													<jstl:out value="${pickup}" />
+												</dd>
+											</jstl:if>
 										</jstl:if>
 
 									</jstl:if>
