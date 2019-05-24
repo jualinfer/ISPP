@@ -559,7 +559,7 @@ li {
 
 						<security:authorize access="hasRole('PASSENGER')">
 
-							<jstl:if test="${rol==3 && route.isCancelled == false}">
+							<jstl:if test="${rol==3 && route.isCancelled == false && startedRoute == false}">
 								<spring:message code="route.request.seats" var="createReserv" />
 								<a class="request--"
 									href="reservation/passenger/create.do?routeId=${route.id }"><jstl:out
