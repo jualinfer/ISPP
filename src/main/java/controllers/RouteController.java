@@ -98,6 +98,7 @@ public class RouteController extends AbstractController {
 		route = this.routeService.findOne(routeId);
 		Assert.notNull(route);
 		commentForm.setRoute(route);
+		startedRoute = route.getDepartureDate().before(new Date());
 		result = new ModelAndView("route/display");
 		//		reservation = this.reservationService.create();
 		//		reservation.setRoute(route);

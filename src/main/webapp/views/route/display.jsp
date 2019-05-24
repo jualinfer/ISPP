@@ -559,7 +559,7 @@ li {
 
 						<security:authorize access="hasRole('PASSENGER')">
 
-							<jstl:if test="${rol==3}">
+							<jstl:if test="${rol==3 && route.isCancelled == false}">
 								<spring:message code="route.request.seats" var="createReserv" />
 								<a class="request--"
 									href="reservation/passenger/create.do?routeId=${route.id }"><jstl:out
@@ -574,20 +574,15 @@ li {
 
 			<div class="cancel-route-driver text-center m-1 p-3">
 				<security:authorize access="hasRole('DRIVER')">
-					<!-- <button class="btn" type="button">CANCEL ROUTE</button> -->
-					<%-- <security:authorize access="hasRole('DRIVER')"> --%>
-
 					<spring:message code="route.cancel.route" var="cancelRoute" />
-					<jstl:if test="${rol==1 }">
-						<jstl:if test="${route.isCancelled==false }">
-							<div class="font-weight-bold">
-								<dd>
-									<a class="text-danger"
-										href="route/driver/cancel.do?routeId=${route.id}"><jstl:out
-											value="${cancelRoute}" /></a>
-								</dd>
-							</div>
-						</jstl:if>
+					<jstl:if test="${rol==1 && route.isCancelled == false && startedRoute == false}">
+						<div class="font-weight-bold">
+							<dd>
+								<a class="text-danger"
+									href="route/driver/cancel.do?routeId=${route.id}"><jstl:out
+										value="${cancelRoute}" /></a>
+							</dd>
+						</div>
 					</jstl:if>
 
 				</security:authorize>
