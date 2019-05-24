@@ -25,6 +25,16 @@
 <link href="${profileManagementcss}" rel="stylesheet" />
 <script src="${profileManagementcss}"></script>
 
+<style>
+	/* landscape phones, 576px and up */
+	@MEDIA ( max-width : 576px) {
+		.nav-profile-enlaces .nav-link{
+			padding: .5rem;
+    		font-size: 16px;
+		}
+	}
+</style>
+
 <div class="title-principal">
 	<h3>
 		<spring:message code="passenger.title.principal" />
@@ -59,59 +69,73 @@
 	<div class="content-principal">
 		<div class="profile-management d-flex flex-column justify-content-center">
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="image">
-					<spring:message code="passenger.image" />: 
-				</form:label></p></span>
-				<div><form:input path="image" class="form-control"/>
-				<form:errors cssClass="error" path="image" /></div>
+				<div class="form-group">
+					<span><p><form:label path="image">
+						<spring:message code="passenger.image" />: 
+					</form:label></p></span>
+					<div><form:input path="image" class="form-control"/>
+					<form:errors cssClass="error" path="image" /></div>
+				</div>
 			</div>
 			
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="name">
-					<spring:message code="passenger.name" />: 
-				</form:label></p></span>
-				<div><form:input path="name" class="form-control" />
-				<form:errors cssClass="error" path="name" /></div>
+				<div class="form-group">
+					<span><p><form:label path="name">
+						<spring:message code="passenger.name" />: 
+					</form:label></p></span>
+					<div><form:input path="name" class="form-control" />
+					<form:errors cssClass="error" path="name" /></div>
+				</div>
 			</div>
 	
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="surname">
-					<spring:message code="passenger.surname" />: 
-				</form:label></p></span>
-				<div><form:input path="surname" class="form-control"/>
-				<form:errors cssClass="error" path="surname" /></div>
+				<div class="form-group">
+					<span><p><form:label path="surname">
+						<spring:message code="passenger.surname" />: 
+					</form:label></p></span>
+					<div><form:input path="surname" class="form-control"/>
+					<form:errors cssClass="error" path="surname" /></div>
+				</div>
 			</div>
 	
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="country">
-					<spring:message code="passenger.country" />: 
-				</form:label></p></span>
-				<div><form:input path="country" class="form-control"/>
-				<form:errors cssClass="error" path="country" /></div>
+				<div class="form-group">
+					<span><p><form:label path="country">
+						<spring:message code="passenger.country" />: 
+					</form:label></p></span>
+					<div><form:input path="country" class="form-control"/>
+					<form:errors cssClass="error" path="country" /></div>
+				</div>
 			</div>
 	
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="city">
-					<spring:message code="passenger.city" />: 
-				</form:label></p></span>
-				<div><form:input path="city"  class="form-control"/>
-				<form:errors cssClass="error" path="city" /></div>
+				<div class="form-group">
+					<span><p><form:label path="city">
+						<spring:message code="passenger.city" />: 
+					</form:label></p></span>
+					<div><form:input path="city"  class="form-control"/>
+					<form:errors cssClass="error" path="city" /></div>
+				</div>
 			</div>
 	
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="phone">
-					<spring:message code="passenger.phone" />: 
-				</form:label></p></span>
-				<div><form:input id="phone" class="form-control" path="phone" />
-				<form:errors cssClass="error" path="phone" /></div>
+				<div class="form-group">
+					<span><p><form:label path="phone">
+						<spring:message code="passenger.phone" />: 
+					</form:label></p></span>
+					<div><form:input id="phone" class="form-control" path="phone" />
+					<form:errors cssClass="error" path="phone" /></div>
+				</div>
 			</div>
 			
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="bankAccountNumber">
-					<spring:message code="passenger.bankAccountNumber" />: 
-				</form:label></p></span>
-				<div><form:input path="bankAccountNumber" class="form-control"/>
-				<form:errors cssClass="error" path="bankAccountNumber" /></div>
+				<div class="form-group">
+					<span><p><form:label path="bankAccountNumber">
+						<spring:message code="passenger.bankAccountNumber" />: 
+					</form:label></p></span>
+					<div><form:input path="bankAccountNumber" class="form-control"/>
+					<form:errors cssClass="error" path="bankAccountNumber" /></div>
+				</div>
 			</div>
 		</div>
 		

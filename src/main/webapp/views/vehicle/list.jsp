@@ -41,6 +41,13 @@
 	should
 	be
 }
+	/* landscape phones, 576px and up */
+	@MEDIA ( max-width : 576px) {
+		.nav-profile-enlaces .nav-link{
+			padding: .5rem;
+    		font-size: 16px;
+		}
+	}
 </style>
 
 

@@ -245,8 +245,8 @@ public class RouteService {
 	//	}
 
 	public Double getDistance(String origin, String destination) {
-		origin = encodeValue(origin);
-		destination = encodeValue(destination);
+		origin = this.encodeValue(origin);
+		destination = this.encodeValue(destination);
 		Double value = 0.0;
 		try {
 			final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + destination + "&key=AIzaSyAKoI-jZJQyPjIp1XGUSsbWh47JBix7qws";
@@ -278,56 +278,41 @@ public class RouteService {
 		return DoubleRounder.round(value, 2);
 
 	}
-	
+
 	public void calculaDuracion(final Route route) {
 		final List<ControlPoint> cps = route.getControlPoints();
 		long acum = 0;
-
-		//--------Origen - Control Point ------
-		final Calendar date = Calendar.getInstance();
-		date.setTime(route.getDepartureDate());
-		final long departureDateMilis = date.getTimeInMillis();
-		final Date arrivalDate = new Date(departureDateMilis + this.getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000);
-
-		final ControlPoint cp = cps.get(0);
-		cp.setArrivalTime(arrivalDate);
-		cps.set(0, cp);
-		acum = acum + departureDateMilis + this.getDurationMinutes(route.getOrigin(), cps.get(0).getLocation()) * 60000;
+		long aux = 0;
+		Calendar previousCalendar;
 
 		//-------Control Points intermedios ---------
 
-		for (final ControlPoint c : cps) {
-			final Calendar date2 = Calendar.getInstance();
-			date2.setTime(c.getArrivalTime());
-			final long departureDateMilis2 = date2.getTimeInMillis();
-			if (cps.indexOf(c) < cps.size() - 1) {
-				final Date arrivalDate2 = new Date(departureDateMilis2 + this.getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000);
-				final ControlPoint b = cps.get(cps.indexOf(c) + 1);
-				b.setArrivalTime(arrivalDate2);
-				cps.set(cps.indexOf(c) + 1, b);
-				acum = acum + departureDateMilis2 + this.getDurationMinutes(c.getLocation(), cps.get(cps.indexOf(c) + 1).getLocation()) * 60000;
-			} else {
-				break;
-			}
+		String previous;
+
+		previous = route.getOrigin();
+
+		previousCalendar = Calendar.getInstance();
+		previousCalendar.setTime(route.getDepartureDate());
+
+		for (ControlPoint controlPoint : cps) {
+
+			aux = this.getDurationMinutes(previous, controlPoint.getLocation());
+			acum += aux;
+
+			previousCalendar.add(Calendar.MINUTE, (int) aux);
+			controlPoint.setArrivalTime(previousCalendar.getTime());
+			previous = controlPoint.getLocation();
 
 		}
 
-		//------Ultimo CP - Destino-------------
-		final Calendar date3 = Calendar.getInstance();
-		date3.setTime(cps.get(cps.size() - 1).getArrivalTime());
-		final long departureDateMilis3 = date.getTimeInMillis();
-
-		final int cosa = Math.toIntExact(acum / 60000);
-
-		route.setEstimatedDuration((int) (acum / 60000 + departureDateMilis3 / 60000 + this.getDurationMinutes(cps.get(cps.size() - 1).getLocation(), route.getDestination())));
+		route.setEstimatedDuration((int) (acum));
 
 		route.setControlPoints(cps);
 
 	}
-
 	public Integer getDurationMinutes(String origin, String destination) {
-		origin = encodeValue(origin);
-		destination = encodeValue(destination);
+		origin = this.encodeValue(origin);
+		destination = this.encodeValue(destination);
 		Double value = 0.0;
 		try {
 			final String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + destination + "&key=AIzaSyAKoI-jZJQyPjIp1XGUSsbWh47JBix7qws";
@@ -358,14 +343,13 @@ public class RouteService {
 		}
 		return value.intValue();
 	}
-	
+
 	private String encodeValue(String value) {
 		String result = value;
 		if (value != null && !value.isEmpty()) {
 			try {
 				result = URLEncoder.encode(value.trim(), StandardCharsets.UTF_8.toString());
-			}
-			catch (UnsupportedEncodingException ex) {
+			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 				result = result.trim().replaceAll(" ", "+");
 			}
@@ -784,10 +768,10 @@ public class RouteService {
 		Long millisPerDay = 24 * 60 * 60 * 1000L;
 		Collection<Route> completedAfterDayRoutes = new ArrayList<Route>();
 
-		//Obtenemos las rutas que ya comenzaron 
+		//Obtenemos las rutas que ya comenzaron
 		Collection<Route> startedRoutes = this.findStartedRoutes();
 
-		//De las rutas comenzadas sacamos las que ya hayan pasado 24h desde 
+		//De las rutas comenzadas sacamos las que ya hayan pasado 24h desde
 		//la fecha y hora de finalización
 		for (Route route : startedRoutes) {
 			Calendar departureDate = Calendar.getInstance();

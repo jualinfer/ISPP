@@ -28,18 +28,32 @@
 <spring:url value="/styles/route.css" var="routecss" />
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
+<style>
+	/* landscape phones, 576px and up */
+	@MEDIA ( max-width : 576px) {
+		img.comment.star {
+			width: 10%;
+			height: auto;
+		}
+		._profile{
+			width: 100%;	
+		}
+	}
+</style>
 <div class="text-center active-routes">
-	<h3><spring:message code="showPassenger" /></h3>
+	<h3>
+		<spring:message code="showPassenger" />
+	</h3>
 </div>
 <div class="_profile">
 	<div
 		class="resume fotousuario d-flex flex-column justify-content-center align-items-center">
-	
+
 		<img src="${passenger.image}" />
 		<!-- <img src="images/iconotronf.png" /> -->
-	
+
 	</div>
-	
+
 	<div
 		class="resume d-flex flex-column justify-content-center align-items-center">
 		<dt>
@@ -48,99 +62,109 @@
 			<jstl:out value="${passengerSurname}" />
 			<jstl:out value="${passenger.surname}" />
 		</dt>
-		
-		<div class="comment.star">
-								<jstl:if test="${passenger.mediumStars >= 0 && passenger.mediumStars <= 0.4 }">
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 0.5 && passenger.mediumStars <= 0.9 }">
-									<img src="images/mediauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 1 && passenger.mediumStars <= 1.4 }">
-									<img src="images/enterauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 1.5 && passenger.mediumStars <= 1.9 }">
-									<img src="images/enterauser.png" />
-									<img src="images/mediauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 2 && passenger.mediumStars <= 2.4 }">
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 2.5 && passenger.mediumStars <= 2.9 }">
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/mediauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 3 && passenger.mediumStars <= 3.4 }">
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/vaciauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 3.5 && passenger.mediumStars <= 3.9 }">
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/mediauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 4 && passenger.mediumStars <= 4.4 }">
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/vaciauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars >= 4.5 && passenger.mediumStars <= 4.9 }">
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/mediauser.png" />
-								</jstl:if>
-	
-								<jstl:if test="${passenger.mediumStars > 4.9 }">
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-									<img src="images/enterauser.png" />
-								</jstl:if>
-	
-							</div>
-		
-	
+
+		<div class="comment.star d-flex">
+			<jstl:if
+				test="${passenger.mediumStars >= 0 && passenger.mediumStars <= 0.4 }">
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 0.5 && passenger.mediumStars <= 0.9 }">
+				<img src="images/mediauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 1 && passenger.mediumStars <= 1.4 }">
+				<img src="images/enterauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 1.5 && passenger.mediumStars <= 1.9 }">
+				<img src="images/enterauser.png" />
+				<img src="images/mediauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 2 && passenger.mediumStars <= 2.4 }">
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 2.5 && passenger.mediumStars <= 2.9 }">
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/mediauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 3 && passenger.mediumStars <= 3.4 }">
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/vaciauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 3.5 && passenger.mediumStars <= 3.9 }">
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/mediauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 4 && passenger.mediumStars <= 4.4 }">
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/vaciauser.png" />
+			</jstl:if>
+
+			<jstl:if
+				test="${passenger.mediumStars >= 4.5 && passenger.mediumStars <= 4.9 }">
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/mediauser.png" />
+			</jstl:if>
+
+			<jstl:if test="${passenger.mediumStars > 4.9 }">
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+				<img src="images/enterauser.png" />
+			</jstl:if>
+
+		</div>
+
+
 		<spring:message code="passenger.country" var="driverCountry" />
 		<dt>
 			<jstl:out value="${passengerCountry}" />
@@ -148,7 +172,7 @@
 		<dd>
 			<jstl:out value="${passenger.country}" />
 		</dd>
-	
+
 		<spring:message code="passenger.phone" var="driverPhone" />
 		<dt>
 			<jstl:out value="${passengerPhone}" />
@@ -156,7 +180,7 @@
 		<dd>
 			<jstl:out value="${passenger.phone}" />
 		</dd>
-	
+
 		<spring:message code="passenger.city" var="passengerCity" />
 		<dt>
 			<jstl:out value="${passengerCity}" />
@@ -165,32 +189,32 @@
 			<jstl:out value="${passenger.city}" />
 		</dd>
 	</div>
-	
+
 	<div class="card_">
 		<div class="card-header_" id="headingTwo">
 			<h2 class="mb-0">
-			<spring:message code="driver.comment"  var = "commentsMsg"/>
+				<spring:message code="driver.comment" var="commentsMsg" />
 				<button class="btn btn-link collapsed" data-toggle="collapse"
 					data-target="#collapseTwo" aria-expanded="false"
 					aria-controls="collapseTwo">${commentsMsg}</button>
 			</h2>
 		</div>
 	</div>
-	
-	
+
+
 	<!-- Comments -->
-	
+
 	<div id="collapseTwo" class="collapse">
 		<div class="card-body d-flex flex-column">
-	
+
 			<div
 				class="comments d-flex flex-row align-items-baseline justify-content-center m-2">
 				<div class="comments">
-	
+
 					<jstl:forEach var="comment" items="${comments}">
 						<div class="title listRoute"></div>
 						<div class="comment d-flex flex-column align-items-center">
-	
+
 							<div class="comment.driver">
 								<dd>
 								<dt>
@@ -199,13 +223,13 @@
 								</dt>
 								</dd>
 							</div>
-	
-	
+
+
 							<div class="date-comment">
-	
+
 								<fmt:formatDate value="${comment.date}" pattern="${formatDate}" />
 							</div>
-	
+
 							<div class="comment.star">
 								<jstl:if test="${comment.star >= 0 && comment.star <= 0.4 }">
 									<img src="images/vacia.png" />
@@ -214,7 +238,7 @@
 									<img src="images/vacia.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 0.5 && comment.star <= 0.9 }">
 									<img src="images/media.png" />
 									<img src="images/vacia.png" />
@@ -222,7 +246,7 @@
 									<img src="images/vacia.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 1 && comment.star <= 1.4 }">
 									<img src="images/entera.png" />
 									<img src="images/vacia.png" />
@@ -230,7 +254,7 @@
 									<img src="images/vacia.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 1.5 && comment.star <= 1.9 }">
 									<img src="images/entera.png" />
 									<img src="images/media.png" />
@@ -238,7 +262,7 @@
 									<img src="images/vacia.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 2 && comment.star <= 2.4 }">
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
@@ -246,7 +270,7 @@
 									<img src="images/vacia.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 2.5 && comment.star <= 2.9 }">
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
@@ -254,7 +278,7 @@
 									<img src="images/vacia.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 3 && comment.star <= 3.4 }">
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
@@ -262,7 +286,7 @@
 									<img src="images/vacia.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 3.5 && comment.star <= 3.9 }">
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
@@ -270,7 +294,7 @@
 									<img src="images/media.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 4 && comment.star <= 4.4 }">
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
@@ -278,7 +302,7 @@
 									<img src="images/entera.png" />
 									<img src="images/vacia.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 4.5 && comment.star <= 4.9 }">
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
@@ -286,7 +310,7 @@
 									<img src="images/entera.png" />
 									<img src="images/media.png" />
 								</jstl:if>
-	
+
 								<jstl:if test="${comment.star >= 4.9 }">
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
@@ -294,52 +318,52 @@
 									<img src="images/entera.png" />
 									<img src="images/entera.png" />
 								</jstl:if>
-	
+
 							</div>
-	
+
 							<div class="comment.text">
 								<jstl:out value="${comment.text }"></jstl:out>
 							</div>
-	
-	
+
+
 						</div>
-	
+
 					</jstl:forEach>
-	
+
 				</div>
 			</div>
-	
-	
+
+
 		</div>
-	
+
 	</div>
-	
+
 	<div class="card_">
 		<div class="card-header_" id="headingTwo">
 			<h2 class="mb-0">
-			<spring:message code="passenger.route"  var = "routeMsg"/>
+				<spring:message code="passenger.route" var="routeMsg" />
 				<button class="btn btn-link collapsed" data-toggle="collapse"
 					data-target="#collapseOne" aria-expanded="false"
 					aria-controls="collapseOne">${routeMsg}</button>
 			</h2>
 		</div>
 	</div>
-	
+
 	<div id="collapseOne" class="collapse">
-		<div class="card-body d-flex flex-column">
-	
+		<div class="d-flex flex-column">
+
 			<div
 				class="routes d-flex flex-row align-items-baseline justify-content-center m-2">
 				<div class="routes">
-	
+
 					<jstl:forEach var="reservation" items="${passenger.reservations}">
 						<div class="title listReservation"></div>
 						<div class="route d-flex flex-column align-items-center">
-	
+
 							<a
-								class="stretched-link d-flex align-items-center justify-content-space-between flex-wrap"
+								class="d-flex align-items-center justify-content-space-between flex-wrap"
 								href="route/display.do?routeId=${reservation.route.id }">
-	
+
 								<div class="origin">
 									<jstl:out value="${reservation.route.origin }"></jstl:out>
 								</div>
@@ -351,7 +375,7 @@
 								<fmt:formatDate value="${reservation.route.departureDate}"
 									pattern="${formatDate}" />
 							</div>
-	<%-- <spring:url var="alertUrl"
+							<%-- <spring:url var="alertUrl"
 			value="alert/list.do">
 			<spring:param name="actorId"
 				value="${passenger.id}"/>
@@ -359,33 +383,35 @@
 		<a href="${alertUrl}"><jstl:out value="${alert}" /></a> --%>
 						</div>
 					</jstl:forEach>
-	
+
 				</div>
 			</div>
-	
-	
+
+
 		</div>
-	
+
 	</div>
-	
+
 	<jstl:if test="${isPrincipal}">
-	
+
 		<div class="text-center">
-			<br/>
-			<a class="btn btn-primary" href="profile/download.do"><spring:message code="profile.download"/></a>
+			<br /> <a class="btn btn-primary" href="profile/download.do"><spring:message
+					code="profile.download" /></a>
 		</div>
-	
+
 	</jstl:if>
-	
+
 	<security:authorize access="hasRole('PASSENGER')">
-		<br/>
+		<br />
 		<div class="text-center">
 			<jstl:if test="${(passenger.id == passengerConnected.id) eq true}">
-				<a class="btn btn-primary" href="passenger/unsubscribe.do" onclick="return confirm('${confirm}')"><spring:message code="passenger.unsubscribe"/></a>
+				<a class="btn btn-primary" href="passenger/unsubscribe.do"
+					onclick="return confirm('${confirm}')"><spring:message
+						code="passenger.unsubscribe" /></a>
 			</jstl:if>
 		</div>
 	</security:authorize>
-	
+
 	<div class="endList">
 		<div class="circle background_pink"></div>
 		<div class="circle background_blue"></div>

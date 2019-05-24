@@ -29,6 +29,24 @@
 
 <link href="${routecss}" rel="stylesheet" />
 <script src="${routecss}"></script>
+
+<style>
+	/* desktops, 992px and up */
+	@MEDIA ( min-width : 993px) {
+		.item-route-accordion {
+			position: relative;
+			flex-direction: row !important;
+		}
+		
+	}
+	
+	@MEDIA ( max-width : 992px) {
+		.item-route-accordion .circle{
+			display: none;
+		}
+	}
+</style>
+
 <div class="text-center active-routes">
 	<h3><spring:message code="confirmRoute" /></h3>
 </div>
@@ -41,14 +59,13 @@
 <spring:message code="route.cancel"  var="cancel"/>
 <spring:message code="route.formatDate" var="formatDate" />
 
-
 <center>
 	<div class="col-sm-10 text-center" style="padding-top: 20px;">
 		<h2><spring:message code="confirmRouteMessage" /></h2>
 	</div>
 	
 	<jstl:forEach var="point" items="${route.controlPoints}">
-		<div class="item-route-accordion d-inline-flex font-weight-bold">
+		<div class="item-route-accordion d-inline-flex flex-column font-weight-bold">
 			<div
 				class="circle m-0 mr-3 align-items-baseline background_orange"></div>
 			<p>

@@ -25,6 +25,16 @@
 <link href="${profileManagementcss}" rel="stylesheet" />
 <script src="${profileManagementcss}"></script>
 
+<style>
+	/* landscape phones, 576px and up */
+	@MEDIA ( max-width : 576px) {
+		.nav-profile-enlaces .nav-link{
+			padding: .5rem;
+    		font-size: 16px;
+		}
+	}
+</style>
+
 <div class="title-principal">
 	<h3>
 		<spring:message code="passenger.title.principal" />
@@ -46,19 +56,23 @@
 	<div class="content-principal">
 		<div class="profile-management d-flex flex-column justify-content-center">
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="password">
-					<spring:message code="passenger.password"/>: 
-				</form:label></p></span>
-				<div><form:password id="password" path="password" class="form-control"/>
-				<form:errors cssClass="error" path="password"/></div>
+				<div class="form-group">
+					<span><p><form:label path="password">
+						<spring:message code="passenger.password"/>: 
+					</form:label></p></span>
+					<div><form:password id="password" path="password" class="form-control"/>
+					<form:errors cssClass="error" path="password"/></div>
+				</div>
 			</div>
 			
 			<div class="item-profile-management d-flex d-row justify-content-arround">
-				<span><p><form:label path="repeatPassword">
-					<spring:message code="passenger.repeat.password"/>: 
-				</form:label></p></span>
-				<div><form:password id="repeatPassword" path="repeatPassword" class="form-control"/>
-				<form:errors cssClass="error" path="repeatPassword"/></div>
+				<div class="form-group">
+					<span><p><form:label path="repeatPassword">
+						<spring:message code="passenger.repeat.password"/>: 
+					</form:label></p></span>
+					<div><form:password id="repeatPassword" path="repeatPassword" class="form-control"/>
+					<form:errors cssClass="error" path="repeatPassword"/></div>
+				</div>
 			</div>
 		</div>
 	
