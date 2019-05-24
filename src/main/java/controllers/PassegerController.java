@@ -118,8 +118,12 @@ public class PassegerController extends AbstractController {
 				passenger.setUserAccount(userAccount);
 				this.passengerService.save(passenger);
 				result = new ModelAndView("redirect:/security/login.do");
-			} catch (final Throwable oops) {
-				result = this.createEditModelAndView(passenger, "passenger.commit.error");
+			}
+			catch (IllegalArgumentException ex) {
+				result = this.createEditModelAndView(passenger, "passenger/create", "passenger.error.email");
+			}
+			catch (final Throwable oops) {
+				result = this.createEditModelAndView(passenger, "passenger/create", "passenger.commit.error");
 			}
 		return result;
 	}
